@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <parent>
+    <groupId>de.dfki.cos.basys</groupId>
+    <artifactId>pom</artifactId>
+    <version>0.2.7-SNAPSHOT</version>
+    <relativePath/>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.dfki.cos.basys</groupId>
+  <artifactId>p4p</artifactId>
+  <version>0.1.1-SNAPSHOT</version>
+  
+  <name>BaSys 4.2 Demonstrator</name>
+  <description>The common BaSys 4.2 demonstrator at the Power4Production Center</description>
+  
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>poms</module>
+    <module>provision</module>
+    <module>platform</module>
+    <module>controlcomponents</module>
+    <module>configs</module>
+  </modules>
+  
+  <scm>
+    <url>https://github.com/BaSys-PC1</url>
+    <connection>${gitUrl}/p4p-demonstrator.git</connection>
+    <developerConnection>${gitUrl}/p4p-demonstrator.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+  
+</project>

@@ -21,10 +21,10 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
 public class MoveToSymbolicPositionOperationMode extends BaseOperationMode {
 
-	@Parameter(name = "position", direction = ParameterDirection.READ_WRITE)
+	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = null;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.IN)
+	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration = 0;
 	
 	private MissionInstanceInfo currentMission = null;

@@ -9,7 +9,7 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>BaSys 4.2 Demonstrator - MiR Control Component</bundle.symbolicName>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.namespace>		
 	</properties>
 
@@ -17,7 +17,7 @@
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
 	<artifactId>mir</artifactId>
 
-	<name>${bundle.symbolicName}</name>
+	<name>BaSys 4.2 Demonstrator - MiR Control Component</name>
 
 	<packaging>bundle</packaging>
 

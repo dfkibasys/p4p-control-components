@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.4.1">
   <bpmn:process id="TestProcess" name="TestProcess" isExecutable="true">
     <bpmn:startEvent id="StartEvent_0oafi8e" name="Test&#10;Process">
       <bpmn:extensionElements>
@@ -16,21 +16,25 @@
     <bpmn:serviceTask id="ServiceTask_0hrz46c" name="component-1&#10;calculate&#10;hypothenuse" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
       <bpmn:extensionElements>
         <camunda:field name="_componentId" />
-        <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${componentId1}</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">["pyt_c", "pyt_calculation", "pyt_duration"]</camunda:inputParameter>
-          <camunda:inputParameter name="parameters">
-            <camunda:script scriptFormat="freemarker">{
-	"pyt_a" : ${sideA},
-	"pyt_b" : ${sideB}
-}
+          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[
+{"name": "pyt_c" , "type" : "DOUBLE"},
+{"name": "pyt_calculation" , "type" : "STRING"},
+{"name": "pyt_duration" , "type" : "INTEGER"}
+]
+</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
+{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
+]
 </camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0yz5vxy</bpmn:incoming>
@@ -39,20 +43,24 @@
     <bpmn:serviceTask id="ServiceTask_1lq6i1l" name="component-1&#10;calculate&#10;fibonacci" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
       <bpmn:extensionElements>
         <camunda:field name="_componentId" />
-        <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${componentId1}</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="parameters">
-            <camunda:script scriptFormat="freemarker">{
-	"fib_n" : ${fibN}
-}
+          <camunda:inputParameter name="token">fibonacci</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{"name": "fib_n" , "type" : "INTEGER", "value" : ${fibN}}
+]
 </camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">["fib_result", "fib_calculation", "fib_duration"]</camunda:inputParameter>
-          <camunda:inputParameter name="token">fibonacci</camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[
+{"name": "fib_result" , "type" : "LONG"},
+{"name": "fib_calculation" , "type" : "STRING"},
+{"name": "fib_duration" , "type" : "INTEGER"}
+]
+</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1gtmuen</bpmn:incoming>
@@ -61,19 +69,24 @@
     <bpmn:serviceTask id="ServiceTask_1kh50ny" name="component-2&#10;calculate&#10;fibonacci" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
       <bpmn:extensionElements>
         <camunda:field name="_componentId" />
-        <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${componentId2}</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="parameters">
-            <camunda:script scriptFormat="freemarker">{
-	"fib_n" : ${fibN}
-}</camunda:script>
-          </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">["fib_result", "fib_calculation", "fib_duration"]</camunda:inputParameter>
           <camunda:inputParameter name="token">fibonacci</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{"name": "fib_n" , "type" : "INTEGER", "value" : ${fibN}}
+]
+</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[
+{"name": "fib_result" , "type" : "LONG"},
+{"name": "fib_calculation" , "type" : "STRING"},
+{"name": "fib_duration" , "type" : "INTEGER"}
+]
+</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0fpl8yn</bpmn:incoming>
@@ -89,21 +102,25 @@
     <bpmn:serviceTask id="ServiceTask_03x9l95" name="component-2&#10;calculate&#10;hypothenuse" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
       <bpmn:extensionElements>
         <camunda:field name="_componentId" />
-        <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${componentId2}</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">["pyt_c", "pyt_calculation", "pyt_duration"]</camunda:inputParameter>
-          <camunda:inputParameter name="parameters">
-            <camunda:script scriptFormat="freemarker">{
-	"pyt_a" : ${sideA},
-	"pyt_b" : ${sideB}
-}
+          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[
+{"name": "pyt_c" , "type" : "DOUBLE"},
+{"name": "pyt_calculation" , "type" : "STRING"},
+{"name": "pyt_duration" , "type" : "INTEGER"}
+]
+</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
+{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
+]
 </camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_12f9ht6</bpmn:incoming>

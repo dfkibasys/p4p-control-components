@@ -22,11 +22,14 @@
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${componentId}</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">["duration"]</camunda:inputParameter>
-          <camunda:inputParameter name="parameters">
-            <camunda:script scriptFormat="freemarker">{
-"location": "${location}"
-}</camunda:script>
+          <camunda:inputParameter name="outputParameters">[
+{ "name": "duration", "type" : "INTEGER"}
+]
+</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "location", "type" : "STRING", "value": "${location}"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -44,7 +47,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0kwriuo_di" bpmnElement="EndEvent_0kwriuo">
-        <dc:Bounds x="423" y="102" width="36" height="36" />
+        <dc:Bounds x="412" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0lrvdb5_di" bpmnElement="SequenceFlow_0lrvdb5">
         <di:waypoint x="208" y="120" />
@@ -55,7 +58,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0em2iv7_di" bpmnElement="SequenceFlow_0em2iv7">
         <di:waypoint x="360" y="120" />
-        <di:waypoint x="423" y="120" />
+        <di:waypoint x="412" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

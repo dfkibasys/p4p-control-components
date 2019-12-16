@@ -284,17 +284,18 @@
 		{
 			"label": "Input Parameters",
 			"type": "Text",
-			"description": "Enter a JSON document containing parameters, you can also use variables, e.g. ${paramValue}, here.",
+			"description": "Enter a JSON array containing input parameters with properties 'name', 'type' and 'valueString'. You can also use variables, e.g. ${paramValue}, here.",
+			"value" : "[]",
 			"binding": {
+				"name": "inputParameters",
 				"type": "camunda:inputParameter",
-				"name": "parameters",
 				"scriptFormat": "freemarker"
 			}
 		},
 		{
 			"label": "Output Parameters",
-			"type": "String",
-			"description": "A JSON string array of output property names, e.g. ['a','b'].",
+			"type": "Text",
+			"description": "Enter a JSON array containing expected output parameters with properties 'name' and 'type'.",
 			"value" : "[]",
 			"binding": {
 				"name": "outputParameters",

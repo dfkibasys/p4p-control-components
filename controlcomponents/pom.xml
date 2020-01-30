@@ -9,16 +9,22 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.dfki.cos.basys.p4p</groupId>
-  <artifactId>device</artifactId>
+  <artifactId>controlcomponent</artifactId>
 
-  <name>BaSys 4.2 Demonstrator - Control Components</name>
+  <name>P4P Demonstrator - Control Components</name>
 
   <packaging>pom</packaging>
   <version>0.1.1-SNAPSHOT</version>
 
   <modules>
+
+	<module>de.dfki.cos.basys.p4p.controlcomponent.mir</module>
+	<module>de.dfki.cos.basys.p4p.controlcomponent.ur</module>
+
+	<!--
 	<module>mir</module>
 	<module>server</module>
+	-->
   </modules>
   
 </project>

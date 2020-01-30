@@ -26,13 +26,13 @@
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
 			<artifactId>de.dfki.cos.basys.controlcomponent.core</artifactId>
-			<version>${project.version}</version>
+			<version>${version.basys.controlcomponent}</version>
 		</dependency>
 	
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
 			<artifactId>de.dfki.cos.basys.common.mirrestclient</artifactId>
-			<version>${project.version}</version>
+			<version>${version.basys.common}</version>
 		</dependency>
 	
 		<!-- comment to remove all imported (non-local) bundles from your compilation 

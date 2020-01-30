@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.controlcomponent.mir;
+package de.dfki.cos.basys.p4p.controlcomponent.mir;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
@@ -51,8 +51,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 			//TODO check status
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error(e.getLocalizedMessage());
-			component.setErrorStatus(3, e.getLocalizedMessage());
+			LOGGER.error(e.getMessage());
+			component.setErrorStatus(3, e.getMessage());
 			component.stop(component.getOccupierId());
 		}
 	}
@@ -64,8 +64,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 			currentMission = getService(MirService.class).gotoSymbolicPosition(position);
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error(e.getLocalizedMessage());
-			component.setErrorStatus(3, e.getLocalizedMessage());
+			LOGGER.error(e.getMessage());
+			component.setErrorStatus(3, e.getMessage());
 			component.stop(component.getOccupierId());
 		}
 	}
@@ -108,8 +108,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error(e.getLocalizedMessage());
-			component.setErrorStatus(3, e.getLocalizedMessage());
+			LOGGER.error(e.getMessage());
+			component.setErrorStatus(3, e.getMessage());
 			component.stop(component.getOccupierId());
 		}
 	}
@@ -134,7 +134,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error(e.getLocalizedMessage());
+			LOGGER.error(e.getMessage());
 		}	
 	}
 
@@ -152,14 +152,14 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());
 		Mockito.when(serviceMock.dequeueMissionInstance(Mockito.anyInt())).thenReturn(true);
 		Mockito.when(serviceMock.gotoSymbolicPosition(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
-		//Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenReturn(new MissionInstanceInfo());
-		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).then(new Answer<MissionInstanceInfo>() {
+		Mockito.when(serviceMock.gotoSymbolicPosition(null)).thenReturn(new MissionInstanceInfo());
+		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
 
 			@Override
 			public MissionInstanceInfo answer(InvocationOnMock invocation) throws Throwable {
 				long elapsed = System.currentTimeMillis() - startTime;
 				MissionInstanceInfo result = new MissionInstanceInfo();
-				if (elapsed < 5000) {
+				if (elapsed < 10000) {
 					result.state = "executing";
 				} else {
 					result.state = "done";

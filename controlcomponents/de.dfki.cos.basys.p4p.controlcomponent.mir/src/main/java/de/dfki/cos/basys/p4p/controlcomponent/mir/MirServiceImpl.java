@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.controlcomponent.mir;
+package de.dfki.cos.basys.p4p.controlcomponent.mir;
 
 import java.util.List;
 import java.util.Properties;

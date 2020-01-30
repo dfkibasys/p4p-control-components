@@ -155,8 +155,8 @@
     }
 },
 {
-	"name": "Occupation Level Request (Select Component)",
-	"id": "de.dfki.cos.basys.occupationLevel.select",
+	"name": "Occupation Command Request (Select Component)",
+	"id": "de.dfki.cos.basys.occupationCommand.select",
 	"appliesTo": [
 		"bpmn:ServiceTask"
 	],
@@ -184,7 +184,7 @@
 		{
 			"label": "RequestType",
 			"type": "Hidden",
-			"value": "OccupationLevelRequest",
+			"value": "OccupationCommandRequest",
 			"editable": false,
 			"binding": {
 				"type": "camunda:inputParameter",
@@ -208,12 +208,12 @@
 			}
 		},
 		{
-			"label": "Occupation Level",
+			"label": "Occupation Command",
 			"type": "Dropdown",
 			"choices": [
 			  { "name": "FREE", "value": "FREE" },
-			  { "name": "OCCUPIED", "value": "OCCUPIED" },
-			  { "name": "PRIORITY", "value": "PRIORITY" }
+			  { "name": "OCCUPY", "value": "OCCUPY" },
+			  { "name": "PRIO", "value": "PRIO" }
 			],
 			"binding": {
 				"type": "camunda:inputParameter",

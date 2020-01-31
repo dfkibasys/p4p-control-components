@@ -11,8 +11,10 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.mir
+		</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.mir
+		</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -55,15 +57,26 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.glassfish.jersey.core</groupId> <artifactId>jersey-client</artifactId> 
-			<version>${jersey-version}</version> <scope>test</scope> </dependency> -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.inject/jersey-hk2 -->
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson -->
-		<!-- <dependency> <groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-json-jackson</artifactId> 
-			<version>${jersey-version}</version> <scope>test</scope> <exclusions> <exclusion> 
-			<groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-annotations</artifactId> 
-			</exclusion> </exclusions> </dependency> -->
-
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -26,7 +26,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirService> {
 
 	@Parameter(name = "position", direction = ParameterDirection.IN)
-	private String position = null;
+	private String position = "Station-Wait";
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration = 0;

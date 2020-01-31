@@ -1,0 +1,10 @@
+{
+  "id": "MiR100-4",
+  "name": "MiR100-4",
+  "serviceConnectionString": "http://robot-mir-01",
+  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.mir.MirControlComponent",
+  "executionMode": "AUTO",
+  "disableExecutionModeChange" : "false",
+  "disableOccupationCheck" : "false",
+  "auth" : "bXJrOjZjNGIwNmRjYTU4NmM1NzkxYmI2Nzc4MjFjZjU3YWQ0ZjcyOGVmMTZmMWNjN2ZiMDg1MmEwNmY3Yzc5NmI1M2Y="
+}

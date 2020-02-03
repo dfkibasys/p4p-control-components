@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.controlcomponent.ur;
+package de.dfki.cos.basys.p4p.controlcomponent.ur;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;

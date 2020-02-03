@@ -1,0 +1,9 @@
+{
+  "id": "Drone-1",
+  "name": "Drone-1",
+  "serviceConnectionString": "",
+  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.drone.DroneControlComponent",
+  "executionMode": "SIMULATION",
+  "disableExecutionModeChange" : "true",
+  "disableOccupationCheck" : "true"
+}

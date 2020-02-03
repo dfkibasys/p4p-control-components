@@ -1,13 +1,13 @@
-package de.dfki.cos.basys.controlcomponent.ur;
+package de.dfki.cos.basys.p4p.controlcomponent.baxter;
 
 import java.util.Properties;
 
 import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 
-public class UrControlComponent extends BaseControlComponent {
+public class BaxterRobotControlComponent extends BaseControlComponent {
 
-	public UrControlComponent(Properties config) {
+	public BaxterRobotControlComponent(Properties config) {
 		super(config);
 	}
 	

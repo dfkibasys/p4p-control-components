@@ -13,8 +13,8 @@ public class BaxterRobotControlComponent extends BaseControlComponent {
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new ExampleOperationMode(this);
-		registerOperationMode(opMode);		
+		//OperationMode opMode = new ExampleOperationMode(this);
+		//registerOperationMode(opMode);		
 	}
 	
 }

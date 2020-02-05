@@ -5,7 +5,7 @@ import java.util.Properties;
 import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 
-public class BaxterPlatformControlComponent extends BaseControlComponent {
+public class BaxterPlatformControlComponent extends BaseControlComponent<BaxterService> {
 
 	public BaxterPlatformControlComponent(Properties config) {
 		super(config);
@@ -13,7 +13,7 @@ public class BaxterPlatformControlComponent extends BaseControlComponent {
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new ExampleOperationMode(this);
+		OperationMode opMode = new MoveToSymbolicPositionOperationMode(this);
 		registerOperationMode(opMode);		
 	}
 	

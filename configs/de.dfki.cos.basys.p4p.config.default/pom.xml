@@ -61,6 +61,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.worker</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<!-- comment to remove all imported (non-local) bundles from your compilation 
 			classpath -->
 		<dependency>

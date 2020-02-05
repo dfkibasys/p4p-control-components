@@ -5,7 +5,7 @@ import java.util.Properties;
 import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 
-public class UrControlComponent extends BaseControlComponent {
+public class UrControlComponent extends BaseControlComponent<UrService> {
 
 	public UrControlComponent(Properties config) {
 		super(config);
@@ -13,8 +13,8 @@ public class UrControlComponent extends BaseControlComponent {
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new ExampleOperationMode(this);
-		registerOperationMode(opMode);		
+		//OperationMode opMode = new ExampleOperationMode(this);
+		//registerOperationMode(opMode);		
 	}
 	
 }

@@ -17,14 +17,12 @@
   <version>0.1.1-SNAPSHOT</version>
 
   <modules>
-
+	<module>de.dfki.cos.basys.p4p.controlcomponent.baxter</module>
+	<module>de.dfki.cos.basys.p4p.controlcomponent.drone</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.mir</module>
+	<module>de.dfki.cos.basys.p4p.controlcomponent.smartwatch</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.ur</module>
-
-	<!--
-	<module>mir</module>
-	<module>server</module>
-	-->
+	<module>de.dfki.cos.basys.p4p.controlcomponent.worker</module>
   </modules>
   
 </project>

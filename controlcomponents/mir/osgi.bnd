@@ -1,8 +1,0 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
-
-Bundle-SymbolicName: ${bundle.symbolicName};singleton:=true
-#Bundle-Activator: ${bundle.namespace}.internal.ExampleActivator
-# important for creating components in component manager via reflection
-#DynamicImport-Package = * 

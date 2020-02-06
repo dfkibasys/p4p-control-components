@@ -33,11 +33,40 @@
 
 		<dependency>
 			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.baxter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.drone</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
 			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.mir</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.smartwatch</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.ur</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.worker</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<!-- comment to remove all imported (non-local) bundles from your compilation 
 			classpath -->
 		<dependency>

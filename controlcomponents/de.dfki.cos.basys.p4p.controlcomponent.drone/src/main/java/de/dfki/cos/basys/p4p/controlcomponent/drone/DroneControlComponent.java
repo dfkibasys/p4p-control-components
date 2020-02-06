@@ -13,8 +13,11 @@ public class DroneControlComponent extends BaseControlComponent<DroneService> {
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new MoveToSymbolicPositionOperationMode(this);
-		registerOperationMode(opMode);		
+		registerOperationMode(new TakeOffOperationMode(this));	
+		registerOperationMode(new MoveToSymbolicPositionOperationMode(this));	
+		registerOperationMode(new ProvideVideoStreamOperationMode(this));	
+		registerOperationMode(new DetectObstacleOperationMode(this));	
+		registerOperationMode(new LandOperationMode(this));		
 	}
 	
 }

@@ -13,8 +13,11 @@ public class SmartwatchControlComponent extends BaseControlComponent {
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new ExampleOperationMode(this);
-		registerOperationMode(opMode);		
+		OperationMode opMode = new DisplayInfoMessageOperationMode(this);
+		registerOperationMode(opMode);	
+		
+		OperationMode opMode2 = new RequestTaskExecutionOperationMode(this);
+		registerOperationMode(opMode2);	
 	}
 	
 }

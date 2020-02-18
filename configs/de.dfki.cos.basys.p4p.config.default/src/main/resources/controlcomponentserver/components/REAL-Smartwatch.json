@@ -1,0 +1,9 @@
+{
+  "id": "Smartwatch-LG-3691",
+  "name": "Smartwatch-LG-3691",
+  "serviceConnectionString": "mq3t.rpc://smartwatch-lg-3691-wifi.lan:9030",
+  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.smartwatch.SmartwatchControlComponent",
+  "executionMode": "AUTO",
+  "disableExecutionModeChange" : "false",
+  "disableOccupationCheck" : "false"
+}

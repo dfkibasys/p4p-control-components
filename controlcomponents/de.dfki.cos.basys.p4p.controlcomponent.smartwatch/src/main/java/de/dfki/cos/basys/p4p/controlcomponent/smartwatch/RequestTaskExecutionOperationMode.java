@@ -32,16 +32,14 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 	
 	private long startTime = 0;
 	
-	
-	private NotificationService service;
 	private HumanTaskDTO task = null;
 	private String clientId = null;
 	
 	@Override
 	protected void configureServiceMock(NotificationService serviceMock) {
 		try {
-			Mockito.when(service.requestTaskExecution(task)).thenReturn(CommandState.ACCEPTED);
-			Mockito.when(service.getCommandState(task.businessKey)).thenAnswer(new Answer<CommandState>() {
+			Mockito.when(getService(NotificationService.class).requestTaskExecution(task)).thenReturn(CommandState.ACCEPTED);
+			Mockito.when(getService(NotificationService.class).getCommandState(task.businessKey)).thenAnswer(new Answer<CommandState>() {
 
 				@Override
 				public CommandState answer(InvocationOnMock arg0) throws Throwable {
@@ -56,9 +54,8 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 	}
 
 	
-	public RequestTaskExecutionOperationMode(BaseControlComponent component) {
+	public RequestTaskExecutionOperationMode(BaseControlComponent<NotificationService> component) {
 		super(component);
-		service = getService(NotificationService.class);
 		clientId = UUID.randomUUID().toString();
 	}
 
@@ -80,12 +77,12 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 		
 		while(!taskExecRequested) {
 			try {
-				state = service.requestTaskExecution(task);
+				state = getService(NotificationService.class).requestTaskExecution(task);
 				taskExecRequested = true;
 			} catch (TException e) {
 				LOGGER.warn(" Notification ressource not responding. Retrying ...");
 				sleep(1500);
-				service.reconnect();
+				getService(NotificationService.class).reconnect();
 			}
 		}
 	}
@@ -101,11 +98,11 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 		
 		while(executing) {
 			try {
-				state = service.getCommandState("");
+				state = getService(NotificationService.class).getCommandState("");
 			} catch (TException e) {
 				LOGGER.warn(" Notification ressource not responding. Retrying ...");
 				sleep(1500);
-				service.reconnect();
+				getService(NotificationService.class).reconnect();
 				continue;
 			}
 			

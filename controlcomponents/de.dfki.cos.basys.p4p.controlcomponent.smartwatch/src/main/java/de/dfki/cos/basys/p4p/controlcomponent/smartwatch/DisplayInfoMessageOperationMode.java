@@ -22,13 +22,11 @@ public class DisplayInfoMessageOperationMode extends BaseOperationMode<Notificat
 	@Parameter(name = "message", direction = ParameterDirection.IN)
 	private String message = "";
 	
-	private NotificationService service;
-	
 	@Override
 	protected void configureServiceMock(NotificationService serviceMock) {
 		try {
 			Mockito.when(serviceMock.displayInfoMessage(message)).thenReturn(CommandState.ACCEPTED);
-			Mockito.when(service.getCommandState(Mockito.anyString())).thenReturn(CommandState.FINISHED);
+			Mockito.when(getService(NotificationService.class).getCommandState(Mockito.anyString())).thenReturn(CommandState.FINISHED);
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,9 +34,8 @@ public class DisplayInfoMessageOperationMode extends BaseOperationMode<Notificat
 	}
 
 	
-	public DisplayInfoMessageOperationMode(BaseControlComponent component) {
+	public DisplayInfoMessageOperationMode(BaseControlComponent<NotificationService> component) {
 		super(component);
-		service = getService(NotificationService.class);
 	}
 
 
@@ -53,12 +50,12 @@ public class DisplayInfoMessageOperationMode extends BaseOperationMode<Notificat
 		
 		while(!messageSent) {
 			try {
-				service.displayInfoMessage(message);
+				getService(NotificationService.class).displayInfoMessage(message);
 				messageSent = true;
 			} catch (TException e) {
 				LOGGER.warn(" Display ressource not responding. Retrying ...");
 				sleep(1500);
-				service.reconnect();
+				getService(NotificationService.class).reconnect();
 			}
 		}
 	}
@@ -70,11 +67,11 @@ public class DisplayInfoMessageOperationMode extends BaseOperationMode<Notificat
 		
 		while(executing) {
 			try {
-				state = service.getCommandState("");
+				state = getService(NotificationService.class).getCommandState("");
 			} catch (TException e) {
 				LOGGER.warn(" Display ressource not responding. Retrying ...");
 				sleep(1500);
-				service.reconnect();
+				getService(NotificationService.class).reconnect();
 				continue;
 			}
 			

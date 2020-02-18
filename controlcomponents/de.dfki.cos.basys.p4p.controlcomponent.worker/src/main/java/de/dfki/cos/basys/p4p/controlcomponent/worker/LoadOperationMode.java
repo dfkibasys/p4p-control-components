@@ -20,15 +20,6 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
 public class LoadOperationMode extends BaseOperationMode<NotificationService> {
-
-	@Parameter(name = "position", direction = ParameterDirection.IN)
-	private String position = "Station-Wait";
-	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
-	private int duration = 0;
-	
-	private long startTime = 0;
-	private long endTime = 0;
 		
 	public LoadOperationMode(BaseControlComponent<NotificationService> component) {
 		super(component);
@@ -36,31 +27,27 @@ public class LoadOperationMode extends BaseOperationMode<NotificationService> {
 
 	@Override
 	public void onResetting() {
-		duration = 0;
-		startTime = 0;
-		endTime = 0;
+		sleep(1000);
 	}
 
 	@Override
-	public void onStarting() {		
-		startTime = System.currentTimeMillis();	
+	public void onStarting() {	
+		sleep(1000);
 	}
 
 	@Override
 	public void onExecute() {
-		
+		sleep(1000);		
 	}
 
 	@Override
 	public void onCompleting() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
+		sleep(1000);
 	}
 
 	public void sleep(long millis) {

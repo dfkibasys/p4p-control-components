@@ -29,35 +29,29 @@ public class TakeOffOperationMode extends BaseOperationMode<DroneService> {
 
 	@Override
 	public void onResetting() {
-	
+		sleep(1000);
 	}
 
 	@Override
-	public void onStarting() {		
+	public void onStarting() {	
+		sleep(1000);
 	}
 
 	@Override
 	public void onExecute() {
-		
+		sleep(1000);		
 	}
 
 	@Override
 	public void onCompleting() {
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
+		sleep(1000);
 	}
 
-	public void sleep(long millis) {
-		try {
-			TimeUnit.MILLISECONDS.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	protected void configureServiceMock(DroneService serviceMock) {
 	

@@ -13,8 +13,8 @@ public class BaxterControlComponent extends BaseControlComponent<BaxterService> 
 	
 	@Override
 	protected void registerOperationModes() {		
-		OperationMode opMode = new MoveToSymbolicPositionOperationMode(this);
-		registerOperationMode(opMode);		
+		registerOperationMode(new MoveToSymbolicPositionOperationMode(this));
+		registerOperationMode(new RemoveObstacleOperationMode(this));		
 	}
 	
 }

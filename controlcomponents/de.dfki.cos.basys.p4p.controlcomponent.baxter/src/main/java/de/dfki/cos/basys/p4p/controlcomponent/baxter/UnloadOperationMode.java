@@ -16,51 +16,38 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "MoveSymbolic", shortName = "MOVE_SYM", description = "moves component to a symbolic position", 
+@OperationMode(name = "Unload", shortName = "UNLOAD", description = "Unload something", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<BaxterService> {
+public class UnloadOperationMode extends BaseOperationMode<BaxterService> {
 
-	@Parameter(name = "position", direction = ParameterDirection.IN)
-	private String position = "";
-	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
-	private int duration = 0;
-	
-	private long startTime = 0;
-	private long endTime = 0;
-		
-	public MoveToSymbolicPositionOperationMode(BaseControlComponent<BaxterService> component) {
+	public UnloadOperationMode(BaseControlComponent<BaxterService> component) {
 		super(component);
 	}
 
 	@Override
 	public void onResetting() {
-		duration = 0;
-		startTime = 0;
-		endTime = 0;
+		sleep(1000);
 	}
 
 	@Override
-	public void onStarting() {		
-		startTime = System.currentTimeMillis();	
+	public void onStarting() {	
+		sleep(1000);
 	}
 
 	@Override
 	public void onExecute() {
-		
+		sleep(1000);		
 	}
 
 	@Override
 	public void onCompleting() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
+		sleep(1000);
 	}
 	
 	@Override

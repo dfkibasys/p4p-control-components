@@ -1,5 +1,5 @@
 {
-  "id": "MiR100-1",
+  "id": "mir-1",
   "name": "MiR100-1",
   "serviceConnectionString": "",
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.mir.MirControlComponent",

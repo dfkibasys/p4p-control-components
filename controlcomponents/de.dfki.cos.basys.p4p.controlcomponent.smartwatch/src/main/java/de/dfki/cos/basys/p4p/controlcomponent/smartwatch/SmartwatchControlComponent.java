@@ -8,7 +8,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 public class SmartwatchControlComponent extends BaseControlComponent<NotificationService> {
 
 	public SmartwatchControlComponent(Properties config) {
-		super(config);
+		super(config, new NotificationServiceImpl(config));
 	}
 	
 	@Override

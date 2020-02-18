@@ -2,6 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.smartwatch;
 
 import org.slf4j.LoggerFactory;
 
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +26,10 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 	private String connectionString = "";
 	private ComponentContext cc = null;
 
+	public NotificationServiceImpl(Properties config) {
+		
+	}
+	
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
 		this.connectionString = connectionString;
@@ -73,8 +78,10 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 	@Override
 	public void reconnect() {
 		disconnect();
-		sleep(500);
-		connect(cc, connectionString);
+		while(!connect(cc, connectionString)) {
+			LOG.warn("Reconnecing failed! Retrying ... ");
+			sleep(1000);			
+		}
 	}
 
 	@Override

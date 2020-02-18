@@ -87,6 +87,9 @@ public class DisplayInfoMessageOperationMode extends BaseOperationMode<Notificat
 			case FINISHED:
 				executing = false;
 				break;
+			case READY:
+				executing = false;
+				break;
 			case PAUSED:
 				// TODO should the component be hold here?
 				break;

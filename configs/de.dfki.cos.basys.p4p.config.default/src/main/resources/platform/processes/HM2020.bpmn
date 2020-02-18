@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.4.1">
   <bpmn:process id="TestProcess" name="TestProcess" isExecutable="true">
     <bpmn:startEvent id="StartEvent_0oafi8e" name="Test&#10;Process">
       <bpmn:extensionElements>
@@ -8,6 +8,7 @@
           <camunda:formField id="baxterId" label="Baxter ID" type="string" defaultValue="baxter-1" />
           <camunda:formField id="workerId" label="Worker ID" type="string" defaultValue="heinz" />
           <camunda:formField id="mirId" label="MiR ID" type="string" defaultValue="mir-1" />
+          <camunda:formField id="position" label="Position" type="string" defaultValue="somewhere" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0yz5vxy</bpmn:outgoing>
@@ -21,21 +22,14 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${droneId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">TAKEOFF</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0yz5vxy</bpmn:incoming>
@@ -46,20 +40,15 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${droneId}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "${position}"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -73,21 +62,14 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${droneId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">DETECT</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1hfirq0</bpmn:incoming>
@@ -99,20 +81,15 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${droneId}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "_HOME_"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -125,73 +102,33 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${droneId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">LAND</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0hyenbr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_109ph1x</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_109ph1x" sourceRef="ServiceTask_04ki7wp" targetRef="ServiceTask_0nzm2ci" />
-    <bpmn:serviceTask id="ServiceTask_0nzm2ci" name="Baxter fährt zum Hindernis" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
-      <bpmn:extensionElements>
-        <camunda:field name="_componentId" />
-        <camunda:inputOutput>
-          <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
-          <camunda:inputParameter name="componentId">
-            <camunda:script scriptFormat="freemarker">${baxterId}</camunda:script>
-          </camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_109ph1x</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0dfikxc</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0dfikxc" sourceRef="ServiceTask_0nzm2ci" targetRef="ServiceTask_1hg3o4z" />
     <bpmn:serviceTask id="ServiceTask_1hg3o4z" name="Baxter beseitigt Hindernis" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
       <bpmn:extensionElements>
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${baxterId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">REMOVE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0dfikxc</bpmn:incoming>
@@ -203,21 +140,16 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${baxterId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "_HOME_"}
+]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1b2cfe2</bpmn:incoming>
@@ -234,21 +166,16 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${workerId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "${position}"}
+]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1mtdxlg</bpmn:incoming>
@@ -259,21 +186,14 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${workerId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="token">REMOVE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0hm6cv4</bpmn:incoming>
@@ -284,21 +204,16 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${workerId}</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "_HOME_"}
+]</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1h48ard</bpmn:incoming>
@@ -315,7 +230,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1h48ard" sourceRef="ServiceTask_0pey0g3" targetRef="ServiceTask_1isggag" />
     <bpmn:sequenceFlow id="SequenceFlow_1aqq8xt" sourceRef="ExclusiveGateway_0hf0f93" targetRef="ExclusiveGateway_1kz1yf4" />
     <bpmn:sequenceFlow id="SequenceFlow_1mtdxlg" sourceRef="ExclusiveGateway_0hf0f93" targetRef="ServiceTask_1x31v9k">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="groovy">true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1kz1yf4">
       <bpmn:incoming>SequenceFlow_1a4a4qc</bpmn:incoming>
@@ -336,19 +251,14 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[
-{"name": "pyt_c" , "type" : "DOUBLE"},
-{"name": "pyt_calculation" , "type" : "STRING"},
-{"name": "pyt_duration" , "type" : "INTEGER"}
-]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{"name": "pyt_a" , "type" : "DOUBLE", "value" : ${sideA}},
-{"name": "pyt_b" , "type" : "DOUBLE", "value" : ${sideB}}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${mirId}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "${position}"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -356,20 +266,43 @@
       <bpmn:outgoing>SequenceFlow_1ckll7f</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1ckll7f" sourceRef="ServiceTask_14nckqi" targetRef="EndEvent_1dd2a21" />
+    <bpmn:serviceTask id="ServiceTask_0nzm2ci" name="Baxter fährt zum Hindernis" camunda:modelerTemplate="de.dfki.cos.basys.operationMode" camunda:type="external" camunda:topic="ControlComponent">
+      <bpmn:extensionElements>
+        <camunda:field name="_componentId" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
+          <camunda:inputParameter name="componentId">
+            <camunda:script scriptFormat="freemarker">${baxterId}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
+          <camunda:inputParameter name="token">MOVE_SYM</camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "position", "type" : "STRING", "value": "${position}"}
+]</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_109ph1x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dfikxc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0dfikxc" sourceRef="ServiceTask_0nzm2ci" targetRef="ServiceTask_1hg3o4z" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TestProcess">
       <bpmndi:BPMNShape id="StartEvent_0oafi8e_di" bpmnElement="StartEvent_0oafi8e">
-        <dc:Bounds x="132" y="102" width="36" height="36" />
+        <dc:Bounds x="132" y="103" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="132" y="145" width="40" height="27" />
+          <dc:Bounds x="132" y="146" width="41" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1dd2a21_di" bpmnElement="EndEvent_1dd2a21">
         <dc:Bounds x="1932" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0yz5vxy_di" bpmnElement="SequenceFlow_0yz5vxy">
-        <di:waypoint x="168" y="120" />
+        <di:waypoint x="168" y="121" />
+        <di:waypoint x="199" y="121" />
+        <di:waypoint x="199" y="120" />
         <di:waypoint x="230" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1d9rmfi_di" bpmnElement="ServiceTask_1d9rmfi" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
@@ -406,13 +339,6 @@
       <bpmndi:BPMNEdge id="SequenceFlow_109ph1x_di" bpmnElement="SequenceFlow_109ph1x">
         <di:waypoint x="840" y="120" />
         <di:waypoint x="870" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0nzm2ci_di" bpmnElement="ServiceTask_0nzm2ci" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
-        <dc:Bounds x="870" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0dfikxc_di" bpmnElement="SequenceFlow_0dfikxc">
-        <di:waypoint x="970" y="120" />
-        <di:waypoint x="1000" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1hg3o4z_di" bpmnElement="ServiceTask_1hg3o4z" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
         <dc:Bounds x="1000" y="80" width="100" height="80" />
@@ -493,6 +419,13 @@
       <bpmndi:BPMNEdge id="SequenceFlow_1ckll7f_di" bpmnElement="SequenceFlow_1ckll7f">
         <di:waypoint x="1870" y="120" />
         <di:waypoint x="1932" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0nzm2ci_di" bpmnElement="ServiceTask_0nzm2ci" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="870" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dfikxc_di" bpmnElement="SequenceFlow_0dfikxc">
+        <di:waypoint x="970" y="120" />
+        <di:waypoint x="1000" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

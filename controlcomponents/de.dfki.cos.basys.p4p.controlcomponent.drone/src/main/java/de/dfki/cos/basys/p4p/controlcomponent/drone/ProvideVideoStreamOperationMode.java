@@ -16,7 +16,7 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "TakeOff", shortName = "TAKEOFF", description = "brings the drone to flight height", 
+@OperationMode(name = "ProvideVideoStream", shortName = "PROVIDEO", description = "provides a video stream", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
 public class ProvideVideoStreamOperationMode extends BaseOperationMode<DroneService> {
@@ -29,33 +29,27 @@ public class ProvideVideoStreamOperationMode extends BaseOperationMode<DroneServ
 
 	@Override
 	public void onResetting() {
-	
+		sleep(1000);
 	}
 
 	@Override
-	public void onStarting() {		
+	public void onStarting() {	
+		sleep(1000);
 	}
 
 	@Override
 	public void onExecute() {
-		
+		sleep(1000);		
 	}
 
 	@Override
 	public void onCompleting() {
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
-	}
-
-	public void sleep(long millis) {
-		try {
-			TimeUnit.MILLISECONDS.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		sleep(1000);
 	}
 	
 	@Override

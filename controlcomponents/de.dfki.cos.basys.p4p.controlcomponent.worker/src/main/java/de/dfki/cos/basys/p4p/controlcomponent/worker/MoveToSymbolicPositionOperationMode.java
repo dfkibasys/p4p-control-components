@@ -63,15 +63,6 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<Notif
 		duration = (int) (endTime - startTime);
 	}
 
-	public void sleep(long millis) {
-		try {
-			TimeUnit.MILLISECONDS.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	protected void configureServiceMock(NotificationService serviceMock) {
 	

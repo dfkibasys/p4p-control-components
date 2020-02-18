@@ -14,6 +14,7 @@ public class WorkerControlComponent extends BaseControlComponent<NotificationSer
 	@Override
 	protected void registerOperationModes() {		
 		registerOperationMode(new MoveToSymbolicPositionOperationMode(this));
+		registerOperationMode(new RemoveObstacleOperationMode(this));
 		registerOperationMode(new LoadOperationMode(this));
 		registerOperationMode(new UnloadOperationMode(this));
 	}

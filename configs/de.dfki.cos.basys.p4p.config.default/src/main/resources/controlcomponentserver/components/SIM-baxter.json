@@ -1,5 +1,5 @@
 {
-  "id": "Baxter-1",
+  "id": "baxter-1",
   "name": "Baxter-1",
   "serviceConnectionString": "",
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.baxter.BaxterControlComponent",

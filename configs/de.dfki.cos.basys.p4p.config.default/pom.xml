@@ -25,6 +25,34 @@
 
 	<dependencies>
 
+		<!-- Platform Dependencies -->
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.platform.runtime</groupId>
+			<artifactId>de.dfki.cos.basys.platform.runtime.instance</artifactId>
+			<version>${version.basys.platform}</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>de.dfki.cos.basys.platform.runtime</groupId>
+			<artifactId>de.dfki.cos.basys.platform.runtime.component.registry.zookeeper</artifactId>
+			<version>${version.basys.platform}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.platform.runtime</groupId>
+			<artifactId>de.dfki.cos.basys.platform.runtime.gateway</artifactId>
+			<version>${version.basys.platform}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.platform.runtime</groupId>
+			<artifactId>de.dfki.cos.basys.platform.runtime.processcontrol</artifactId>
+			<version>${version.basys.platform}</version>
+		</dependency>
+
+		<!-- ControlComponent Dependencies -->
+
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
 			<artifactId>de.dfki.cos.basys.controlcomponent.server</artifactId>
@@ -69,13 +97,13 @@
 		
 		<!-- comment to remove all imported (non-local) bundles from your compilation 
 			classpath -->
-		<dependency>
+<!-- 		<dependency>
 			<type>pom</type>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>provision</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 
 	</dependencies>
 

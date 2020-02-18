@@ -16,12 +16,10 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "TakeOff", shortName = "TAKEOFF", description = "brings the drone to flight height", 
+@OperationMode(name = "DetectObstacles", shortName = "DETECT", description = "detect nearby obstacles", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
 public class DetectObstacleOperationMode extends BaseOperationMode<DroneService> {
-
-	
 		
 	public DetectObstacleOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
@@ -29,24 +27,27 @@ public class DetectObstacleOperationMode extends BaseOperationMode<DroneService>
 
 	@Override
 	public void onResetting() {
-	
+		sleep(1000);
 	}
 
 	@Override
-	public void onStarting() {		
+	public void onStarting() {	
+		sleep(1000);
 	}
 
 	@Override
 	public void onExecute() {
-		
+		sleep(1000);		
 	}
 
 	@Override
 	public void onCompleting() {
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
+		sleep(1000);
 	}
 
 	public void sleep(long millis) {

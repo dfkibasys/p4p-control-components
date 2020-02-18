@@ -138,15 +138,6 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 		}	
 	}
 
-	public void sleep(long millis) {
-		try {
-			TimeUnit.MILLISECONDS.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	protected void configureServiceMock(MirService serviceMock) {
 		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());

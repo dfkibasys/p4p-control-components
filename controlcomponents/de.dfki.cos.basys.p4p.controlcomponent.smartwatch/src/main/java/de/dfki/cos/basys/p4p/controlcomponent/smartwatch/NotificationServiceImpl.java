@@ -3,6 +3,8 @@ package de.dfki.cos.basys.p4p.controlcomponent.smartwatch;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -17,17 +19,31 @@ import de.dfki.iui.smartwatch.Smartwatch;
 
 public class NotificationServiceImpl implements NotificationService, ServiceProvider<NotificationService>{
 	private static final Logger LOG = LoggerFactory.getLogger(NotificationServiceImpl.class);
+	private static final String CONNECTION_STRING_PATTERN = "mq3t.rpc:\\/\\/(?<host>.*):(?<port>\\d*)";
+	
 	private RPCClientSimple<Smartwatch.Client> client = null;
 	private String connectionString = "";
 	private ComponentContext cc = null;
 
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
-		connectionString = connectionString;
+		this.connectionString = connectionString;
 		cc = context;
 		if(client == null) {
-			// TODO parse args from ext. connection string
-			client = RPCFactory.createRPCClientSimple(Smartwatch.Client.class, "127.0.0.1", 9030);
+			Pattern pattern = Pattern.compile(CONNECTION_STRING_PATTERN);
+			Matcher matcher = pattern.matcher(connectionString);
+			if(matcher.matches()) {
+				client = RPCFactory.createRPCClientSimple(
+						Smartwatch.Client.class,
+						matcher.group("host"),
+						Integer.parseInt(matcher.group("port")));
+			}
+			else {
+				LOG.error("Invalid or malformed service connection string! {} does not match "
+						+ "the expected pattern {}! Connection failed! ",
+						connectionString, CONNECTION_STRING_PATTERN);
+				return false;
+			}
 		}
 		else if(client.isConnected()) {
 			LOG.warn("Client already connected! Consider disconnecting first.");

@@ -4,7 +4,7 @@ import java.util.Properties;
 import java.util.function.Supplier;
 
 import de.dfki.cos.basys.common.component.impl.ServiceManagerImpl;
-import de.dfki.cos.basys.common.mirrestclient.MirService;
+import de.dfki.cos.basys.common.rest.mir.MirService;
 import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 

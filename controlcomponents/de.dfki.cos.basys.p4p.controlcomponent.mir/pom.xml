@@ -34,8 +34,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>de.dfki.cos.basys.common.mirrestclient</artifactId>
+			<groupId>de.dfki.cos.basys.common.rest</groupId>
+			<artifactId>de.dfki.cos.basys.common.rest.mir</artifactId>
 			<version>${version.basys.common}</version>
 		</dependency>
 

@@ -11,10 +11,10 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import de.dfki.cos.basys.common.mirrestclient.MiRState;
-import de.dfki.cos.basys.common.mirrestclient.MirService;
-import de.dfki.cos.basys.common.mirrestclient.dto.MissionInstanceInfo;
-import de.dfki.cos.basys.common.mirrestclient.dto.Status;
+import de.dfki.cos.basys.common.rest.mir.MiRState;
+import de.dfki.cos.basys.common.rest.mir.MirService;
+import de.dfki.cos.basys.common.rest.mir.dto.MissionInstanceInfo;
+import de.dfki.cos.basys.common.rest.mir.dto.Status;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;

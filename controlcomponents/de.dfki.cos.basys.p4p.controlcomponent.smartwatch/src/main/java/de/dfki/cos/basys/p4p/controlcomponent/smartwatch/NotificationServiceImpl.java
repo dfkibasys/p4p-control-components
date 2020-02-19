@@ -79,9 +79,10 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 	public void reconnect() {
 		disconnect();
 		while(!connect(cc, connectionString)) {
-			LOG.warn("Reconnecing failed! Retrying ... ");
+			LOG.warn("Reconnecting failed! Retrying ... ");
 			sleep(1000);			
 		}
+		LOG.debug("Reconnected succesfully!");
 	}
 
 	@Override

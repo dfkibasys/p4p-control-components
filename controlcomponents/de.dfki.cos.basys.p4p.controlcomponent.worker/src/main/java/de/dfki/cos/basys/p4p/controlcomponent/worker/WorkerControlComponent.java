@@ -7,7 +7,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 public class WorkerControlComponent extends BaseControlComponent<NotificationService> {
 
 	public WorkerControlComponent(Properties config) {
-		super(config, new NotificationServiceImpl(config));
+		super(config);
 	}
 	
 	@Override

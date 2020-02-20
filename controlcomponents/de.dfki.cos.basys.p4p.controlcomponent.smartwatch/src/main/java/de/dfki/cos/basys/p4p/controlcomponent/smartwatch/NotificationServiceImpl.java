@@ -33,56 +33,44 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
 		this.connectionString = connectionString;
-		cc = context;
-		if(client == null) {
-			Pattern pattern = Pattern.compile(CONNECTION_STRING_PATTERN);
-			Matcher matcher = pattern.matcher(connectionString);
-			if(matcher.matches()) {
-				client = RPCFactory.createRPCClientSimple(
-						Smartwatch.Client.class,
-						matcher.group("host"),
-						Integer.parseInt(matcher.group("port")));
-			}
-			else {
-				LOG.error("Invalid or malformed service connection string! {} does not match "
-						+ "the expected pattern {}! Connection failed! ",
-						connectionString, CONNECTION_STRING_PATTERN);
-				return false;
-			}
+		this.cc = context;
+
+		Pattern pattern = Pattern.compile(CONNECTION_STRING_PATTERN);
+		Matcher matcher = pattern.matcher(connectionString);
+		if(matcher.matches()) {
+			client = RPCFactory.createRPCClientSimple(
+					Smartwatch.Client.class,
+					matcher.group("host"),
+					Integer.parseInt(matcher.group("port")));
+			return client.connect();
 		}
-		else if(client.isConnected()) {
-			LOG.warn("Client already connected! Consider disconnecting first.");
-			return true;
+		else {
+			LOG.error("Invalid or malformed service connection string! {} does not match "
+					+ "the expected pattern {}! Connection failed! ",
+					connectionString, CONNECTION_STRING_PATTERN);				
 		}
-		client.connect();
-		return client.isConnected();
+		
+		return false;
 	}
 
 	@Override
 	public void disconnect() {
-		if(client == null) {
-			LOG.error("Client is null! Disconnecting aborted! You have to connect first!");
-			return;
+		if (isConnected()) {
+			client.disconnect();
+		} else  {
+			LOG.error("Client not connected");			
 		}
-		client.disconnect();
 	}
 
 	@Override
 	public boolean isConnected() {
-		if(client == null) {
-			return false;
-		}
-		return client.isConnected();
+		return client == null ? false : client.isConnected();
 	}
 	
-	@Override
-	public void reconnect() {
-		disconnect();
-		while(!connect(cc, connectionString)) {
-			LOG.warn("Reconnecting failed! Retrying ... ");
-			sleep(1000);			
-		}
-		LOG.debug("Reconnected succesfully!");
+	public void reconnect() {	
+		if (client.isConnected())
+			client.disconnect();
+		client.connect();
 	}
 
 	@Override
@@ -113,5 +101,6 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 			e.printStackTrace();
 		}
 	}
+
 
 }

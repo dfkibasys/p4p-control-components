@@ -67,6 +67,7 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 		return client == null ? false : client.isConnected();
 	}
 	
+	@Override
 	public void reconnect() {	
 		if (client.isConnected())
 			client.disconnect();

@@ -1,0 +1,9 @@
+{
+  "id": "heinz",
+  "name": "Heinz",
+  "serviceConnectionString": "mq3t.rpc://smartwatch-lg-3691.mrk40.dfki.lan:9030",
+  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.worker.WorkerControlComponent",
+  "executionMode": "AUTO",
+  "disableExecutionModeChange" : "true",
+  "disableOccupationCheck" : "true"
+}

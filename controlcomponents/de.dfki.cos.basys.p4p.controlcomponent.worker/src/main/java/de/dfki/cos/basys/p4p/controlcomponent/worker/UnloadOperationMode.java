@@ -3,8 +3,10 @@ package de.dfki.cos.basys.p4p.controlcomponent.worker;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
+import de.dfki.iui.hrc.hybritcommand.HumanTaskDTO;
 
 import java.sql.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.mockito.Mockito;
@@ -19,39 +21,15 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 @OperationMode(name = "Unload", shortName = "UNLOAD", description = "Unload something", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class UnloadOperationMode extends BaseOperationMode<NotificationService> {
+public class UnloadOperationMode extends BaseWorkerOperationMode {
 		
 	public UnloadOperationMode(BaseControlComponent<NotificationService> component) {
 		super(component);
 	}
 
 	@Override
-	public void onResetting() {
-		sleep(1000);
+	protected HumanTaskDTO getHumanTask() {
+		return new HumanTaskDTO(UUID.randomUUID().toString(), "UNLOAD", "Entlade ...", "");
 	}
 
-	@Override
-	public void onStarting() {	
-		sleep(1000);
-	}
-
-	@Override
-	public void onExecute() {
-		sleep(1000);		
-	}
-
-	@Override
-	public void onCompleting() {
-		sleep(1000);
-	}
-
-	@Override
-	public void onStopping() {
-		sleep(1000);
-	}
-	
-	@Override
-	protected void configureServiceMock(NotificationService serviceMock) {
-	
-	}
 }

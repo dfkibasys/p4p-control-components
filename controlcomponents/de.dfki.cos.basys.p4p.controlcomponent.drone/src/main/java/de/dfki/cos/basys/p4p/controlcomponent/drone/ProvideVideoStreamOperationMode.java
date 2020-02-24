@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
@@ -19,41 +21,31 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 @OperationMode(name = "ProvideVideoStream", shortName = "PROVIDEO", description = "provides a video stream", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class ProvideVideoStreamOperationMode extends BaseOperationMode<DroneService> {
-
+public class ProvideVideoStreamOperationMode extends BaseDroneOperationMode {
+	private static final Logger LOG = LoggerFactory.getLogger(ProvideVideoStreamOperationMode.class);
 	
-		
 	public ProvideVideoStreamOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
 	}
 
 	@Override
-	public void onResetting() {
-		sleep(1000);
-	}
-
-	@Override
 	public void onStarting() {	
-		sleep(1000);
-	}
-
-	@Override
-	public void onExecute() {
-		sleep(1000);		
+		// #############################################################################
+		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
+		getService(DroneService.class).startVideoStream();
+		// #############################################################################
+		executing = true;
 	}
 
 	@Override
 	public void onCompleting() {
-		sleep(1000);
+		getService(DroneService.class).reset();
 	}
 
 	@Override
 	public void onStopping() {
-		sleep(1000);
-	}
-	
-	@Override
-	protected void configureServiceMock(DroneService serviceMock) {
-	
+		getService(DroneService.class).reset();
+		getService(DroneService.class).stopVideoStream();
+		
 	}
 }

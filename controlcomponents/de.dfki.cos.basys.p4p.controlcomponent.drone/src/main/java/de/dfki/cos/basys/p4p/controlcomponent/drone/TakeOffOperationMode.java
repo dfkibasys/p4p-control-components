@@ -19,27 +19,19 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 @OperationMode(name = "TakeOff", shortName = "TAKEOFF", description = "brings the drone to flight height", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class TakeOffOperationMode extends BaseOperationMode<DroneService> {
-
-	
+public class TakeOffOperationMode extends BaseDroneOperationMode {
 		
 	public TakeOffOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
 	}
 
 	@Override
-	public void onResetting() {
-		sleep(1000);
-	}
-
-	@Override
 	public void onStarting() {	
-		sleep(1000);
-	}
-
-	@Override
-	public void onExecute() {
-		sleep(1000);		
+		// #############################################################################
+		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
+		getService(DroneService.class).takeOff();
+		// #############################################################################
+		executing = true;
 	}
 
 	@Override
@@ -50,10 +42,5 @@ public class TakeOffOperationMode extends BaseOperationMode<DroneService> {
 	@Override
 	public void onStopping() {
 		sleep(1000);
-	}
-
-	@Override
-	protected void configureServiceMock(DroneService serviceMock) {
-	
 	}
 }

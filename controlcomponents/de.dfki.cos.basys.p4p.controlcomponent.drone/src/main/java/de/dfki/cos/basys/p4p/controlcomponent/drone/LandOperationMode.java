@@ -3,6 +3,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 
 import java.sql.Date;
 import java.util.concurrent.TimeUnit;

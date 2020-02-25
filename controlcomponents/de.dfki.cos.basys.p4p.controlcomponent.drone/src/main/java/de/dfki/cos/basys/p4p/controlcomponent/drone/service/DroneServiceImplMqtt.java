@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.p4p.controlcomponent.drone;
+package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +24,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
 	private static final Integer QOS = 0;
 	String missionState = "pending";
+	String workState = "";
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
 	
@@ -75,7 +76,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public boolean isConnected() {
-		return mqttClient.isConnected();
+		return mqttClient == null ? false : mqttClient.isConnected();
 	}
 
 	@Override
@@ -88,6 +89,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	public void moveToSymbolicPosition(String position) {
 		String stateTopic = "Mavic2/state/moveToLocation";
 		String commandTopic = "Mavic2/command/moveToLocation";
+		workState = "";
 		try {
 			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 				
@@ -97,12 +99,16 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 					LOG.debug("New message arrived " + sMessage);
 					if (sMessage.contains("Phase Idle")) {
 						missionState = "done";
+						workState = "Done";
 					} else if (sMessage.contains("Phase 0")) {
 						missionState = "pending";
+						workState = "Phase 0";
 					} else if (sMessage.contains("Phase 1")) {
 						missionState = "executing";
+						workState = "Phase 1";
 					} else if (sMessage.contains("Phase 2")) {
 						missionState = "executing";
+						workState = "Phase 2";
 					}
 
 					
@@ -111,11 +117,33 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		} catch (MqttException e) {
 			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
 		}
+		
+		if ("_HOME_".equals(position)) {
+			position = "Drone-Home";
+		}
 
 		publish(commandTopic, "{\"position\": \"" + position + "\"}");
 
 	}
+	
+	public void pause() {
+		String commandTopic = "Mavic2/command/pauseMotion";
 
+		publish(commandTopic, "");
+	}
+	
+	public void resume() {
+		String commandTopic = "Mavic2/command/continueMotion";
+
+		publish(commandTopic, "");
+	}
+
+	public void abort() {
+		String commandTopic = "Mavic2/command/emergencyLanding";
+
+		publish(commandTopic, "from ControlComponent");
+	}
+	
 	@Override
 	public void takeOff() {
 		String stateTopic = "Mavic2/state/takeOffAndHandOverControl";
@@ -143,7 +171,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	@Override
 	public void land() {
 		// TODO Maybe decouple this from MoveToLocation(Home);
-		moveToSymbolicPosition("Drone-Home");
+		moveToSymbolicPosition("_HOME_");
 	}
 
 	@Override
@@ -151,6 +179,11 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		return this.missionState;
 	}
 
+	@Override
+	public String getWorkState() {
+		return this.workState;
+	}
+	
 	@Override
 	public String getStatus() {
 		// TODO Auto-generated method stub

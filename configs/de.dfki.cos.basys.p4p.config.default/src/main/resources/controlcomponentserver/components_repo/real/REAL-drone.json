@@ -1,8 +1,8 @@
 {
   "id": "drone-1",
   "name": "Drone-1",
-  "serviceConnectionString": "",
-  "serviceImplementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.drone.DroneServiceImplMqtt",
+  "serviceConnectionString": "tcp://10.2.10.1:1883",
+  "serviceImplementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneServiceImplMqtt",
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.drone.DroneControlComponent",
   "executionMode": "AUTO",
   "disableExecutionModeChange" : "true",

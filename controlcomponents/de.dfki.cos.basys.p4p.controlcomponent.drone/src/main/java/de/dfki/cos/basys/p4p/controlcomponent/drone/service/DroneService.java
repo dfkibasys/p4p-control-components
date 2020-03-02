@@ -12,5 +12,6 @@ public interface DroneService {
 	String getWorkState();
 	String getStatus();
 	List<String> getSymbolicPositions();
+	List<String> detectObstacles(String type);
 	void reset();
 }

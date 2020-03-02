@@ -20,48 +20,37 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 @OperationMode(name = "DetectObstacles", shortName = "DETECT", description = "detect nearby obstacles", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class DetectObstacleOperationMode extends BaseOperationMode<DroneService> {
-		
+public class DetectObstacleOperationMode extends BaseDroneOperationMode {
+	@Parameter(name = "type", direction = ParameterDirection.IN)
+	private String type = "block";	
+	
+
 	public DetectObstacleOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
 	}
 
 	@Override
-	public void onResetting() {
+	public void onStarting() {
+		// Start Video Streaming with endpoint of obstacle detection service
+		getService(DroneService.class).startVideoStream();
 		sleep(1000);
-	}
-
-	@Override
-	public void onStarting() {	
-		sleep(1000);
-	}
-
-	@Override
-	public void onExecute() {
-		sleep(1000);		
+		getService(DroneService.class).detectObstacles(type);
+		
 	}
 
 	@Override
 	public void onCompleting() {
+		// TODO Report retrieved set of obstacles to Worldmodel server
 		sleep(1000);
+		// Stop video stream
+		getService(DroneService.class).stopVideoStream();
+		getService(DroneService.class).reset();
+		
 	}
 
 	@Override
-	public void onStopping() {
-		sleep(1000);
-	}
-
-	public void sleep(long millis) {
-		try {
-			TimeUnit.MILLISECONDS.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	protected void configureServiceMock(DroneService serviceMock) {
-	
+	public void onStopping() {		
+		getService(DroneService.class).stopVideoStream();
+		getService(DroneService.class).reset();		
 	}
 }

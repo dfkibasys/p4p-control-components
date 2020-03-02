@@ -1,7 +1,10 @@
 package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
@@ -273,5 +276,24 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 			
 		missionState = "pending";
 	}
+
+	@Override
+	public List<String> detectObstacles(String type) {
+		missionState = "executing";
+		workState = "detecting obstacles of type " + type + " ...";
+		// TODO Retrieve set of detected obstacles by PS from obstacle detection service
+		sleep(5000);
+		missionState = "done";
+		workState = "Done";
+		return Collections.EMPTY_LIST;
+	}
 	
+	private  void sleep(long millis) {
+		try {
+			TimeUnit.MILLISECONDS.sleep(millis);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

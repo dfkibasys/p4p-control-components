@@ -41,7 +41,7 @@ public class RemoveObstacleOperationMode extends BaseOperationMode<BaxterService
 	public void onStarting() {
 		int x = 0;
 		int y = 0;
-		getService(BaxterService.class).removeObstacle(type, x, y);
+		//getService(BaxterService.class).removeObstacle(type, x, y);
 		sleep(1000);
 	}
 

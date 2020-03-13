@@ -5,7 +5,5 @@
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.baxter.BaxterControlComponent",
   "executionMode": "SIMULATION",
   "disableExecutionModeChange" : "true",
-  "disableOccupationCheck" : "true",
-  "serverName" : "/move_base",
-  "actionNameMove" : "/move_base_msgs/MoveBaseAction "
+  "disableOccupationCheck" : "true"
 }

@@ -1,9 +1,13 @@
 package de.dfki.cos.basys.p4p.controlcomponent.baxter;
 
-public interface BaxterService {
+import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
 
-	boolean removeObstacle(String type, int x, int y);
+public interface BaxterService {
 	
-	String getStatus();
+	//boolean removeObstacle(String type, int x, int y);
+	
+	void gotoSymbolicPosition(String positionName);
+	
+	GoalStatusEnum getStatus();
 	
 }

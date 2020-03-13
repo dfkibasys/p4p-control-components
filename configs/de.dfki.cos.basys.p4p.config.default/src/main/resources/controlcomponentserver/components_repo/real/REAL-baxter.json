@@ -1,7 +1,8 @@
 {
-  "id": "baxter-1",
+  "id": "baxter-2",
   "name": "Baxter-1",
-  "serviceConnectionString": "",
+  "serviceConnectionString": "ws://10.2.1.11:9090",
+  "serviceImplementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.baxter.BaxterServiceImpl",
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.baxter.BaxterControlComponent",
   "executionMode": "AUTO",
   "disableExecutionModeChange" : "true",

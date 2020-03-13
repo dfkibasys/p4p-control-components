@@ -261,7 +261,7 @@
       <bpmn:outgoing>SequenceFlow_07i5z5a</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0n8s79g" sourceRef="ExclusiveGateway_1w7qyxd" targetRef="ExclusiveGateway_1724qb7" />
-    <bpmn:sequenceFlow id="SequenceFlow_0ezsqxe" sourceRef="ExclusiveGateway_1724qb7" targetRef="ServiceTask_0nzm2ci">
+    <bpmn:sequenceFlow id="SequenceFlow_0ezsqxe" name="entfernbare Hindernisse gefunden&#10;&#10;" sourceRef="ExclusiveGateway_1724qb7" targetRef="ServiceTask_0nzm2ci">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="Groovy">true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1g4gytt" sourceRef="ServiceTask_0nzm2ci" targetRef="ServiceTask_1hg3o4z" />
@@ -300,6 +300,14 @@ OpMode/
 DetectObstacles OpMode</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0aldtvj" sourceRef="ServiceTask_0g1co8x" targetRef="TextAnnotation_0wy3k7i" />
+    <bpmn:textAnnotation id="TextAnnotation_04vl61l">
+      <bpmn:text>MoveToSymbolic Position OpMode</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0nevjae" sourceRef="ServiceTask_1s016h1" targetRef="TextAnnotation_04vl61l" />
+    <bpmn:textAnnotation id="TextAnnotation_0x7e58s">
+      <bpmn:text>LandOperation OpMode</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0c50n01" sourceRef="ServiceTask_04ki7wp" targetRef="TextAnnotation_0x7e58s" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HM2020">
@@ -408,6 +416,9 @@ DetectObstacles OpMode</bpmn:text>
         <di:waypoint x="690" y="395" />
         <di:waypoint x="690" y="520" />
         <di:waypoint x="750" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="620" y="437" width="59" height="66" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1g4gytt_di" bpmnElement="SequenceFlow_1g4gytt">
         <di:waypoint x="850" y="520" />
@@ -454,6 +465,20 @@ DetectObstacles OpMode</bpmn:text>
       <bpmndi:BPMNEdge id="SequenceFlow_1et3xld_di" bpmnElement="SequenceFlow_1et3xld">
         <di:waypoint x="1420" y="210" />
         <di:waypoint x="1502" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_04vl61l_di" bpmnElement="TextAnnotation_04vl61l">
+        <dc:Bounds x="807" y="90" width="126.64577280839782" height="40.75235109717868" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0nevjae_di" bpmnElement="Association_0nevjae">
+        <di:waypoint x="870" y="170" />
+        <di:waypoint x="870" y="131" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0x7e58s_di" bpmnElement="TextAnnotation_0x7e58s">
+        <dc:Bounds x="940" y="89" width="140" height="41" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0c50n01_di" bpmnElement="Association_0c50n01">
+        <di:waypoint x="1010" y="170" />
+        <di:waypoint x="1010" y="130" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

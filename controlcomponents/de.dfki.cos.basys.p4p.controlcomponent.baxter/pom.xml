@@ -30,6 +30,12 @@
 			<artifactId>de.dfki.cos.basys.controlcomponent.core</artifactId>
 			<version>${version.basys.controlcomponent}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.jrosbridge</artifactId>
+			<version>${version.basys.common}</version>
+		</dependency>
 
 		<dependency>
 		    <groupId>org.eclipse.jetty.websocket</groupId>

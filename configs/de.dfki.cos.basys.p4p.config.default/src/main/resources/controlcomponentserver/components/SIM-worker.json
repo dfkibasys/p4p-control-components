@@ -1,0 +1,9 @@
+{
+  "id": "heinz",
+  "name": "Heinz",
+  "serviceConnectionString": "",
+  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.worker.WorkerControlComponent",
+  "executionMode": "SIMULATION",
+  "disableExecutionModeChange" : "true",
+  "disableOccupationCheck" : "true"
+}

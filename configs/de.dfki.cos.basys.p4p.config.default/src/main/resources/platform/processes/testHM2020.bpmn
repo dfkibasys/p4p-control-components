@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
-  <bpmn:process id="HM2020" name="HM2020" isExecutable="true">
+  <bpmn:process id="testHM2020" name="testHM2020" isExecutable="true">
     <bpmn:startEvent id="StartEvent_0oafi8e" name="Test&#10;Process">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -214,7 +214,6 @@
         <camunda:field name="_componentId" />
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
-          <camunda:inputParameter name="token">pythargoras</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">${mirId}</camunda:script>
           </camunda:inputParameter>
@@ -224,6 +223,7 @@
 { "name": "position", "type" : "STRING", "value": "${position}"}
 ]</camunda:script>
           </camunda:inputParameter>
+          <camunda:inputParameter name="token">MVSYM</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0a69ch2</bpmn:incoming>
@@ -310,7 +310,7 @@ DetectObstacles OpMode</bpmn:text>
     <bpmn:association id="Association_0c50n01" sourceRef="ServiceTask_04ki7wp" targetRef="TextAnnotation_0x7e58s" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HM2020">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="testHM2020">
       <bpmndi:BPMNShape id="StartEvent_0oafi8e_di" bpmnElement="StartEvent_0oafi8e">
         <dc:Bounds x="146" y="192" width="36" height="36" />
         <bpmndi:BPMNLabel>

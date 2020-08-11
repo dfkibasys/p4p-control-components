@@ -90,8 +90,8 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public void moveToSymbolicPosition(String position) {
-		String stateTopic = "Mavic2/state/moveToLocation";
-		String commandTopic = "Mavic2/command/moveToLocation";
+		String stateTopic = "Mavic2/state/flightPhase";
+		String commandTopic = "Mavic2/command/moveToKnownPosition/req";
 		workState = "";
 		try {
 			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
@@ -130,34 +130,88 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	}
 	
 	public void pause() {
-		String commandTopic = "Mavic2/command/pauseMotion";
-
-		publish(commandTopic, "");
-	}
-	
-	public void resume() {
-		String commandTopic = "Mavic2/command/continueMotion";
-
-		publish(commandTopic, "");
-	}
-
-	public void abort() {
-		String commandTopic = "Mavic2/command/emergencyLanding";
-
-		publish(commandTopic, "from ControlComponent");
-	}
-	
-	@Override
-	public void takeOff() {
-		String stateTopic = "Mavic2/state/takeOffAndHandOverControl";
-		String commandTopic = "Mavic2/command/takeOffAndHandOverControl";
+		String stateTopic = "Mavic2/command/pauseMotion/res";
+		String commandTopic = "Mavic2/command/pauseMotion/req";
+		
 		try {
 			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
 					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("handover done")) {
+					if (sMessage.contains("Accepted")) {
+						missionState = "done";
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+
+		publish(commandTopic, "");
+	}
+	
+	public void resume() {
+		String stateTopic = "Mavic2/command/continueMotion/res";
+		String commandTopic = "Mavic2/command/continueMotion/req";
+		
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
+						missionState = "done";
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+
+		publish(commandTopic, "");
+	}
+
+	public void abort() {
+		String stateTopic = "Mavic2/command/emergencyLanding/res";
+		String commandTopic = "Mavic2/command/emergencyLanding/req";
+		
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
+						missionState = "done";
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+
+		publish(commandTopic, "from ControlComponent");
+	}
+	
+	@Override
+	public void takeOff() {
+		String stateTopic = "Mavic2/command/takeOffAndHandOverControl/res";
+		String commandTopic = "Mavic2/command/takeOffAndHandOverControl/req";
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
 						missionState = "done";
 					}
 
@@ -194,16 +248,16 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	}
 
 	@Override
-	public void startVideoStream() {
-		String stateTopic = "Mavic2/command/videoStreaming";
-		String commandTopic = "Mavic2/state/videoStreaming";
+	public void startLiveImage() {
+		String stateTopic = "Mavic2/command/startLiveImage/res";
+		String commandTopic = "Mavic2/command/startLiveImage/req";
 		try {
 			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
 					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("starting done")) {
+					if (sMessage.contains("Accepted")) {
 						missionState = "done";
 					}
 
@@ -214,20 +268,20 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
 		}
 		
-		publish(commandTopic, "{\"action\": \"start\"}");
+		publish(commandTopic, "");
 	}
 
 	@Override
-	public void stopVideoStream() {
-		String stateTopic = "Mavic2/command/videoStreaming";
-		String commandTopic = "Mavic2/state/videoStreaming";
+	public void stopLiveImage() {
+		String stateTopic = "Mavic2/command/stopLiveImage/res";
+		String commandTopic = "Mavic2/command/stopLiveImage/req";
 		try {
 			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
 					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("stopping done")) {
+					if (sMessage.contains("Accepted")) {
 						missionState = "done";
 					}
 
@@ -238,8 +292,59 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
 		}
 		
-		publish(commandTopic, "{\"action\": \"stop\"}");
+		publish(commandTopic, "");
 
+	}
+	
+
+	@Override
+	public void startRTMPStream() {
+		String stateTopic = "Mavic2/command/startRTMPStream/res";
+		String commandTopic = "Mavic2/command/startRTMPStream/req";
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
+						missionState = "done";
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+		
+		publish(commandTopic, "");
+		
+	}
+
+	@Override
+	public void stopRTMPStream() {
+		String stateTopic = "Mavic2/command/stopRTMPStream/res";
+		String commandTopic = "Mavic2/command/stopRTMPStream/req";
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
+						missionState = "done";
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+		
+		publish(commandTopic, "");
+		
 	}
 	
 	private void unsubscribe(String topic) {
@@ -270,10 +375,16 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public void reset() {
-		unsubscribe("Mavic2/state/moveToLocation");
-		unsubscribe("Mavic2/state/videoStreaming");
-		unsubscribe("Mavic2/state/takeOffAndHandOverControl");
-			
+		unsubscribe("Mavic2/state/flightPhase");
+		unsubscribe("Mavic2/command/startLiveImage/res");
+		unsubscribe("Mavic2/command/stopLiveImage/res");
+		unsubscribe("Mavic2/command/startRTMPStream/res");
+		unsubscribe("Mavic2/command/stopRTMPStream/res");
+		unsubscribe("Mavic2/command/takeOffAndHandOverControl/res");
+		unsubscribe("Mavic2/command/pauseMotion/res");
+		unsubscribe("Mavic2/command/continueMotion/res");
+		unsubscribe("Mavic2/command/emergencyLanding/res");
+		
 		missionState = "pending";
 	}
 

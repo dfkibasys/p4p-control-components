@@ -33,7 +33,7 @@ public class ProvideVideoStreamOperationMode extends BaseDroneOperationMode {
 	public void onStarting() {	
 		// #############################################################################
 		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
-		getService(DroneService.class).startVideoStream();
+		getService(DroneService.class).startLiveImage();
 		// #############################################################################
 		executing = true;
 	}
@@ -46,7 +46,7 @@ public class ProvideVideoStreamOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onStopping() {
 		getService(DroneService.class).reset();
-		getService(DroneService.class).stopVideoStream();
+		getService(DroneService.class).stopLiveImage();
 		
 	}
 }

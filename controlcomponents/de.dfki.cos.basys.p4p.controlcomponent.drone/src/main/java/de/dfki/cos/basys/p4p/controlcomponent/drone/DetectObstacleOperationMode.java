@@ -32,7 +32,7 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onStarting() {
 		// Start Video Streaming with endpoint of obstacle detection service
-		getService(DroneService.class).startVideoStream();
+		getService(DroneService.class).startLiveImage();
 		sleep(1000);
 		getService(DroneService.class).detectObstacles(type);
 		
@@ -43,14 +43,14 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 		// TODO Report retrieved set of obstacles to Worldmodel server
 		sleep(1000);
 		// Stop video stream
-		getService(DroneService.class).stopVideoStream();
+		getService(DroneService.class).stopLiveImage();
 		getService(DroneService.class).reset();
 		
 	}
 
 	@Override
 	public void onStopping() {		
-		getService(DroneService.class).stopVideoStream();
+		getService(DroneService.class).stopLiveImage();
 		getService(DroneService.class).reset();		
 	}
 }

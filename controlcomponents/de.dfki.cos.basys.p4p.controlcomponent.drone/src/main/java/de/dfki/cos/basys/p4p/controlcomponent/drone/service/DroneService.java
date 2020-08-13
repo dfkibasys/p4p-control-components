@@ -5,8 +5,10 @@ import java.util.List;
 public interface DroneService {
 	void moveToSymbolicPosition(String position);
 	void takeOff();
-	void startVideoStream();
-	void stopVideoStream();
+	void startLiveImage();
+	void stopLiveImage();
+	void startRTMPStream();
+	void stopRTMPStream();
 	void land();
 	String getMissionState();
 	String getWorkState();

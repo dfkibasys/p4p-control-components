@@ -22,26 +22,6 @@
 	<name>${bundle.symbolicName}</name>
 
 	<packaging>bundle</packaging>
-	
-    <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url> http://lns-90165.sb.dfki.de:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-       	<repository>
-            <id>nexus-releases</id>
-            <name>nexus-releases</name>
-            <url>http://lns-90165.sb.dfki.de:8081/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
-    
-    <repositories>
-        <repository>
-            <id>DFKI BaSyS Nexus</id>
-            <url>http://lns-90165.sb.dfki.de:8081/repository/maven-public</url>
-        </repository>
-    </repositories>
-	
 
 	<dependencies>
 

@@ -67,6 +67,12 @@
 		
 		<dependency>
 			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.wallet</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
 			<artifactId>de.dfki.cos.basys.p4p.controlcomponent.drone</artifactId>
 			<version>${project.version}</version>
 		</dependency>

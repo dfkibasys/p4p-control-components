@@ -17,7 +17,7 @@
   <version>0.1.1-SNAPSHOT</version>
 
   <modules>
-
+	<module>de.dfki.cos.basys.p4p.wallettaskhandler</module>
   </modules>
 
 </project>

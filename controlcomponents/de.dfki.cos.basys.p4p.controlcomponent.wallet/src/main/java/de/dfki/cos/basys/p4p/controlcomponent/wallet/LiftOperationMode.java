@@ -23,7 +23,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	@Parameter(name = "level", direction = ParameterDirection.IN)
-	private int level;
+	private long level;
 	private long startTime = 0;
 	private long endTime = 0;
 

@@ -8,7 +8,7 @@ public interface WalletService {
 	
 	void gotoSymbolicPosition(String positionName);
 	
-	void moveLiftToLevel(int level);
+	void moveLiftToLevel(long level);
 	
 	GoalStatusEnum getStatus();
 	

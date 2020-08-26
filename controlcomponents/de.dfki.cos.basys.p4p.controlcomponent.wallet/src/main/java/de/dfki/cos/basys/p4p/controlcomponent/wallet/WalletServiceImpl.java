@@ -185,7 +185,7 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 	}
 
 	@Override
-	public void moveLiftToLevel(int level) {
+	public void moveLiftToLevel(long level) {
 		LOGGER.debug("Move lift to level %d.", level);
 	}
 

@@ -11,13 +11,13 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.wallettaskhandler</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.wallettaskhandler</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.platform.wallettaskhandler</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.platform.wallettaskhandler</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.dfki.cos.basys.p4p.wallettaskhandler</groupId>
-	<artifactId>de.dfki.cos.basys.p4p.wallettaskhandler</artifactId>
+	<groupId>de.dfki.cos.basys.p4p.platform</groupId>
+	<artifactId>de.dfki.cos.basys.p4p.platform.wallettaskhandler</artifactId>
 
 	<name>${bundle.symbolicName}</name>
 

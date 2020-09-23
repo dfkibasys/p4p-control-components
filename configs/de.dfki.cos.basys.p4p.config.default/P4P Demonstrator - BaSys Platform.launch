@@ -25,6 +25,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="de.dfki.cos.basys.platform.runtime.instance.Main"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="de.dfki.cos.basys.p4p.config.default"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-c ${project_loc:/de.dfki.cos.basys.p4p.config.default}\src\main\resources\platform\config\&#13;&#10;-cf ${project_loc:/de.dfki.cos.basys.p4p.config.default}\src\main\resources\platform\components\"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="de.dfki.cos.basys.p4p.config.default"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>

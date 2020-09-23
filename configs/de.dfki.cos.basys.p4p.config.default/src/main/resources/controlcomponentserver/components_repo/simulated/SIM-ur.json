@@ -1,9 +1,0 @@
-{
-  "id": "ur-1",
-  "name": "UR-1",
-  "serviceConnectionString": "",
-  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.ur.UrControlComponent",
-  "executionMode": "SIMULATION",
-  "disableExecutionModeChange" : "true",
-  "disableOccupationCheck" : "true"
-}

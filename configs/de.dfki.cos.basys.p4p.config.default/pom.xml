@@ -95,6 +95,15 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		
+		<!-- AasServer Dependencies -->
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.services</artifactId>
+			<version>${version.basys.aas}</version>
+		</dependency>
+		
 		<!-- comment to remove all imported (non-local) bundles from your compilation 
 			classpath -->
 <!-- 		<dependency>

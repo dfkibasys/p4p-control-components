@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.dfki.cos.basys.platform.runtime.processcontrol.BaseComponentTest;
 import de.dfki.cos.basys.platform.runtime.processcontrol.impl.ComponentRequestExecutionManagerImpl;
 
 public class ProcessControllerComponentTest extends BaseComponentTest {

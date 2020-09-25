@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<relativePath>../../poms/compiled/</relativePath>
+		<groupId>de.dfki.cos.basys.p4p</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>0.1.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.config.default.aas</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.config.default.aas</bundle.namespace>
+	</properties>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.dfki.cos.basys.p4p.config.default</groupId>
+	<artifactId>de.dfki.cos.basys.p4p.config.default.aas</artifactId>
+
+	<name>${bundle.symbolicName}</name>
+
+	<packaging>jar</packaging>
+
+	<dependencies>
+
+		<!-- AasServer Dependencies -->
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.services</artifactId>
+			<version>${version.basys.aas}</version>
+		</dependency>
+
+		<!-- comment to remove all imported (non-local) bundles from your compilation 
+			classpath -->
+		<!-- <dependency> <type>pom</type> <groupId>${project.parent.groupId}</groupId> 
+			<artifactId>provision</artifactId> <version>${project.version}</version> 
+			<optional>true</optional> </dependency> -->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>
+										de.dfki.cos.basys.aas.services.Main
+									</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

@@ -13,7 +13,7 @@ COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.platform/components_repo /app/components_repo
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.platform/config /app/config
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.platform/processes /app/processes
-COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.platform/models /app/models
+COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.platform/model /app/model
 WORKDIR /app
 #ENV JAVA_OPTS="-Dlog4j.configuration=file:///app/config/log4j.properties"
 ENTRYPOINT ["java", "-Dlog4j.configuration=file:///app/config/log4j.properties", "-jar","./basys-platform.jar"]

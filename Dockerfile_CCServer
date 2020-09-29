@@ -7,7 +7,7 @@ RUN mvn -s settings_basys.xml clean package -DskipTests -P ccs
 # Step : Build image
 FROM openjdk:8-jre-alpine
 LABEL maintainer="basys-support@dfki.de"
-EXPOSE 5082
+EXPOSE 5082 12685
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.ccs/target/*jar-with-dependencies.jar /app/basys-cc-server.jar
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.ccs/components /app/components
 COPY --from=builder /build/configs/default/de.dfki.cos.basys.p4p.config.default.ccs/components_repo /app/components_repo

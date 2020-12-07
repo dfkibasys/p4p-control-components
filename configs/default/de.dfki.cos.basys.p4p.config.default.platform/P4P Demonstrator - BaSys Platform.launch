@@ -26,7 +26,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="de.dfki.cos.basys.platform.runtime.instance.Main"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="de.dfki.cos.basys.p4p.config.default"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-c ${project_loc:/de.dfki.cos.basys.p4p.config.default.platform}\config\&#13;&#10;-cf ${project_loc:/de.dfki.cos.basys.p4p.config.default.platform}\components\&#13;&#10;-zk zookeeper:2181"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-c ${project_loc:/de.dfki.cos.basys.p4p.config.default.platform}\config\&#13;&#10;-cf ${project_loc:/de.dfki.cos.basys.p4p.config.default.platform}\components\&#13;&#10;-zk localhost:2181"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="de.dfki.cos.basys.p4p.config.default.platform"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=file:&quot;${project_loc:/de.dfki.cos.basys.p4p.config.default.platform}\config\log4j.properties&quot;&#13;&#10;-Dlog4j.debug"/>

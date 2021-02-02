@@ -33,7 +33,7 @@ import edu.wpi.rail.jrosbridge.messages.sensor.BatteryState;
 import edu.wpi.rail.jrosbridge.messages.std.Header;
 import edu.wpi.rail.jrosbridge.primitives.Time;
 
-public class WalletServiceImpl implements WalletService, ServiceProvider<WalletService>, ActionCallback {
+public class WalletServiceImpl implements WalletService, ServiceProvider<WalletService> {
 
 	private Properties config = null;
 
@@ -41,10 +41,12 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 	private String protocol = "ws";
 	private String host = "localhost";
 	private int port = 9090;
-	
+
 	private ActionClient gotoClient;
-	
-	private GoalStatusEnum status = GoalStatusEnum.PENDING;
+	private ActionClient liftClient;
+
+	private GoalStatusEnum gotoStatus = GoalStatusEnum.PENDING;
+	private GoalStatusEnum liftStatus = GoalStatusEnum.PENDING;
 	
 	private final Logger LOGGER;
 	
@@ -73,30 +75,35 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 		ros = new Ros(host, port, WebSocketType.valueOf(protocol));
 		
 		if (ros.connect()) {
-			gotoClient = new ActionClient(ros, "/move_base", "move_base_msgs/MoveBaseAction");
-			// TODO add lift client
+			String gotoServerName = config.getProperty("gotoServerName");
+			String gotoActionName = config.getProperty("gotoActionName");
+			gotoClient = new ActionClient(ros, gotoServerName, gotoActionName);
 			gotoClient.initialize();
+			
+			String liftServerName = config.getProperty("gotoServerName");
+			String liftActionName = config.getProperty("gotoActionName");
+			liftClient = new ActionClient(ros, liftServerName, liftActionName);
+			liftClient.initialize();
 		}
 		
-		boolean telemetryEnabled = true;
-		if (telemetryEnabled) {
-			Topic poseTopic = new Topic(ros, "/robot_pose", "geometry_msgs/PoseStamped");
-			poseTopic.subscribe(new TopicCallback() {
-				@Override
-				public void handleMessage(Message message) {
-					LOGGER.info("POSITION: " + message.toString());
-				}
-			});
-			
-			Topic batteryTopic = new Topic(ros, "/mobility_base/battery", "mobility_base_core_msgs/BatteryState");
-			batteryTopic.subscribe(new TopicCallback() {
-				@Override
-				public void handleMessage(Message message) {
-					LOGGER.info("BATTERY: " + message.toString());
-				}
-			});
-
-		}
+//		boolean telemetryEnabled = false;
+//		if (telemetryEnabled) {
+//			Topic poseTopic = new Topic(ros, "/robot_pose", "geometry_msgs/PoseStamped");
+//			poseTopic.subscribe(new TopicCallback() {
+//				@Override
+//				public void handleMessage(Message message) {
+//					LOGGER.info("POSITION: " + message.toString());
+//				}
+//			});
+//			
+//			Topic batteryTopic = new Topic(ros, "/mobility_base/battery", "mobility_base_core_msgs/BatteryState");
+//			batteryTopic.subscribe(new TopicCallback() {
+//				@Override
+//				public void handleMessage(Message message) {
+//					LOGGER.info("BATTERY: " + message.toString());
+//				}
+//			});
+//		}
 		
 		return ros.isConnected();
 
@@ -106,6 +113,7 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 	public void disconnect() {
 		if (ros.isConnected()) {
 			gotoClient.dispose();
+			liftClient.dispose();
 			ros.disconnect();	
 		}
 	}
@@ -138,9 +146,26 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 		}
 		 */
 
-		status = GoalStatusEnum.PENDING;
+		gotoStatus = GoalStatusEnum.PENDING;
 		
-		Goal goal = gotoClient.createGoal(this);
+		Goal goal = gotoClient.createGoal(new ActionCallback() {
+			
+			@Override
+			public void handleStatus(GoalStatus goalStatus) {
+				LOGGER.debug("GOTO-STATUS: " + goalStatus.toString());	
+				gotoStatus = GoalStatusEnum.get(goalStatus.getStatus());	
+			}
+			
+			@Override
+			public void handleResult(JsonObject result) {
+				LOGGER.debug("GOTO-RESULT: " + result.toString());								
+			}
+			
+			@Override
+			public void handleFeedback(JsonObject feedback) {
+				LOGGER.debug("GOTO-FEEDBK: " + feedback.toString());				
+			}
+		});
 		
 		PoseStamped poseOutOfMap = new PoseStamped(
 				new Header(0, new Time(), "/map"), 
@@ -164,29 +189,41 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 	}
 
 	@Override
-	public GoalStatusEnum getStatus() {		
-		return status;
-	}
-
-	@Override
-	public void handleStatus(GoalStatus goalStatus) {
-		LOGGER.debug("STATUS: " + goalStatus.toString());	
-		status = GoalStatusEnum.get(goalStatus.getStatus());	
-	}
-	
-	@Override
-	public void handleResult(JsonObject result) {
-		LOGGER.debug("RESULT: " + result.toString());								
-	}
-	
-	@Override
-	public void handleFeedback(JsonObject feedback) {
-		LOGGER.debug("FEEDBK: " + feedback.toString());				
-	}
-
-	@Override
 	public void moveLiftToLevel(long level) {
 		LOGGER.debug("Move lift to level %d.", level);
+		
+		liftStatus = GoalStatusEnum.PENDING;
+		
+		Goal goal = liftClient.createGoal(new ActionCallback() {
+			
+			@Override
+			public void handleStatus(GoalStatus goalStatus) {
+				LOGGER.debug("LIFT-STATUS: " + goalStatus.toString());	
+				liftStatus = GoalStatusEnum.get(goalStatus.getStatus());	
+			}
+			
+			@Override
+			public void handleResult(JsonObject result) {
+				LOGGER.debug("LIFT-RESULT: " + result.toString());								
+			}
+			
+			@Override
+			public void handleFeedback(JsonObject feedback) {
+				LOGGER.debug("LIFT-FEEDBK: " + feedback.toString());				
+			}
+		});
+		
+		JsonObject targetLevel = Json.createObjectBuilder().add("tbd", level).build();
+		goal.submit(targetLevel);
+	}
+	
+	@Override
+	public GoalStatusEnum getGotoStatus() {		
+		return gotoStatus;
 	}
 
+	@Override
+	public GoalStatusEnum getLiftStatus() {		
+		return liftStatus;
+	}
 }

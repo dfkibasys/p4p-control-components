@@ -47,7 +47,7 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	public void onExecute() {
 		boolean executing = true;
 		while(executing) {
-			GoalStatusEnum status = getService(WalletService.class).getStatus();
+			GoalStatusEnum status = getService(WalletService.class).getLiftStatus();
 			LOGGER.debug("Status : " + status);
 			 
 			switch (status) {
@@ -109,7 +109,7 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	@Override
 	protected void configureServiceMock(WalletService serviceMock) {
-		Mockito.when(serviceMock.getStatus()).thenAnswer(new Answer<GoalStatusEnum>() {
+		Mockito.when(serviceMock.getLiftStatus()).thenAnswer(new Answer<GoalStatusEnum>() {
 
 			@Override
 			public GoalStatusEnum answer(InvocationOnMock invocation) throws Throwable {

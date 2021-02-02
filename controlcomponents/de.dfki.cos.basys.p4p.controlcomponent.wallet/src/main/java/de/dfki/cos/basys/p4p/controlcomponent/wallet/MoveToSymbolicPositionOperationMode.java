@@ -53,7 +53,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<Walle
 	public void onExecute() {
 		boolean executing = true;
 		while(executing) {
-			GoalStatusEnum status = getService(WalletService.class).getStatus();
+			GoalStatusEnum status = getService(WalletService.class).getGotoStatus();
 			LOGGER.debug("Status : " + status);
 			 
 			switch (status) {

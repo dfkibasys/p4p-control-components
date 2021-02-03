@@ -26,7 +26,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<Walle
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "";
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "duration_MOVE_SYM", direction = ParameterDirection.OUT)
 	private int duration = 0;
 	
 	private long startTime = 0;
@@ -117,6 +117,20 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<Walle
 	
 	@Override
 	protected void configureServiceMock(WalletService serviceMock) {
-	
+		Mockito.when(serviceMock.getGotoStatus()).thenAnswer(new Answer<GoalStatusEnum>() {
+
+			@Override
+			public GoalStatusEnum answer(InvocationOnMock invocation) throws Throwable {
+				long elapsed = System.currentTimeMillis() - startTime;
+				GoalStatusEnum result;
+				if (elapsed < 10000) {
+					result = GoalStatusEnum.ACTIVE;
+				} else {
+					result = GoalStatusEnum.SUCCEEDED;
+				}
+				return result;
+			}
+
+	    }); 
 	}
 }

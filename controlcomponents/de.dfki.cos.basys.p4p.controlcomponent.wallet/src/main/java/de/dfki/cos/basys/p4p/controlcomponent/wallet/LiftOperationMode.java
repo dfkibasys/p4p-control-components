@@ -24,6 +24,10 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	@Parameter(name = "level", direction = ParameterDirection.IN)
 	private long level;
+
+	@Parameter(name = "duration_LIFT", direction = ParameterDirection.OUT)
+	private int duration = 0;
+	
 	private long startTime = 0;
 	private long endTime = 0;
 
@@ -33,6 +37,7 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	@Override
 	public void onResetting() {
+		duration = 0;
 		startTime = 0;
 		endTime = 0;
 	}
@@ -100,11 +105,13 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	@Override
 	public void onCompleting() {
 		endTime = System.currentTimeMillis();
+		duration = (int) (endTime - startTime);
 	}
 
 	@Override
 	public void onStopping() {
 		endTime = System.currentTimeMillis();
+		duration = (int) (endTime - startTime);
 	}
 	
 	@Override

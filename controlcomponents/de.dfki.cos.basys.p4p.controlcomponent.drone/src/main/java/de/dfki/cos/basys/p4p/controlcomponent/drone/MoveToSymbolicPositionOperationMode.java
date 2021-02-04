@@ -26,10 +26,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	private String position = "";
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
-	private int duration = 0;
+	private int duration_out = 0;
 	
-	private long startTime = 0;
-	private long endTime = 0;
 		
 	public MoveToSymbolicPositionOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
@@ -37,6 +35,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 
 	@Override
 	public void onStarting() {	
+		super.onStarting();
 		// #############################################################################
 		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
 		getService(DroneService.class).moveToSymbolicPosition(position);
@@ -46,17 +45,15 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 
 	@Override
 	public void onCompleting() {
+		super.onCompleting();
+		duration_out = duration;
 		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
+		super.onStopping();
 		sleep(1000);
-	}
-
-	@Override
-	protected void configureServiceMock(DroneService serviceMock) {
-	
 	}
 
 }

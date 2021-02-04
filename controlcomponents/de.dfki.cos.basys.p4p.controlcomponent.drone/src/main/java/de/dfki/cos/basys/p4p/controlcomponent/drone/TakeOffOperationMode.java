@@ -28,6 +28,7 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 
 	@Override
 	public void onStarting() {	
+		super.onStarting();
 		// #############################################################################
 		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
 		getService(DroneService.class).takeOff();
@@ -36,12 +37,21 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	}
 
 	@Override
+	public void onResetting() {
+		super.onResetting();
+		sleep(1000);
+	}
+
+	@Override
 	public void onCompleting() {
+		super.onCompleting();
 		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
+		super.onStopping();
 		sleep(1000);
 	}
+
 }

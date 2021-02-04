@@ -129,6 +129,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	}
 	
+	@Override
 	public void pause() {
 		String stateTopic = "Mavic2/command/pauseMotion/res";
 		String commandTopic = "Mavic2/command/pauseMotion/req";
@@ -153,6 +154,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		publish(commandTopic, "");
 	}
 	
+	@Override
 	public void resume() {
 		String stateTopic = "Mavic2/command/continueMotion/res";
 		String commandTopic = "Mavic2/command/continueMotion/req";
@@ -177,6 +179,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		publish(commandTopic, "");
 	}
 
+	@Override
 	public void abort() {
 		String stateTopic = "Mavic2/command/emergencyLanding/res";
 		String commandTopic = "Mavic2/command/emergencyLanding/req";
@@ -396,7 +399,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		sleep(5000);
 		missionState = "done";
 		workState = "Done";
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 	
 	private  void sleep(long millis) {

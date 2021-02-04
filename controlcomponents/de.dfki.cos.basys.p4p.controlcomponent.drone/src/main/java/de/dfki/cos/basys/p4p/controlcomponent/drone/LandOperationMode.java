@@ -31,6 +31,7 @@ public class LandOperationMode extends BaseDroneOperationMode{
 
 	@Override
 	public void onStarting() {	
+		super.onStarting();
 		// #############################################################################
 		// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
 		getService(DroneService.class).land();
@@ -40,11 +41,13 @@ public class LandOperationMode extends BaseDroneOperationMode{
 
 	@Override
 	public void onCompleting() {
+		super.onCompleting();
 		getService(DroneService.class).reset();
 	}
 
 	@Override
 	public void onStopping() {
+		super.onStopping();
 		getService(DroneService.class).reset();
 	}
 }

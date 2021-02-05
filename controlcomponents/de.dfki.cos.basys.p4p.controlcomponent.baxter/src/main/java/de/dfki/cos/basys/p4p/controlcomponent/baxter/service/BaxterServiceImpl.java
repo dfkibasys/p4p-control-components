@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.p4p.controlcomponent.baxter;
+package de.dfki.cos.basys.p4p.controlcomponent.baxter.service;
 
 import java.io.StringReader;
 import java.util.Properties;
@@ -181,6 +181,18 @@ public class BaxterServiceImpl implements BaxterService, ServiceProvider<BaxterS
 	@Override
 	public void handleFeedback(JsonObject feedback) {
 		LOGGER.debug("FEEDBK: " + feedback.toString());				
+	}
+
+	@Override
+	public boolean removeObstacle(String type, int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.cos.basys.p4p.controlcomponent.baxter.service.BaxterService;
 
 public class BaxterControlComponent extends BaseControlComponent<BaxterService> {
 

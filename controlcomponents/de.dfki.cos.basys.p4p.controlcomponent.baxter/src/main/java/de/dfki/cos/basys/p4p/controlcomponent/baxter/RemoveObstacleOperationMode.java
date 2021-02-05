@@ -3,6 +3,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.baxter;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
+import de.dfki.cos.basys.p4p.controlcomponent.baxter.service.BaxterService;
 
 import java.sql.Date;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 @OperationMode(name = "RemoveObstacle", shortName = "REMOVE", description = "remove obstacle", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
-public class RemoveObstacleOperationMode extends BaseOperationMode<BaxterService> {
+public class RemoveObstacleOperationMode extends BaseBaxterOperationMode {
 
 	@Parameter(name = "grid", direction = ParameterDirection.IN)
 	private String grid = "G10:H11";
@@ -34,34 +35,29 @@ public class RemoveObstacleOperationMode extends BaseOperationMode<BaxterService
 	
 	@Override
 	public void onResetting() {
+		super.onResetting();
 		sleep(1000);
 	}
 
 	@Override
 	public void onStarting() {
+		super.onStarting();
+		// TODO map grid coords to (x,y) --> Transformation Server
 		int x = 0;
 		int y = 0;
-		//getService(BaxterService.class).removeObstacle(type, x, y);
+		getService(BaxterService.class).removeObstacle(type, x, y);
 		sleep(1000);
 	}
 
 	@Override
-	public void onExecute() {
-		sleep(1000);		
-	}
-
-	@Override
 	public void onCompleting() {
+		super.onCompleting();
 		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
+		super.onStopping();
 		sleep(1000);
-	}
-
-	@Override
-	protected void configureServiceMock(BaxterService serviceMock) {
-	
 	}
 }

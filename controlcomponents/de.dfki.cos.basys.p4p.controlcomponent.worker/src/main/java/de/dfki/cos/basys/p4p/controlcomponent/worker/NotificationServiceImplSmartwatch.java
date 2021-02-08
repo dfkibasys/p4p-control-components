@@ -103,4 +103,10 @@ public class NotificationServiceImplSmartwatch implements NotificationService, S
 		}
 	}
 
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

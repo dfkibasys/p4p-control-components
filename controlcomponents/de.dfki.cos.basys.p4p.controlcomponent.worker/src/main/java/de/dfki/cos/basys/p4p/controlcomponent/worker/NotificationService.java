@@ -10,6 +10,7 @@ public interface NotificationService {
 	CommandState displayInfoMessage(String message) throws TException;
 	CommandState getCommandState(String taskId) throws TException;
 	void reconnect();
+	void reset();
 	
 	//abort/cancelRequest()
 }

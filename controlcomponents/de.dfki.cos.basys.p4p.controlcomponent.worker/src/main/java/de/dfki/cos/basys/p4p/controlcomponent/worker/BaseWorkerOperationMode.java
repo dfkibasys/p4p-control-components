@@ -1,27 +1,22 @@
 package de.dfki.cos.basys.p4p.controlcomponent.worker;
 
-import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
-import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
-import de.dfki.iui.hrc.hybritcommand.CommandState;
-import de.dfki.iui.hrc.hybritcommand.HumanTaskDTO;
-
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.thrift.TException;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
-import de.dfki.cos.basys.controlcomponent.ExecutionMode;
-import de.dfki.cos.basys.controlcomponent.ParameterDirection;
-import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
+import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
+import de.dfki.iui.hrc.hybritcommand.CommandState;
+import de.dfki.iui.hrc.hybritcommand.HumanTaskDTO;
 
 public abstract class BaseWorkerOperationMode extends BaseOperationMode<NotificationService> {
 
-	private long startTime = 0;	
+	protected long startTime = 0;
+	protected long endTime = 0;
+	protected int duration = 0;
 	//private String clientId = null;
 	
 	private boolean executing = false;
@@ -30,6 +25,8 @@ public abstract class BaseWorkerOperationMode extends BaseOperationMode<Notifica
 	@Override
 	protected void configureServiceMock(NotificationService serviceMock) {
 		try {
+			Mockito.doNothing().when(serviceMock).reconnect();
+			Mockito.doNothing().when(serviceMock).reset();			
 			Mockito.when(serviceMock.requestTaskExecution(Mockito.any(HumanTaskDTO.class))).thenReturn(CommandState.ACCEPTED);
 			Mockito.when(serviceMock.getCommandState(Mockito.anyString())).thenAnswer(new Answer<CommandState>() {
 
@@ -54,8 +51,11 @@ public abstract class BaseWorkerOperationMode extends BaseOperationMode<Notifica
 
 	@Override
 	public void onResetting() {
-		executing = false;
+		duration = 0;
 		startTime = 0;
+		endTime = 0;
+		getService(NotificationService.class).reset();
+		executing = false;
 	}
 
 	@Override
@@ -65,11 +65,22 @@ public abstract class BaseWorkerOperationMode extends BaseOperationMode<Notifica
 		
 		int retryCount = 20;
 		int i=0;
+		startTime = System.currentTimeMillis();	
 		
 		while (!executing && i < retryCount) {		
 			try {
 				CommandState state = getService(NotificationService.class).requestTaskExecution(task);
-				executing = true;
+				if(state==CommandState.ACCEPTED)
+					executing = true;
+				else if(state==CommandState.REJECTED) {
+					LOGGER.warn(" Notification ressource busy. Retrying (#{}/{}) ...", i, retryCount);
+					i++;
+				}
+				else  {
+					LOGGER.error(" Received unexpected command state {}! Aborting ... ", state);
+					component.setErrorStatus(-1, "Unexpected command state " + state);
+					executing = false;
+				}
 			} catch (TException e1) {
 				i++;
 				//e1.printStackTrace();
@@ -128,11 +139,15 @@ public abstract class BaseWorkerOperationMode extends BaseOperationMode<Notifica
 
 	@Override
 	public void onCompleting() {
+		endTime = System.currentTimeMillis();
+		duration = (int) (endTime - startTime);	
 		executing = false;
 	}
 
 	@Override
 	public void onStopping() {
+		endTime = System.currentTimeMillis();
+		duration = (int) (endTime - startTime);	
 		executing = false;
 	}
 

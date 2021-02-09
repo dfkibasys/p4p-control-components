@@ -12,3 +12,20 @@ These instructions will get you a copy of the project up and running on your loc
 2) Install the BaSys 4.2 docker stacks as described [here](https://basys.dfki.dev/gitlab/i40/basys/docker). Note: Regarding the dockerized demonstration environment, make sure that running containers
 do not interfere with your workbench setup, i.e. simply stop the BaSys-related containers for Administration Shell Management, Control Components, and the BaSys service platform.
 
+### Overview
+Once you have sucessfully setup the project in your Eclipse IDE, you will find sub-projects therein configuring
+- Asset administration shell management (aas)
+- Control Component Server (ccs)
+- BaSys 4.2 service platform (platform)
+
+<img src='/docs/basys4.2-p4p-demonstrator.png?raw=true' width='50%' height='50%'>
+
+
+
+## Contributing
+Authors
+
+* **Jonas Mohr** - Profile at [DFKI](https://www.dfki.de/web/ueber-uns/mitarbeiter/person/jomo02)
+* **Sönke Knoch** - Profile at [DFKI](https://www.dfki.de/web/ueber-uns/mitarbeiter/person/sokn01)
+* **Daniel Porta** - Profile at [DFKI](https://www.dfki.de/web/ueber-uns/mitarbeiter/person/dapo01/)
+* **Andreas Luxenburger** - Profile at [DFKI](https://www.dfki.de/web/ueber-uns/mitarbeiter/person/anlu01/)

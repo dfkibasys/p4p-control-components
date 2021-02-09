@@ -18,7 +18,17 @@ Once you have sucessfully setup the project in your Eclipse IDE, you will find s
 - Control Component Server (ccs)
 - BaSys 4.2 service platform (platform)
 
-<img src='/docs/basys4.2-p4p-demonstrator.png?raw=true' width='50%' height='50%'>
+<img src='/docs/basys4.2-p4p-demonstrator.png?raw=true' width='75%' height='75%'>
+
+## Usage
+### Configuration
+coming soon
+
+### Starting the P4P-Demonstrator 
+coming soon
+
+## Docker
+coming soon
 
 
 

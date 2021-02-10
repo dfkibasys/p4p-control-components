@@ -51,12 +51,25 @@ Start all three of them in the following order:
 1) aas
 2) ccs
 3) platform
+
 After a first launch, the three mentioned run configurations should appear in the run section.
 
-<img src='/docs/basys4.2-p4p-demonstrator-startup.png?raw=true' width='75%' height='75%'>
+<img src='/docs/basys4.2-p4p-demonstrator-startup.png?raw=true' width='50%' height='50%'>
 
 ### Inspecting the OPC-UA Server
-coming soon
+You can use for example [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php) for
+inspecting the Basys OPC UA Server (`opc.tcp://localhost:12685/basys`). Your first attempt for a login will
+probably fail since a new certificate for your client will be generated on the server side and initially rejected.
+You will find it in the corresponding folders of the ccs as mentioned above. Just move the newly generated certificate
+for your client from the `rejected` folder under `certs` into the `trusted` folder. 
+
+Here is an example for five configured assets in the control component server project which result in 
+a corresponding information tree in the OPC-UA server. 
+<img src='/docs/basys4.2-p4p-demonstrator-ccs.png?raw=true' width='75%' height='75%'>
+
+Under each parent node of an asset you will find the corresponding control component object along with 
+registered operation modes (which you can also trigger from here) and status variables.
+
 ### Starting Processes
 coming soon
 

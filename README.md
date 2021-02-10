@@ -31,6 +31,13 @@ following folders (visible in the Eclipse Package Explorer) are of importance:
                 associated submodels (`submodels`)
 - `components_repo`: Set of pre-configured aas and submodels which can be used in the `components` folder
 
+#### Control Component Server (ccs)
+In this project, control components for which an instance is automatically generated in the OPC-UA server (`opc.tcp://localhost:12685/basys`)
+are specified. The following folders are of importance:
+- `certs`: Set of trusted, rejected and issued certificates of OPC-UA clients for accessing the OPC-UA server
+- `components`: Set of `.json`-files configuring important properties of an asset such as its id, name, execution mode, ids of aas/submodels and service endpoints
+- `components_repo`: Set of pre-defined control-component configs which can be used in the `components` folder
+
 ### Starting the P4P-Demonstrator 
 coming soon
 

@@ -22,7 +22,14 @@ Once you have sucessfully setup the project in your Eclipse IDE, you will find s
 
 ## Usage
 ### Configuration
-coming soon
+#### Asset Administration Shell Management (aas)
+Here, you define the asset administration shells and associated submodels of I40 components
+which will be accessible via the AAS registry under `localhost:4999/api/v1/registry`. The
+following folders (visible in the Eclipse Package Explorer) are of importance:
+
+- `components`: Includes a set of `.properties`-files for asset administration shells (`aas` subfolder) and
+                associated submodels (`submodels`)
+- `components_repo`: Set of pre-configured aas and submodels which can be used in the `components` folder
 
 ### Starting the P4P-Demonstrator 
 coming soon

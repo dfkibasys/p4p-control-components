@@ -71,7 +71,12 @@ Under each parent node of an asset you will find the corresponding control compo
 registered operation modes (which you can also trigger from here) and status variables.
 
 ### Starting Processes
-coming soon
+With a running asset administration shell management, control component server, BaSys service platform and
+3rd party service docker stack (backend) you will be able to execute production and test processes previously deployed 
+ via the [Camunda Modeler](https://camunda.com/de/download/modeler/) to the camunda REST endpoint (http://localhost:9080/engine-rest).
+To this end, you can use the web-based camunda frontend (`http://localhost:9080/camunda/`) directly or the [ppr-dashboard](https://mrk40.dfki.de/mrk-4.0/ppr-dashboard).
+
+<img src='/docs/basys4.2-p4p-demonstrator-ppr.png?raw=true' width='100%' height='100%'>
 
 ## Docker
 coming soon

@@ -26,7 +26,7 @@ Here, you define the asset administration shells and associated submodels of I40
 which will be accessible via the AAS registry under `localhost:4999/api/v1/registry`. The
 following folders (visible in the Eclipse Package Explorer) are of importance:
 
-- `components`: Includes a set of `.properties`-files for asset administration shells (`aas` subfolder) and
+- `components`: Includes a set of `.properties/.json`-files for asset administration shells (`aas` subfolder) and
                 associated submodels (`submodels`)
 - `components_repo`: Set of pre-configured aas and submodels which can be used in the `components` folder
 
@@ -34,7 +34,7 @@ following folders (visible in the Eclipse Package Explorer) are of importance:
 In this project, control components for which an instance is automatically generated in the OPC-UA server (`opc.tcp://localhost:12685/basys`)
 are specified. The following folders are of importance:
 - `certs`: Set of trusted, rejected and issued certificates of OPC-UA clients for accessing the OPC-UA server
-- `components`: Set of `.json`-files configuring important properties of an asset such as its id, name, execution mode, ids of aas/submodels and service endpoints
+- `components`: Set of `.properties/.json`-files configuring important properties of an asset such as its id, name, execution mode, ids of aas/submodels and service endpoints
 - `components_repo`: Set of pre-defined control-component configs which can be used in the `components` folder
 
 ### BaSys Service Platform (platform)
@@ -65,6 +65,7 @@ for your client from the `rejected` folder under `certs` into the `trusted` fold
 
 Here is an example for five configured assets in the control component server project which result in 
 a corresponding information tree in the OPC-UA server. 
+
 <img src='/docs/basys4.2-p4p-demonstrator-ccs.png?raw=true' width='75%' height='75%'>
 
 Under each parent node of an asset you will find the corresponding control component object along with 

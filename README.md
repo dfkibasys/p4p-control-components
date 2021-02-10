@@ -20,9 +20,8 @@ Once you have sucessfully setup the project in your Eclipse IDE, you will find s
 
 <img src='/docs/basys4.2-p4p-demonstrator.png?raw=true' width='75%' height='75%'>
 
-## Usage
-### Configuration
-#### Asset Administration Shell Management (aas)
+## Configuration
+### Asset Administration Shell Management (aas)
 Here, you define the asset administration shells and associated submodels of I40 components
 which will be accessible via the AAS registry under `localhost:4999/api/v1/registry`. The
 following folders (visible in the Eclipse Package Explorer) are of importance:
@@ -31,14 +30,32 @@ following folders (visible in the Eclipse Package Explorer) are of importance:
                 associated submodels (`submodels`)
 - `components_repo`: Set of pre-configured aas and submodels which can be used in the `components` folder
 
-#### Control Component Server (ccs)
+### Control Component Server (ccs)
 In this project, control components for which an instance is automatically generated in the OPC-UA server (`opc.tcp://localhost:12685/basys`)
 are specified. The following folders are of importance:
 - `certs`: Set of trusted, rejected and issued certificates of OPC-UA clients for accessing the OPC-UA server
 - `components`: Set of `.json`-files configuring important properties of an asset such as its id, name, execution mode, ids of aas/submodels and service endpoints
 - `components_repo`: Set of pre-defined control-component configs which can be used in the `components` folder
 
+### BaSys Service Platform (platform)
+Here, you configure important service components of the BaSys Service platform. Important folders:
+- `components`: in the `services` subfolder, you find important service configurations, i.e. for the process execution manager and the  mqtt gateway
+- `components_repo`: set of pre-defined configs which can be used in the `components` folder 
+- `processes`: set of production and test processes in `.bpmn` format
+
+## Usage
 ### Starting the P4P-Demonstrator 
+In order to start the P4P-Demonstrator from within the Eclipse IDE for testing purposes proceed as follows.
+Each subproject (aas, ccs, platform) provides an own `.launch` file which can be started via `Right-Click --> Run As`.
+Start all three of them in the following order: 
+1) aas
+2) ccs
+3) platform
+
+
+### Inspecting the OPC-UA Server
+coming soon
+### Starting Processes
 coming soon
 
 ## Docker

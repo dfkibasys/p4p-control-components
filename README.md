@@ -51,7 +51,9 @@ Start all three of them in the following order:
 1) aas
 2) ccs
 3) platform
+After a first launch, the three mentioned run configurations should appear in the run section.
 
+<img src='/docs/basys4.2-p4p-demonstrator-startup.png?raw=true' width='75%' height='75%'>
 
 ### Inspecting the OPC-UA Server
 coming soon

@@ -10,7 +10,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.baxter.service.BaxterService;
 
 @OperationMode(name = "MoveSymbolic", shortName = "MOVE_SYM", description = "moves component to a symbolic position", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseBaxterOperationMode {
 
 	@Parameter(name = "position", direction = ParameterDirection.IN)

@@ -19,7 +19,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "TakeOff", shortName = "TAKEOFF", description = "brings the drone to flight height", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class TakeOffOperationMode extends BaseDroneOperationMode {
 		
 	public TakeOffOperationMode(BaseControlComponent<DroneService> component) {

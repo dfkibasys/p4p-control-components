@@ -21,7 +21,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "requestTaskExecution", shortName = "RTE", description = "this requests the execution of a task with a task description ", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class RequestTaskExecutionOperationMode extends BaseOperationMode<NotificationService> {
 
 	@Parameter(name = "description", direction = ParameterDirection.IN)

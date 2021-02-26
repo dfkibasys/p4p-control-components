@@ -19,7 +19,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "DetectObstacles", shortName = "DETECT", description = "detect nearby obstacles", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 	@Parameter(name = "type", direction = ParameterDirection.IN)
 	private String type = "block";	

@@ -8,7 +8,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.baxter.service.BaxterService;
 
 @OperationMode(name = "Unload", shortName = "UNLOAD", description = "Unload something", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class UnloadOperationMode extends BaseBaxterOperationMode {
 
 	public UnloadOperationMode(BaseControlComponent<BaxterService> component) {

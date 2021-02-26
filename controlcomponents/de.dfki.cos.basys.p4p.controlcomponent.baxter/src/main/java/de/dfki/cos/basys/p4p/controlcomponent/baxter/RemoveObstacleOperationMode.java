@@ -19,7 +19,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "RemoveObstacle", shortName = "REMOVE", description = "remove obstacle", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class RemoveObstacleOperationMode extends BaseBaxterOperationMode {
 
 	@Parameter(name = "grid", direction = ParameterDirection.IN)

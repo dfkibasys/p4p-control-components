@@ -16,7 +16,7 @@ import de.dfki.iui.hrc.hybritcommand.CommandState;
 
 @OperationMode(name = "displayInfoMessage", shortName = "DIM", description = "mode for displaying a string based message on the display of the smartwatch", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class DisplayInfoMessageOperationMode extends BaseOperationMode<NotificationService> {
 
 	@Parameter(name = "message", direction = ParameterDirection.IN)

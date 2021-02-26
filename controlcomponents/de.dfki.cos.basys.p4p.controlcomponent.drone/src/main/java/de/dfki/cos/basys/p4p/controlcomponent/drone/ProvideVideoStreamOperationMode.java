@@ -21,7 +21,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "ProvideVideoStream", shortName = "PROVIDEO", description = "provides a video stream", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProvideVideoStreamOperationMode extends BaseDroneOperationMode {
 	private static final Logger LOG = LoggerFactory.getLogger(ProvideVideoStreamOperationMode.class);
 	

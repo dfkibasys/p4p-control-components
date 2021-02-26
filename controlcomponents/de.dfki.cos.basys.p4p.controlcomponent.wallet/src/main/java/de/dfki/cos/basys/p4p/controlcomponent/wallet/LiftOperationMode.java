@@ -19,7 +19,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "Lift", shortName = "LIFT", description = "Lift to level", 
 		allowedCommands = { ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATION })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	@Parameter(name = "level", direction = ParameterDirection.IN)

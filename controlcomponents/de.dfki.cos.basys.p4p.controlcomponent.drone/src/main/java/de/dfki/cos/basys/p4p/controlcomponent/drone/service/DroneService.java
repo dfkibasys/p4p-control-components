@@ -2,6 +2,9 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
 import java.util.List;
 
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.WorkState;
+
 public interface DroneService {
 	void moveToSymbolicPosition(String position);
 	void takeOff();
@@ -10,8 +13,8 @@ public interface DroneService {
 	void startRTMPStream();
 	void stopRTMPStream();
 	void land();
-	String getMissionState();
-	String getWorkState();
+	MissionState getMissionState();
+	WorkState getWorkState();
 	String getStatus();
 	List<String> getSymbolicPositions();
 	List<String> detectObstacles(String type);

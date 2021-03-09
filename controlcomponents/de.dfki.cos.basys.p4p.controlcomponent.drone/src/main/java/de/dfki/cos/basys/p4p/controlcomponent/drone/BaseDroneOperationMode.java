@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.WorkState;
 
 public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneService> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDroneOperationMode.class);
@@ -43,26 +45,26 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 
 	@Override
 	public void onExecute() {
-		String state;
+		MissionState state;
 		while(executing) {
 			DroneService service = getService(DroneService.class);
 			state = service.getMissionState();
-			component.setWorkState(service.getWorkState());
+			component.setWorkState(service.getWorkState().name());
 			LOG.debug("Current mission state is {}.", state);
 			switch(state) {
-				case "pending":
+				case PENDING:
 					break;
-				case "executing":
+				case EXECUTING:
 					break;
-				case "done":
+				case DONE:
 					executing=false;
 					break;
-				case "failed":
+				case FAILED:
 					executing=false;
 					component.setErrorStatus(1, "failed");
 					component.stop(component.getOccupierId());
 					break;
-				case "aborted":
+				case ABORTED:
 					executing=false;
 					component.setErrorStatus(2, "aborted");
 					component.stop(component.getOccupierId());
@@ -92,7 +94,7 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 	@Override
 	protected void configureServiceMock(DroneService serviceMock) {
 		Mockito.when(serviceMock.detectObstacles(Mockito.anyString())).thenReturn(Collections.emptyList());
-		Mockito.when(serviceMock.getWorkState()).thenReturn("working");
+		Mockito.when(serviceMock.getWorkState()).thenReturn(WorkState.PHASE_IDLE);
 		Mockito.doNothing().when(serviceMock).takeOff();
 		Mockito.doNothing().when(serviceMock).reset();
 		Mockito.doNothing().when(serviceMock).startLiveImage();

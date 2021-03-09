@@ -24,6 +24,12 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.event.mqtt</artifactId>
+			<version>${version.basys.aas}</version>
+		</dependency>
 
 		<!-- ControlComponent Dependencies -->
 

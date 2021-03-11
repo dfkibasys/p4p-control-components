@@ -31,6 +31,12 @@
 			<version>${version.basys.aas}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.logging</artifactId>
+			<version>${version.basys.common}</version>
+		</dependency>
+
 		<!-- ControlComponent Dependencies -->
 
 		<dependency>
@@ -83,13 +89,13 @@
 				
 		<!-- comment to remove all imported (non-local) bundles from your compilation 
 			classpath -->
-<!-- 		<dependency>
+ 		<dependency>
 			<type>pom</type>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>provision</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
-		</dependency> -->
+		</dependency> 
 
 	</dependencies>
 

@@ -103,17 +103,24 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 		Mockito.doNothing().when(serviceMock).stopRTMPStream();
 		Mockito.doNothing().when(serviceMock).land();
 		Mockito.doNothing().when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
-		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<String>() {
-
+		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<MissionState>() {
+			boolean accepted = false;
 			@Override
-			public String answer(InvocationOnMock invocation) throws Throwable {
-				long elapsed = System.currentTimeMillis() - startTime;
-				String  result;
-				if (elapsed < MOCKUP_SERVICE_DURATION) {
-					result = "executing";
-				} else {
-					result = "done";
+			public MissionState answer(InvocationOnMock invocation) throws Throwable {
+				MissionState  result;
+				if(!accepted)
+				{
+					result = MissionState.ACCEPTED;
+					accepted = true;
 				}
+				else { // accepted
+					long elapsed = System.currentTimeMillis() - startTime;
+					if (elapsed < MOCKUP_SERVICE_DURATION) {
+						result = MissionState.EXECUTING;
+					} else {
+						result = MissionState.DONE;
+					}
+			}
 				return result;
 			}
 			

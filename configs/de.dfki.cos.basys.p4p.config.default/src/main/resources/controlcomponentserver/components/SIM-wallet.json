@@ -1,9 +1,0 @@
-{
-  "id": "wallet-1",
-  "name": "Wallet-1",
-  "serviceConnectionString": "",
-  "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.wallet.WalletControlComponent",
-  "executionMode": "SIMULATION",
-  "disableExecutionModeChange" : "true",
-  "disableOccupationCheck" : "true"
-}

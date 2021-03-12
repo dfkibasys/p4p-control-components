@@ -18,9 +18,6 @@
  
   <modules>
 	<!--
-	<module>de.dfki.cos.basys.p4p.config.default</module>
-	-->
-	<!--
 	<module>default/de.dfki.cos.basys.p4p.config.default.aas</module>
 	<module>default/de.dfki.cos.basys.p4p.config.default.ccs</module>
 	<module>default/de.dfki.cos.basys.p4p.config.default.platform</module>

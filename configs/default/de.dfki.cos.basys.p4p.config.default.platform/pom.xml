@@ -50,13 +50,13 @@
 			<artifactId>de.dfki.cos.basys.platform.runtime.processcontrol</artifactId>
 			<version>${version.basys.platform}</version>
 		</dependency>
-		
+		<!--
 		<dependency>
 			<groupId>de.dfki.cos.basys.p4p.platform</groupId>
 			<artifactId>de.dfki.cos.basys.p4p.platform.bdevws</artifactId>
 			<version>${project.version}</version>
 		</dependency>		
-		
+		-->
 		<dependency>
 			<groupId>de.dfki.cos.basys.p4p.platform</groupId>
 			<artifactId>de.dfki.cos.basys.p4p.platform.wallettaskhandler</artifactId>

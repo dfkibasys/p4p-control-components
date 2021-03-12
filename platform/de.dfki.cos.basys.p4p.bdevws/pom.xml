@@ -11,8 +11,8 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.bdevws</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.bdevws</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.platform.bdevws</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.platform.bdevws</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>

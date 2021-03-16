@@ -254,10 +254,11 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	
 	@Override
 	public void takeOff() {
-		String stateTopic = "Mavic2/command/takeOffAndHandOverControl/res";
+		String responseTopic = "Mavic2/command/takeOffAndHandOverControl/res";
 		String commandTopic = "Mavic2/command/takeOffAndHandOverControl/req";
+		String stateTopic = "Mavic2/state/physical";
 		try {
-			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -268,14 +269,28 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 					else // Rejected
 					{
 						missionState = MissionState.REJECTED;
-					}
-
-					
+					}		
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
+		}
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("HOVERING")) {
+						missionState = MissionState.DONE;
+						// FIXME later
+						mqttClient.unsubscribe(stateTopic);
+					}				
 				}
 			}).waitForCompletion();
 		} catch (MqttException e) {
 			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
-		}
+		}			
 		
 		publish(commandTopic, "");
 	}

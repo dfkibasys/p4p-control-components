@@ -36,8 +36,9 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 			// #############################################################################
 			sleep(1000);
 	
-	
-			if(getService(DroneService.class).getMissionState().equals(MissionState.ACCEPTED))
+			//TODO: Improve this code
+			if(getService(DroneService.class).getMissionState().equals(MissionState.ACCEPTED) || 
+			getService(DroneService.class).getMissionState().equals(MissionState.EXECUTING))
 			{
 				executing = true;
 				break;

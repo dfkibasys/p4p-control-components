@@ -281,7 +281,10 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
 					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("HOVERING")) {
+					if (sMessage.contains("TAKINGOFF")) {
+						missionState = MissionState.EXECUTING;
+					}
+					else if (sMessage.contains("HOVERING")) {
 						missionState = MissionState.DONE;
 						// FIXME later
 						mqttClient.unsubscribe(stateTopic);

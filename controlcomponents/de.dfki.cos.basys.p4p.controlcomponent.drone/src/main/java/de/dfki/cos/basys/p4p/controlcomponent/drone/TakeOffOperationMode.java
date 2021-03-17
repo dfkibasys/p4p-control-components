@@ -25,7 +25,7 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 			// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
 			getService(DroneService.class).takeOff();
 			// #############################################################################
-			sleep(500);
+			sleep(1000);
 	
 	
 			//TODO: Improve this code

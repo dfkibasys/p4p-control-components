@@ -34,7 +34,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 			// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
 			getService(DroneService.class).moveToSymbolicPosition(position);
 			// #############################################################################
-			sleep(500);
+			sleep(1000);
 	
 			//TODO: Improve this code
 			if(getService(DroneService.class).getMissionState().equals(MissionState.ACCEPTED) || 

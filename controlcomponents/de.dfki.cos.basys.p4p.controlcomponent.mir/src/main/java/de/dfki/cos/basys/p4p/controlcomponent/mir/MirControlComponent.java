@@ -11,7 +11,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 public class MirControlComponent extends BaseControlComponent<MirService> {
 
 	public MirControlComponent(Properties config) {
-		super(config, new MirServiceImpl(config));		
+		super(config);		
 	}
 	
 	@Override

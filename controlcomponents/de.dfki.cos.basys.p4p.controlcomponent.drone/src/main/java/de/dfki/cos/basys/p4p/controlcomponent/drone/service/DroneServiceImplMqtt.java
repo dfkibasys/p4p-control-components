@@ -57,7 +57,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 					LOG.debug(clientId + " successfully connected to {}.", connectionString);	
 					
 					// Subscribe to drone work state
-					String stateTopic = "Mavic2/state/flightPhase";
+					/*String stateTopic = "Mavic2/state/flightPhase";
 					try {
 						mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 							
@@ -78,7 +78,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 						}).waitForCompletion();
 					} catch (MqttException e) {
 						LOG.warn(clientId + " could not subscribe to topic {}!", stateTopic);		
-					}
+					}*/
 				}
 				
 				@Override
@@ -139,6 +139,11 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 				
 				}
 			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+		
+		try {
 			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
 				
 				@Override
@@ -157,7 +162,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 				}
 			}).waitForCompletion();
 		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
 		}
 		
 		if ("_HOME_".equals(position)) {

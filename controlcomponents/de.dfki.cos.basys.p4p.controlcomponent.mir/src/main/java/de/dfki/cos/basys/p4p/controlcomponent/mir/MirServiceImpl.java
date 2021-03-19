@@ -3,6 +3,9 @@ package de.dfki.cos.basys.p4p.controlcomponent.mir;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.common.rest.mir.MiRState;
@@ -18,8 +21,10 @@ import de.dfki.cos.basys.common.rest.mir.dto.SymbolicPositionInfo;
 
 public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 
+	protected final Logger LOGGER = LoggerFactory.getLogger(MirServiceImpl.class.getName());
 	private MirRestService service;
 	private String auth = null;
+	private boolean connected = false;
 	
 	public MirServiceImpl(Properties config) {
 		auth = config.getProperty("auth");
@@ -27,19 +32,26 @@ public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 	
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
-		service = new MirRestService(connectionString, auth);		
-		return isConnected();
+		service = new MirRestService(connectionString, auth);	
+		Status status = service.getRobotStatus();
+		if (status != null) {
+			LOGGER.info("Battery-Percentage: " + status.battery_percentage);
+			LOGGER.info("Time-Remaining: " + status.battery_time_remaining);
+			connected = true;
+		}
+		return connected;
 	}
 
 	@Override
 	public void disconnect() {
+		connected = false;
 		service = null;
 	}
 
 	@Override
 	public boolean isConnected() {
 		//TODO check also for mission definitions
-		return (service != null);
+		return connected;
 	}
 
 	@Override

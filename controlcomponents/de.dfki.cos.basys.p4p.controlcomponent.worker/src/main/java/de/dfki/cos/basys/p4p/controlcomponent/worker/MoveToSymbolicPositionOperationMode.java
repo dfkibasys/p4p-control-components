@@ -18,7 +18,7 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "MoveSymbolic", shortName = "MVSYM", description = "moves Baxter to a symbolic position", 
+@OperationMode(name = "MoveSymbolic", shortName = "MOVE_SYM", description = "moves Baxter to a symbolic position", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseWorkerOperationMode {

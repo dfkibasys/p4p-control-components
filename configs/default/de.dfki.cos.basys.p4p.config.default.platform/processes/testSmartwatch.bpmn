@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
-  <bpmn:process id="TestProcess" name="TestProcess" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_0oafi8e" name="Test&#10;Smartwatch">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_149hkfo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
+  <bpmn:process id="TestSmartWatch" name="TestSmartWatch" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_0oafi8e">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="componentId" label="Component ID " type="string" defaultValue="smartwatch-component-1" />
+          <camunda:formField id="componentId" label="Component ID " type="string" defaultValue="smartwatch-1" />
           <camunda:formField id="taskDescription" label="Task Description" type="string" defaultValue="Roboter beladen." />
           <camunda:formField id="infoMessage" label="Info Message" type="string" defaultValue="Be water my friend." />
           <camunda:formField id="operationType" label="Operattion Type" type="string" defaultValue="load" />
@@ -21,13 +21,13 @@
             <camunda:script scriptFormat="freemarker">${componentId}</camunda:script>
           </camunda:inputParameter>
           <camunda:inputParameter name="token">requestTaskExecution</camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
           <camunda:inputParameter name="inputParameters">
             <camunda:script scriptFormat="freemarker">[
-{"name": "description" , "type" : "STRING", "value" : ${taskDescription}},
-{"name": "operationType" , "type" : "STRING", "value" : ${operationType}}
+{"name": "description" , "type" : "STRING", "value" : "${taskDescription}"},
+{"name": "operationType" , "type" : "STRING", "value" : "${operationType}"}
 ]</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0yz5vxy</bpmn:incoming>
@@ -42,12 +42,12 @@
             <camunda:script scriptFormat="freemarker">${componentId}</camunda:script>
           </camunda:inputParameter>
           <camunda:inputParameter name="token">displayInfoMessage</camunda:inputParameter>
+          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
           <camunda:inputParameter name="inputParameters">
             <camunda:script scriptFormat="freemarker">[
-{"name": "message" , "type" : "STRING", "value" : ${infoMessage}}
+{"name": "message" , "type" : "STRING", "value" : "${infoMessage}"}
 ]</camunda:script>
           </camunda:inputParameter>
-          <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1gtmuen</bpmn:incoming>
@@ -61,7 +61,19 @@
     <bpmn:sequenceFlow id="SequenceFlow_0yz5vxy" sourceRef="StartEvent_0oafi8e" targetRef="ServiceTask_0hrz46c" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TestProcess">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TestSmartWatch">
+      <bpmndi:BPMNEdge id="SequenceFlow_0yz5vxy_di" bpmnElement="SequenceFlow_0yz5vxy">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_12f9ht6_di" bpmnElement="SequenceFlow_12f9ht6">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="572" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gtmuen_di" bpmnElement="SequenceFlow_1gtmuen">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="410" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="StartEvent_0oafi8e_di" bpmnElement="StartEvent_0oafi8e">
         <dc:Bounds x="162" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -74,21 +86,9 @@
       <bpmndi:BPMNShape id="ServiceTask_1lq6i1l_di" bpmnElement="ServiceTask_1lq6i1l" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
         <dc:Bounds x="410" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1gtmuen_di" bpmnElement="SequenceFlow_1gtmuen">
-        <di:waypoint x="360" y="120" />
-        <di:waypoint x="410" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_12f9ht6_di" bpmnElement="SequenceFlow_12f9ht6">
-        <di:waypoint x="510" y="120" />
-        <di:waypoint x="572" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1dd2a21_di" bpmnElement="EndEvent_1dd2a21">
         <dc:Bounds x="572" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0yz5vxy_di" bpmnElement="SequenceFlow_0yz5vxy">
-        <di:waypoint x="198" y="120" />
-        <di:waypoint x="260" y="120" />
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

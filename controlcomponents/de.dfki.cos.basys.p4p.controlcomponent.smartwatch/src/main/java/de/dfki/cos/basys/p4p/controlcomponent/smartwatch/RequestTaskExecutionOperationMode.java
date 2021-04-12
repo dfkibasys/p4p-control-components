@@ -1,28 +1,22 @@
 package de.dfki.cos.basys.p4p.controlcomponent.smartwatch;
 
-import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
-import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
-import de.dfki.iui.hrc.hybritcommand.CommandState;
-import de.dfki.iui.hrc.hybritcommand.HumanTaskDTO;
-
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.thrift.TException;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
+import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
+import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.iui.hrc.hybritcommand.CommandState;
+import de.dfki.iui.hrc.hybritcommand.HumanTaskDTO;
 
 @OperationMode(name = "requestTaskExecution", shortName = "RTE", description = "this requests the execution of a task with a task description ", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
-public class RequestTaskExecutionOperationMode extends BaseOperationMode<NotificationService> {
+public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMode {
 
 	@Parameter(name = "description", direction = ParameterDirection.IN)
 	private String taskDescription = "";
@@ -30,28 +24,8 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 	@Parameter(name = "operationType", direction = ParameterDirection.IN)
 	private String operationType = "";
 	
-	private long startTime = 0;
-	
 	private HumanTaskDTO task = null;
 	private String clientId = null;
-	
-	@Override
-	protected void configureServiceMock(NotificationService serviceMock) {
-		try {
-			Mockito.when(serviceMock.requestTaskExecution(Mockito.any(HumanTaskDTO.class))).thenReturn(CommandState.ACCEPTED);
-			Mockito.when(serviceMock.getCommandState(Mockito.anyString())).thenAnswer(new Answer<CommandState>() {
-
-				@Override
-				public CommandState answer(InvocationOnMock arg0) throws Throwable {
-					long elapsed = System.currentTimeMillis() - startTime;
-					return (elapsed < 5000) ? CommandState.EXECUTING: CommandState.FINISHED;
-				}
-			});
-		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	
 	public RequestTaskExecutionOperationMode(BaseControlComponent<NotificationService> component) {
@@ -59,83 +33,47 @@ public class RequestTaskExecutionOperationMode extends BaseOperationMode<Notific
 		clientId = UUID.randomUUID().toString();
 	}
 
-
 	@Override
 	public void onResetting() {
-		startTime = 0;
+		super.onResetting();
 		taskDescription = "";
 		operationType = "";
 	}
 
 	@Override
 	public void onStarting() {
-		boolean taskExecRequested = false;
-		CommandState state = CommandState.ABORTED;
+		HumanTaskDTO task = getHumanTask();
 		
-		task = readParams();
+		int retryCount = 20;
+		int i=0;
+		startTime = System.currentTimeMillis();	
 		
-		while(!taskExecRequested) {
+		while (!executing && i < retryCount) {		
 			try {
-				state = getService(NotificationService.class).requestTaskExecution(task);
-				taskExecRequested = true;
-			} catch (TException e) {
-				LOGGER.warn(" Notification ressource not responding. Retrying ...");
-				sleep(1500);
+				CommandState state = getService(NotificationService.class).requestTaskExecution(task);
+				if(state==CommandState.ACCEPTED)
+					executing = true;
+				else if(state==CommandState.REJECTED) {
+					LOGGER.warn(" Notification ressource busy. Retrying (#{}/{}) ...", i, retryCount);
+					i++;
+				}
+				else  {
+					LOGGER.error(" Received unexpected command state {}! Aborting ... ", state);
+					component.setErrorStatus(-1, "Unexpected command state " + state);
+					executing = false;
+				}
+			} catch (TException e1) {
+				i++;
+				//e1.printStackTrace();
+				LOGGER.warn(" Notification ressource not responding. Retrying (#{}/{}) ...", i, retryCount);			
 				getService(NotificationService.class).reconnect();
+				sleep(1000);
 			}
 		}
 	}
 	
-	private HumanTaskDTO readParams() {
+	private HumanTaskDTO getHumanTask() {
 		return new HumanTaskDTO(UUID.randomUUID().toString(), operationType, taskDescription, clientId);
 	}
-
-	@Override
-	public void onExecute() {
-		boolean executing = true;
-		CommandState state = CommandState.EXECUTING;
-		
-		while(executing) {
-			try {
-				state = getService(NotificationService.class).getCommandState("");
-			} catch (TException e) {
-				LOGGER.warn(" Notification ressource not responding. Retrying ...");
-				sleep(1500);
-				getService(NotificationService.class).reconnect();
-				continue;
-			}
-			
-			switch(state) {
-			case EXECUTING:
-				// Wait for completion
-				break;
-			case ABORTED:
-				component.setErrorStatus(1, "aborted");
-				component.stop(component.getOccupierId());
-				executing = false;
-				break;
-			case FINISHED:
-				executing = false;
-				break;
-			case PAUSED:
-				// TODO should the component be hold here?
-				break;
-			default:
-				LOGGER.warn("Received unexpected CommandState {} during task execution!", state);
-				break;
-			}
-			sleep(500);
-		}
-
-	}
-
-	@Override
-	public void onCompleting() {
-	}
-
-	@Override
-	public void onStopping() {
-	}
-
 
 }

@@ -103,5 +103,11 @@ public class NotificationServiceImpl implements NotificationService, ServiceProv
 		}
 	}
 
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

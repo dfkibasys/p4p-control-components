@@ -2,10 +2,10 @@ package de.dfki.cos.basys.p4p.controlcomponent.ur;
 
 import java.util.Properties;
 
-import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URService;
 
-public class UrControlComponent extends BaseControlComponent<UrService> {
+public class UrControlComponent extends BaseControlComponent<URService> {
 
 	public UrControlComponent(Properties config) {
 		super(config);
@@ -13,8 +13,7 @@ public class UrControlComponent extends BaseControlComponent<UrService> {
 	
 	@Override
 	protected void registerOperationModes() {		
-		//OperationMode opMode = new ExampleOperationMode(this);
-		//registerOperationMode(opMode);		
+		registerOperationMode(new MoveToSymbolicPositionOperationMode(this));	
 	}
 	
 }

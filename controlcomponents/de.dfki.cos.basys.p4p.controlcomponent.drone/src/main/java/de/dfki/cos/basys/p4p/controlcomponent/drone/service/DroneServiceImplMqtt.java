@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
@@ -475,6 +478,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		unsubscribe("Mavic2/command/continueMotion/res");
 		unsubscribe("Mavic2/command/emergencyLanding/res");
 		unsubscribe("Mavic2/command/moveToKnownPosition/res");
+		unsubscribe("Mavic2/command/moveToPoint/res");
 		
 		missionState = MissionState.PENDING;
 	}
@@ -496,5 +500,78 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void moveToPoint(DronePoint point) {
+		String stateTopic = "Mavic2/state/flightPhase";
+		String commandTopic = "Mavic2/command/moveToPoint/req";
+		String responseTopic = "Mavic2/command/moveToPoint/res";
+		workState = WorkState.PHASE_IDLE;
+		try {
+			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());				
+					LOG.debug("New message arrived " + sMessage);
+					if (sMessage.contains("Phase Idle")) {
+						missionState = MissionState.DONE;
+					} else if (sMessage.contains("Phase 0")) {
+						missionState = MissionState.EXECUTING;
+					} else if (sMessage.contains("Phase 1")) {
+						missionState = MissionState.EXECUTING;
+					} else if (sMessage.contains("Phase 2")) {
+						missionState = MissionState.EXECUTING;
+					}
+				
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
+		}
+		
+		try {
+			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sResponse = new String(message.getPayload());
+					LOG.debug("Got response " + sResponse);
+					
+					if (sResponse.contains("Accepted")) {
+						missionState = MissionState.ACCEPTED;					
+					}
+					else // Rejected
+					{
+						missionState = MissionState.REJECTED;
+					}
+						
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
+		}
+		
+		JsonObject position = Json.createObjectBuilder()
+				.add("pos", 
+						Json.createObjectBuilder()
+						.add("x", point.getPosition().getX())
+						.add("y", point.getPosition().getY())
+						.add("z", point.getPosition().getZ())
+						.build()
+						)
+				.add("rot", point.getRotation())
+				.add("pitch", point.getPitch())
+				.build();
+
+		publish(commandTopic, position.toString());
+		
+	}
+
+	@Override
+	public void moveToWaypoints(List<DronePoint> waypoints) {
+		// TODO Auto-generated method stub
+		
 	}
 }

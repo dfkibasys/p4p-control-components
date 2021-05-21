@@ -7,6 +7,8 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.WorkStat
 
 public interface DroneService {
 	void moveToSymbolicPosition(String position);
+	void moveToPoint(DronePoint point);
+	void moveToWaypoints(List<DronePoint> waypoints);
 	void takeOff();
 	void startLiveImage();
 	void stopLiveImage();

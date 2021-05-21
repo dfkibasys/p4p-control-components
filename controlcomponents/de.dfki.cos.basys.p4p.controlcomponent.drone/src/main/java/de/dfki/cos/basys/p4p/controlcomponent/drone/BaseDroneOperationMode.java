@@ -103,6 +103,7 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 		Mockito.doNothing().when(serviceMock).stopRTMPStream();
 		Mockito.doNothing().when(serviceMock).land();
 		Mockito.doNothing().when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
+		Mockito.doNothing().when(serviceMock).moveToPoint(Mockito.any());
 		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<MissionState>() {
 			boolean accepted = false;
 			@Override

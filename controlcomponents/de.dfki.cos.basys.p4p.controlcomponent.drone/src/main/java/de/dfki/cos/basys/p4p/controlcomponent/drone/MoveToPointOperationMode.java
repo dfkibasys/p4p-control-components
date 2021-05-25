@@ -19,19 +19,19 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 public class MoveToPointOperationMode extends BaseDroneOperationMode{
 
 	@Parameter(name = "x", direction = ParameterDirection.IN)
-	private float x = 0.0f;
+	private double x = 0;
 	
 	@Parameter(name = "y", direction = ParameterDirection.IN)
-	private float y = 0.0f;
+	private double y = 0;
 	
 	@Parameter(name = "z", direction = ParameterDirection.IN)
-	private float z = 0.0f;
+	private double z = 0;
 	
 	@Parameter(name = "rot", direction = ParameterDirection.IN)
-	private float rot = 0.0f;
+	private double rot = 0;
 	
 	@Parameter(name = "pitch", direction = ParameterDirection.IN)
-	private float pitch = 0.0f;
+	private double pitch = 0;
 	
 	public MoveToPointOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);

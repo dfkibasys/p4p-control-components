@@ -3,10 +3,10 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 public class DronePoint {
 
 	private Vector3d pos;
-	private float rot;
-	private float pitch;
+	private double rot;
+	private double pitch;
 
-	public DronePoint(float x, float y, float z, float rot, float pitch) {
+	public DronePoint(double x, double y, double z, double rot, double pitch) {
 		this.setPosition(new Vector3d(x, y, z));
 		this.setRotation(rot);
 		this.setPitch(pitch);
@@ -20,19 +20,19 @@ public class DronePoint {
 		this.pos = pos;
 	}
 
-	public float getRotation() {
+	public double getRotation() {
 		return rot;
 	}
 
-	public void setRotation(float rot) {
-		this.rot = rot;
+	public void setRotation(double rot2) {
+		this.rot = rot2;
 	}
 
-	public float getPitch() {
+	public double getPitch() {
 		return pitch;
 	}
 
-	public void setPitch(float pitch) {
+	public void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
 }

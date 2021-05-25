@@ -45,3 +45,4 @@ MANIFEST.MF
 build.properties
 
 /src/main/resources/components/
+.DS_Store

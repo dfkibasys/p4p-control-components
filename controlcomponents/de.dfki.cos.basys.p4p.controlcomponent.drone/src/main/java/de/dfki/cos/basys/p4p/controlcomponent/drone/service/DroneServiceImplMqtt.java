@@ -170,10 +170,8 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sResponse = new String(message.getPayload());
-					LOG.debug("Got response " + sResponse);
-					
-					if (sResponse.contains("Accepted")) {
+					String sMessage = new String(message.getPayload());				
+					if (sMessage.contains("Accepted")) {
 						MissionState.getInstance().setState(MState.ACCEPTED);			
 					}
 					else // Rejected
@@ -190,8 +188,10 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		if ("_HOME_".equals(position)) {
 			position = "Drone-Home";
 		}
+		
+		JsonObject pos = Json.createObjectBuilder().add("position", position).build();
 
-		publish(requestTopic, "{\"position\": \"" + position + "\"}");
+		publish(requestTopic, pos.toString());
 
 	}
 	
@@ -495,7 +495,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		unsubscribe("Mavic2/command/moveToKnownPosition/res");
 		unsubscribe("Mavic2/command/moveToPoint/res");
 		
-		MissionState.getInstance().setState(MState.ACCEPTED);		
+		MissionState.getInstance().setState(MState.PENDING);		
 		WorkState.getInstance().removeStateListeners();
 		PhysicalState.getInstance().removeStateListeners();
 	}
@@ -547,10 +547,8 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 				
 				@Override
 				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sResponse = new String(message.getPayload());
-					LOG.debug("Got response " + sResponse);
-					
-					if (sResponse.contains("Accepted")) {
+					String sMessage = new String(message.getPayload());		
+					if (sMessage.contains("Accepted")) {
 						MissionState.getInstance().setState(MState.ACCEPTED);			
 					}
 					else // Rejected

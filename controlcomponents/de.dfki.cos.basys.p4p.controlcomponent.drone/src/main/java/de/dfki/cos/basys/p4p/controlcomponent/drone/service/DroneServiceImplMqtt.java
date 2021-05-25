@@ -1,5 +1,7 @@
 package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.WorkState;
 
 
 public class DroneServiceImplMqtt implements DroneService, ServiceProvider<DroneService>{
@@ -32,7 +33,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
 	private static final Integer QOS = 0;
 	MissionState missionState = MissionState.PENDING;
-	WorkState workState = WorkState.PHASE_IDLE;
+	WorkState workState = WorkState.getInstance();
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
 	
@@ -60,7 +61,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 					LOG.debug(clientId + " successfully connected to {}.", connectionString);	
 					
 					// Subscribe to drone work state
-					/*String stateTopic = "Mavic2/state/flightPhase";
+					String stateTopic = "Mavic2/state/flightPhase";
 					try {
 						mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
 							
@@ -68,20 +69,20 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 							public void messageArrived(String topic, MqttMessage message) throws Exception {
 								String sMessage = new String(message.getPayload());		
 								if (sMessage.contains("Phase Idle")) {
-									workState = WorkState.PHASE_IDLE;
+									workState.setState(WState.PHASE_IDLE);
 								} else if (sMessage.contains("Phase 0")) {
-									workState = WorkState.PHASE0;
+									workState.setState(WState.PHASE0);
 								} else if (sMessage.contains("Phase 1")) {
-									workState = WorkState.PHASE1;
+									workState.setState(WState.PHASE1);
 								} else if (sMessage.contains("Phase 2")) {
-									workState = WorkState.PHASE2;
+									workState.setState(WState.PHASE2);
 								}
 								
 							}
 						}).waitForCompletion();
 					} catch (MqttException e) {
 						LOG.warn(clientId + " could not subscribe to topic {}!", stateTopic);		
-					}*/
+					}
 				}
 				
 				@Override
@@ -118,33 +119,30 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 
 	@Override
-	public void moveToSymbolicPosition(String position) {
-		String stateTopic = "Mavic2/state/flightPhase";
+	public void moveToSymbolicPosition(String position){
 		String commandTopic = "Mavic2/command/moveToKnownPosition/req";
 		String responseTopic = "Mavic2/command/moveToKnownPosition/res";
-		workState = WorkState.PHASE_IDLE;
-		try {
-			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());				
-					LOG.debug("New message arrived " + sMessage);
-					if (sMessage.contains("Phase Idle")) {
-						missionState = MissionState.DONE;
-					} else if (sMessage.contains("Phase 0")) {
-						missionState = MissionState.EXECUTING;
-					} else if (sMessage.contains("Phase 1")) {
-						missionState = MissionState.EXECUTING;
-					} else if (sMessage.contains("Phase 2")) {
-						missionState = MissionState.EXECUTING;
-					}
-				
+		workState.setState(WState.PHASE_IDLE);
+		
+		workState.addStateListener(new StateListener() {
+
+			@Override
+			public void stateChangedEvent(WState oldState, WState newState) {
+
+				if (newState.equals(WState.PHASE_IDLE)) {
+					missionState = MissionState.DONE;
+				} else if (newState.equals(WState.PHASE0)) {
+					missionState = MissionState.EXECUTING;
+				} else if (newState.equals(WState.PHASE1)) {
+					missionState = MissionState.EXECUTING;
+				} else if (newState.equals(WState.PHASE2)) {
+					missionState = MissionState.EXECUTING;
 				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
-		}
+			}
+			
+			//TODO: remove state listener
+			
+		});
 		
 		try {
 			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
@@ -319,7 +317,7 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public WorkState getWorkState() {
-		return this.workState;
+		return this.workState.getInstance();
 	}
 	
 	@Override
@@ -468,7 +466,6 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public void reset() {
-		unsubscribe("Mavic2/state/flightPhase");
 		unsubscribe("Mavic2/command/startLiveImage/res");
 		unsubscribe("Mavic2/command/stopLiveImage/res");
 		unsubscribe("Mavic2/command/startRTMPStream/res");
@@ -503,33 +500,30 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 	}
 
 	@Override
-	public void moveToPoint(DronePoint point) {
-		String stateTopic = "Mavic2/state/flightPhase";
+	public void moveToPoint(DronePoint point){
 		String commandTopic = "Mavic2/command/moveToPoint/req";
 		String responseTopic = "Mavic2/command/moveToPoint/res";
-		workState = WorkState.PHASE_IDLE;
-		try {
-			mqttClient.subscribe(stateTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());				
-					LOG.debug("New message arrived " + sMessage);
-					if (sMessage.contains("Phase Idle")) {
-						missionState = MissionState.DONE;
-					} else if (sMessage.contains("Phase 0")) {
-						missionState = MissionState.EXECUTING;
-					} else if (sMessage.contains("Phase 1")) {
-						missionState = MissionState.EXECUTING;
-					} else if (sMessage.contains("Phase 2")) {
-						missionState = MissionState.EXECUTING;
-					}
-				
+		workState.setState(WState.PHASE_IDLE);
+		
+		workState.addStateListener(new StateListener() {
+
+			@Override
+			public void stateChangedEvent(WState oldState, WState newState) {
+
+				if (newState.equals(WState.PHASE_IDLE)) {
+					missionState = MissionState.DONE;
+				} else if (newState.equals(WState.PHASE0)) {
+					missionState = MissionState.EXECUTING;
+				} else if (newState.equals(WState.PHASE1)) {
+					missionState = MissionState.EXECUTING;
+				} else if (newState.equals(WState.PHASE2)) {
+					missionState = MissionState.EXECUTING;
 				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", stateTopic, e);
-		}
+			}
+			
+			//TODO: remove state listener
+			
+		});
 		
 		try {
 			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {

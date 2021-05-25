@@ -7,13 +7,14 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 
 @OperationMode(name = "MoveSymbolic", shortName = "MOVE_SYM", description = "moves component to a symbolic position", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode {
-	private static final int NUM_RETRIES = 20;
 
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "";
@@ -29,27 +30,24 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		for(int retry = 0; retry < NUM_RETRIES; retry++) {
-			// #############################################################################
-			// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
-			getService(DroneService.class).moveToSymbolicPosition(position);
-			// #############################################################################
-			sleep(1000);
-	
-			//TODO: Improve this code
-			if(getService(DroneService.class).getMissionState().equals(MissionState.PENDING) || 
-			getService(DroneService.class).getMissionState().equals(MissionState.REJECTED))
-			{
-				executing = false;		
-			}
-			else //ACCEPTED, EXECUTING, ...
-			{
-				executing = true;
-				break;
-			}
-			sleep(1500);
-		}
+
+		getService(DroneService.class).moveToSymbolicPosition(position);
 		
+		MissionState.getInstance().addStateListener(new MissionStateListener() {
+
+			@Override
+			public void stateChangedEvent(MState oldState, MState newState) {
+				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
+					executing = true;
+				}
+				else if (newState.equals(MState.REJECTED) || newState.equals(MState.PENDING)) {
+					executing = false;	
+					getService(DroneService.class).moveToSymbolicPosition(position);
+				}
+			}
+			
+		});
+				
 	}
 
 	@Override

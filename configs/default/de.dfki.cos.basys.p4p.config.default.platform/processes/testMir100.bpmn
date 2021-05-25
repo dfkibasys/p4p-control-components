@@ -8,7 +8,7 @@
           <camunda:formField id="baxterId" label="Baxter ID" type="string" defaultValue="baxter-1" />
           <camunda:formField id="workerId" label="Worker ID" type="string" defaultValue="heinz" />
           <camunda:formField id="mirId" label="MiR ID" type="string" defaultValue="mir100-1" />
-          <camunda:formField id="position" label="Position" type="string" defaultValue="somewhere" />
+          <camunda:formField id="position" label="Position" type="string" defaultValue="target" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0yz5vxy</bpmn:outgoing>

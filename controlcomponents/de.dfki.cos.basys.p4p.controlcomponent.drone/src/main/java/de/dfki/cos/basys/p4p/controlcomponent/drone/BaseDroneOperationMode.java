@@ -11,8 +11,9 @@ import org.slf4j.LoggerFactory;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.WorkState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.WorkState;
 
 public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneService> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDroneOperationMode.class);
@@ -49,9 +50,9 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 		while(executing) {
 			DroneService service = getService(DroneService.class);
 			state = service.getMissionState();
-			component.setWorkState(service.getWorkState().name());
+			component.setWorkState(service.getWorkState().toString());
 			LOG.debug("Current mission state is {}.", state);
-			switch(state) {
+			switch(state.getState()) {
 				case PENDING:
 					break;
 				case EXECUTING:
@@ -94,7 +95,7 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 	@Override
 	protected void configureServiceMock(DroneService serviceMock) {
 		Mockito.when(serviceMock.detectObstacles(Mockito.anyString())).thenReturn(Collections.emptyList());
-		Mockito.when(serviceMock.getWorkState()).thenReturn(WorkState.PHASE_IDLE);
+		Mockito.when(serviceMock.getWorkState()).thenReturn(WorkState.getInstance());
 		Mockito.doNothing().when(serviceMock).takeOff();
 		Mockito.doNothing().when(serviceMock).reset();
 		Mockito.doNothing().when(serviceMock).startLiveImage();
@@ -103,25 +104,25 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 		Mockito.doNothing().when(serviceMock).stopRTMPStream();
 		Mockito.doNothing().when(serviceMock).land();
 		Mockito.doNothing().when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
+		Mockito.doNothing().when(serviceMock).moveToPoint(Mockito.any());
 		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<MissionState>() {
 			boolean accepted = false;
 			@Override
 			public MissionState answer(InvocationOnMock invocation) throws Throwable {
-				MissionState  result;
 				if(!accepted)
 				{
-					result = MissionState.ACCEPTED;
+					MissionState.getInstance().setState(MState.ACCEPTED);
 					accepted = true;
 				}
 				else { // accepted
 					long elapsed = System.currentTimeMillis() - startTime;
 					if (elapsed < MOCKUP_SERVICE_DURATION) {
-						result = MissionState.EXECUTING;
+						MissionState.getInstance().setState(MState.EXECUTING);
 					} else {
-						result = MissionState.DONE;
+						MissionState.getInstance().setState(MState.DONE);
 					}
 			}
-				return result;
+				return MissionState.getInstance();
 			}
 			
 		});

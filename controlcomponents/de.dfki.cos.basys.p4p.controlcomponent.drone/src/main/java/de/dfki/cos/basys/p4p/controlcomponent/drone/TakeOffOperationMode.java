@@ -5,14 +5,15 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
 
 @OperationMode(name = "TakeOff", shortName = "TAKEOFF", description = "brings the drone to flight height", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class TakeOffOperationMode extends BaseDroneOperationMode {
-	private static final int NUM_RETRIES = 20;
-	
+
 	public TakeOffOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
 	}
@@ -20,27 +21,23 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		for(int retry = 0; retry < NUM_RETRIES; retry++) {
-			// #############################################################################
-			// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
-			getService(DroneService.class).takeOff();
-			// #############################################################################
-			sleep(1000);
-	
-	
-			//TODO: Improve this code
-			if(getService(DroneService.class).getMissionState().equals(MissionState.ACCEPTED) || 
-			getService(DroneService.class).getMissionState().equals(MissionState.EXECUTING))
-			{
-				executing = true;
-				break;
+
+		getService(DroneService.class).takeOff();
+		
+		MissionState.getInstance().addStateListener(new MissionStateListener() {
+
+			@Override
+			public void stateChangedEvent(MState oldState, MState newState) {
+				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
+					executing = true;
+				}
+				else if (newState.equals(MState.REJECTED)) {
+					executing = false;	
+					getService(DroneService.class).takeOff();
+				}
 			}
-			else if(getService(DroneService.class).getMissionState().equals(MissionState.REJECTED))
-			{
-				executing = false;
-			}
-			sleep(1500);
-		}
+			
+		});
 	}
 
 	@Override

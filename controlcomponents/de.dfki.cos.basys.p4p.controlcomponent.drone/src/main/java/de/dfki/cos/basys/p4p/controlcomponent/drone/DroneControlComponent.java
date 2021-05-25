@@ -2,7 +2,6 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone;
 
 import java.util.Properties;
 
-import de.dfki.cos.basys.controlcomponent.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 

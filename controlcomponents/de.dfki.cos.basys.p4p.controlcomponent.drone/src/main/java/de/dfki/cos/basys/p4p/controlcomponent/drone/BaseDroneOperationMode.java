@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.WorkState;
 
 public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneService> {
@@ -51,7 +52,7 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 			state = service.getMissionState();
 			component.setWorkState(service.getWorkState().toString());
 			LOG.debug("Current mission state is {}.", state);
-			switch(state) {
+			switch(state.getState()) {
 				case PENDING:
 					break;
 				case EXECUTING:
@@ -108,21 +109,20 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 			boolean accepted = false;
 			@Override
 			public MissionState answer(InvocationOnMock invocation) throws Throwable {
-				MissionState  result;
 				if(!accepted)
 				{
-					result = MissionState.ACCEPTED;
+					MissionState.getInstance().setState(MState.ACCEPTED);
 					accepted = true;
 				}
 				else { // accepted
 					long elapsed = System.currentTimeMillis() - startTime;
 					if (elapsed < MOCKUP_SERVICE_DURATION) {
-						result = MissionState.EXECUTING;
+						MissionState.getInstance().setState(MState.EXECUTING);
 					} else {
-						result = MissionState.DONE;
+						MissionState.getInstance().setState(MState.DONE);
 					}
 			}
-				return result;
+				return MissionState.getInstance();
 			}
 			
 		});

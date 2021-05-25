@@ -2,8 +2,6 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
 import java.util.List;
 
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
-
 public interface DroneService {
 	void moveToSymbolicPosition(String position);
 	void moveToPoint(DronePoint point);

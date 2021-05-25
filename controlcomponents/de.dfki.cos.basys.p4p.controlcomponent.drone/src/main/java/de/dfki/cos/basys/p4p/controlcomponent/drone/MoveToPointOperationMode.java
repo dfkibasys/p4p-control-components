@@ -2,19 +2,11 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DronePoint;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MissionState;
-
-import java.sql.Date;
-import java.util.concurrent.TimeUnit;
-
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
+import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
@@ -25,9 +17,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToPointOperationMode extends BaseDroneOperationMode{
-	private static final int NUM_RETRIES = 20;
-	private static final Logger LOG = LoggerFactory.getLogger(MoveToPointOperationMode.class);
-	
+
 	@Parameter(name = "x", direction = ParameterDirection.IN)
 	private float x = 0.0f;
 	
@@ -50,27 +40,25 @@ public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		for(int retry = 0; retry < NUM_RETRIES; retry++) {
-			// #############################################################################
-			// TODO we definitely need some sort of feedback (ret val, Exception, ...) here!
-			DronePoint point = new DronePoint(x, y, z, rot, pitch);
-			getService(DroneService.class).moveToPoint(point);
-			// #############################################################################
-			sleep(1000);
+	
+		DronePoint point = new DronePoint(x, y, z, rot, pitch);
+		
+		getService(DroneService.class).moveToPoint(point);
+		
+		MissionState.getInstance().addStateListener(new MissionStateListener() {
+
+			@Override
+			public void stateChangedEvent(MState oldState, MState newState) {
+				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
+					executing = true;
+				}
+				else if (newState.equals(MState.REJECTED) || newState.equals(MState.PENDING)) {
+					executing = false;	
+					getService(DroneService.class).moveToPoint(point);
+				}
+			}
 			
-			//TODO: Improve this code
-			if(getService(DroneService.class).getMissionState().equals(MissionState.PENDING) || 
-			getService(DroneService.class).getMissionState().equals(MissionState.REJECTED))
-			{
-				executing = false;		
-			}
-			else //ACCEPTED, EXECUTING, ...
-			{
-				executing = true;
-				break;
-			}
-			sleep(1500);
-		}
+		});
 	}
 
 	@Override

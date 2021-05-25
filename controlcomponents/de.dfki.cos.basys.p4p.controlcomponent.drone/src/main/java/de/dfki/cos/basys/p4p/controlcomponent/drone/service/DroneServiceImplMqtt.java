@@ -153,14 +153,14 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 			public void stateChangedEvent(WState oldState, WState newState) {
 
 				if (newState.equals(WState.PHASE_IDLE)) {
-					MissionState.getInstance().setState(MState.DONE);
-				} else if (newState.equals(WState.PHASE0)) {
-					MissionState.getInstance().setState(MState.EXECUTING);
-				} else if (newState.equals(WState.PHASE1)) {
-					MissionState.getInstance().setState(MState.EXECUTING);
-				} else if (newState.equals(WState.PHASE2)) {
-					MissionState.getInstance().setState(MState.EXECUTING);
-				}
+					MissionState.getInstance().setState(MState.DONE);		
+				} else if (
+						newState.equals(WState.PHASE0) || 
+						newState.equals(WState.PHASE1) || 
+						newState.equals(WState.PHASE2)
+						) {
+					MissionState.getInstance().setState(MState.EXECUTING);		
+				} 
 			}
 				
 		});
@@ -324,8 +324,46 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 	@Override
 	public void land() {
-		// TODO Maybe decouple this from MoveToLocation(Home);
-		moveToSymbolicPosition("_HOME_");
+		String responseTopic = "Mavic2/command/emergencyLanding/res";
+		String requestTopic = "Mavic2/command/emergencyLanding/req";
+		
+		try {
+			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
+				
+				@Override
+				public void messageArrived(String topic, MqttMessage message) throws Exception {
+					String sMessage = new String(message.getPayload());
+					if (sMessage.contains("Accepted")) {
+						MissionState.getInstance().setState(MState.ACCEPTED);			
+					}
+					else // Rejected
+					{
+						MissionState.getInstance().setState(MState.REJECTED);	
+					}
+
+					
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
+		}
+		
+		PhysicalState.getInstance().addStateListener(new PhysicalStateListener() {
+
+			@Override
+			public void stateChangedEvent(PState oldState, PState newState) {
+				if (newState.equals(PState.LANDING)) {
+					MissionState.getInstance().setState(MState.EXECUTING);		
+				}
+				else if (newState.equals(PState.ONGROUND)) {
+					MissionState.getInstance().setState(MState.DONE);		
+				}
+				
+			}
+			
+		});	
+
+		publish(requestTopic, "");
 	}
 
 	@Override
@@ -531,13 +569,13 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 
 				if (newState.equals(WState.PHASE_IDLE)) {
 					MissionState.getInstance().setState(MState.DONE);		
-				} else if (newState.equals(WState.PHASE0)) {
+				} else if (
+						newState.equals(WState.PHASE0) || 
+						newState.equals(WState.PHASE1) || 
+						newState.equals(WState.PHASE2)
+						) {
 					MissionState.getInstance().setState(MState.EXECUTING);		
-				} else if (newState.equals(WState.PHASE1)) {
-					MissionState.getInstance().setState(MState.EXECUTING);	
-				} else if (newState.equals(WState.PHASE2)) {
-					MissionState.getInstance().setState(MState.EXECUTING);	
-				}
+				} 
 			}
 				
 		});

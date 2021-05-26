@@ -48,22 +48,27 @@ public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	
 		DronePoint point = new DronePoint(x, y, z, rot, pitch);
 		
-		getService(DroneService.class).moveToPoint(point);
-		
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 
 			@Override
 			public void stateChangedEvent(MState oldState, MState newState) {
 				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
 					executing = true;
+					component.setErrorStatus(0, "OK");
 					counter.countDown();
 				}
 				else if (newState.equals(MState.REJECTED)) {
-					getService(DroneService.class).moveToPoint(point);
+					component.setErrorStatus(3, "rejected");
+					counter.countDown();
 				}
 			}
 			
 		});
+		
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");		
+		
+		getService(DroneService.class).moveToPoint(point);
 		
 		try {
 			counter.await(20, TimeUnit.SECONDS);
@@ -77,6 +82,7 @@ public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
+		// remove listeners in case of success
 		MissionState.getInstance().removeStateListeners();
 		sleep(1000);
 	}
@@ -84,6 +90,8 @@ public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	@Override
 	public void onStopping() {
 		super.onStopping();
+		// remove listeners in case of error
+		MissionState.getInstance().removeStateListeners();
 		sleep(1000);
 	}
 }

@@ -35,8 +35,6 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-
-		getService(DroneService.class).moveToSymbolicPosition(position);
 			
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 
@@ -44,14 +42,21 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 			public void stateChangedEvent(MState oldState, MState newState) {
 				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
 					executing = true;
+					component.setErrorStatus(0, "OK");
 					counter.countDown();
 				}
 				else if (newState.equals(MState.REJECTED)) {
-					getService(DroneService.class).moveToSymbolicPosition(position);
+					component.setErrorStatus(3, "rejected");
+					counter.countDown();
 				}
 			}
 			
 		});
+		
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");		
+		
+		getService(DroneService.class).moveToSymbolicPosition(position);
 		
 		try {
 			counter.await(20, TimeUnit.SECONDS);
@@ -65,6 +70,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
+		// remove listeners in case of success
 		MissionState.getInstance().removeStateListeners();
 		duration_out = duration;
 		sleep(1000);
@@ -73,6 +79,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	@Override
 	public void onStopping() {
 		super.onStopping();
+		// remove listeners in case of error
+		MissionState.getInstance().removeStateListeners();
 		sleep(1000);
 	}
 

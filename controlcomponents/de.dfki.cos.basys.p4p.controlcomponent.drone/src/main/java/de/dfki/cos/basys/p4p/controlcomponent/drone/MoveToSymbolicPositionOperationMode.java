@@ -1,5 +1,8 @@
 package de.dfki.cos.basys.p4p.controlcomponent.drone;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
@@ -15,6 +18,8 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode {
+	
+	CountDownLatch counter = new CountDownLatch(1);
 
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "";
@@ -32,27 +37,35 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 		super.onStarting();
 
 		getService(DroneService.class).moveToSymbolicPosition(position);
-		
+			
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 
 			@Override
 			public void stateChangedEvent(MState oldState, MState newState) {
 				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
 					executing = true;
+					counter.countDown();
 				}
-				else if (newState.equals(MState.REJECTED) || newState.equals(MState.PENDING)) {
-					executing = false;	
+				else if (newState.equals(MState.REJECTED)) {
 					getService(DroneService.class).moveToSymbolicPosition(position);
 				}
 			}
 			
 		});
+		
+		try {
+			counter.await(20, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				
 	}
 
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
+		MissionState.getInstance().removeStateListeners();
 		duration_out = duration;
 		sleep(1000);
 	}

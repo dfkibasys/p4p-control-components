@@ -27,22 +27,28 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	public void onStarting() {	
 		super.onStarting();
 
-		getService(DroneService.class).takeOff();
-		
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 
 			@Override
 			public void stateChangedEvent(MState oldState, MState newState) {
 				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
 					executing = true;
+					component.setErrorStatus(0, "OK");
 					counter.countDown();
 				}
 				else if (newState.equals(MState.REJECTED)) {
-					getService(DroneService.class).takeOff();
+					component.setErrorStatus(3, "rejected");
+					counter.countDown();
 				}
 			}
 			
 		});
+		
+		
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");		
+
+		getService(DroneService.class).takeOff();
 		
 		try {
 			counter.await(20, TimeUnit.SECONDS);
@@ -61,6 +67,7 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
+		// remove listeners in case of success
 		MissionState.getInstance().removeStateListeners();
 		sleep(1000);
 	}
@@ -68,6 +75,8 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onStopping() {
 		super.onStopping();
+		// remove listeners in case of error
+		MissionState.getInstance().removeStateListeners();
 		sleep(1000);
 	}
 

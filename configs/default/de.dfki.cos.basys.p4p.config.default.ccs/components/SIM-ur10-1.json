@@ -2,7 +2,7 @@
   "id": "ur10-1",
   "name": "UR10-1",
   "serviceConnectionString": "ws://127.0.0.1:9100",
-  "serviceImplementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.ur.service.URServiceImpl",  
+  "serviceImplementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.ur.service.actionlib.URServiceImpl",  
   "implementationJavaClass": "de.dfki.cos.basys.p4p.controlcomponent.ur.UrControlComponent",
   "executionMode": "SIMULATE",
   "disableExecutionModeChange" : "true",

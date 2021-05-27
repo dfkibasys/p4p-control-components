@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.p4p.controlcomponent.ur.service;
+package de.dfki.cos.basys.p4p.controlcomponent.ur.service.actionlib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URService;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URState.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URState.WorkState;
 import edu.wpi.rail.jrosbridge.ActionClient;
 import edu.wpi.rail.jrosbridge.Goal;
 import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
@@ -34,7 +37,7 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 	
 	private ActionClient actionClient;
 	
-	private Map<String, GoalStatusEnum> stati = new HashMap<String, GoalStatusEnum>();
+	private Map<String, String> stati = new HashMap<String, String>();
 	private GoalStatusEnum status;
 	
 	private final Logger LOGGER;	
@@ -46,7 +49,6 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 	@Override
 	public void moveToSymbolicPosition(String positionName) {
 		Goal goal = actionClient.createGoal(this);
-		//stati.put(goal.getId(), GoalStatusEnum.PENDING);
 		status = GoalStatusEnum.PENDING;
 			
 		JsonObject symbolicPosition = Json.createObjectBuilder().add("target_pos", positionName).build();
@@ -54,14 +56,11 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 		
 	}
 
-	@Override
-	public GoalStatusEnum getGoalStatus(GoalID goal) {
-		return stati.get(goal.getID());
-	}
+
 	
 	@Override
-	public GoalStatusEnum getStatus() {
-		return status;
+	public String getStatus() {
+		return status.toString();
 	}	
 
 	@Override
@@ -138,6 +137,50 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 	@Override
 	public void handleFeedback(JsonObject feedback) {
 		LOGGER.debug("FEEDBK: " + feedback.toString());				
+	}
+	@Override
+	public MissionState getMissionState() {
+		// Map goal state to mission state, REMOVE THIS once we have an action server implementation for the UR
+		MissionState mState = null;
+		switch(status) {
+		case ABORTED:
+			mState = MissionState.CANCELLED;
+			break;
+		case ACTIVE:
+			mState = MissionState.EXECUTING;
+			break;
+		case LOST:
+			mState = MissionState.FAILED;			
+			break;
+		case PENDING:
+			mState = MissionState.PENDING;
+			break;
+		case PREEMPTED:
+			mState = MissionState.CANCELLED;
+			break;
+		case PREEMPTING:
+			mState = MissionState.CANCELLED;
+			break;
+		case RECALLED:
+			mState = MissionState.CANCELLED;			
+			break;
+		case RECALLING:
+			mState = MissionState.CANCELLED;			
+			break;
+		case REJECTED:
+			mState = MissionState.REJECTED;
+			break;
+		case SUCCEEDED:
+			mState = MissionState.DONE;
+			break;
+			default:
+				break;
+		}
+		return mState;
+	}
+	@Override
+	public WorkState getWorkState() {
+		return null;
 	}
 
 }

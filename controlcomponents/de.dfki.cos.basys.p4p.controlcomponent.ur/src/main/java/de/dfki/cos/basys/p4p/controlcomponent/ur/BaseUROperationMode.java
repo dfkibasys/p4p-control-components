@@ -16,8 +16,6 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 	protected long endTime = 0;
 	protected int duration = 0;
 	
-	protected boolean executing = false;
-	
 	public BaseUROperationMode(BaseControlComponent<URService> component) {
 		super(component);
 	}
@@ -28,7 +26,6 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 		startTime = 0;
 		endTime = 0;
 		getService(URService.class).reset();
-		executing = false;	
 	}
 
 	@Override
@@ -41,7 +38,7 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 		boolean executing = true;
 		while(executing) {
 			GoalStatusEnum status = getService(URService.class).getStatus();
-			//LOGGER.debug("Status : " + status);
+			LOGGER.debug("Status : " + status);
 			 
 			switch (status) {
 			case ABORTED:

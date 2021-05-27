@@ -28,7 +28,6 @@ public class MoveToSymbolicPositionOperationMode extends BaseUROperationMode {
 		super.onStarting();
 		getService(URService.class).moveToSymbolicPosition(position);
 		sleep(1000);
-		executing = true;
 	}
 
 

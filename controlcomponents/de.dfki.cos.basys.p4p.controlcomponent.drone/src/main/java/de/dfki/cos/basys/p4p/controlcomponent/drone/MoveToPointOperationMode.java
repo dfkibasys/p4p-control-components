@@ -21,7 +21,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	
-	CountDownLatch counter = new CountDownLatch(1);
+	private CountDownLatch counter;
 
 	@Parameter(name = "x", direction = ParameterDirection.IN)
 	private double x = 0;
@@ -45,6 +45,8 @@ public class MoveToPointOperationMode extends BaseDroneOperationMode{
 	@Override
 	public void onStarting() {	
 		super.onStarting();
+		
+		counter = new CountDownLatch(1);
 	
 		DronePoint point = new DronePoint(x, y, z, rot, pitch);
 		

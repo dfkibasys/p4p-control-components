@@ -1,9 +1,6 @@
 package de.dfki.cos.basys.p4p.controlcomponent.ur.service;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -19,21 +16,12 @@ import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import edu.wpi.rail.jrosbridge.ActionClient;
 import edu.wpi.rail.jrosbridge.Goal;
-import edu.wpi.rail.jrosbridge.Ros;
-import edu.wpi.rail.jrosbridge.Topic;
 import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
 import edu.wpi.rail.jrosbridge.JRosbridge.WebSocketType;
+import edu.wpi.rail.jrosbridge.Ros;
 import edu.wpi.rail.jrosbridge.callback.ActionCallback;
-import edu.wpi.rail.jrosbridge.callback.TopicCallback;
-import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.messages.actionlib.GoalID;
 import edu.wpi.rail.jrosbridge.messages.actionlib.GoalStatus;
-import edu.wpi.rail.jrosbridge.messages.geometry.Point;
-import edu.wpi.rail.jrosbridge.messages.geometry.Pose;
-import edu.wpi.rail.jrosbridge.messages.geometry.PoseStamped;
-import edu.wpi.rail.jrosbridge.messages.geometry.Quaternion;
-import edu.wpi.rail.jrosbridge.messages.std.Header;
-import edu.wpi.rail.jrosbridge.primitives.Time;
 
 public class URServiceImpl implements URService, ServiceProvider<URService>, ActionCallback{
 
@@ -47,7 +35,7 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 	private ActionClient actionClient;
 	
 	private Map<String, GoalStatusEnum> stati = new HashMap<String, GoalStatusEnum>();
-	private GoalStatusEnum status = GoalStatusEnum.PENDING;
+	private GoalStatusEnum status;
 	
 	private final Logger LOGGER;	
 	
@@ -68,7 +56,7 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 
 	@Override
 	public GoalStatusEnum getGoalStatus(GoalID goal) {
-		return stati.get(goal);
+		return stati.get(goal.getID());
 	}
 	
 	@Override
@@ -93,7 +81,8 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 		Matcher matcher = pattern.matcher(connectionString);
 		boolean matches = matcher.matches();
 		if (!matches) {
-			//throw new ComponentException("Invalid external connection string! " + connectionString + " does not match the expected pattern " + patternString);
+			LOGGER.error("Invalid external connection string! " + connectionString + " does not match the expected pattern " + patternString);
+			return false;
 		}
 		
 		protocol = matcher.group("protocol");
@@ -137,7 +126,7 @@ public class URServiceImpl implements URService, ServiceProvider<URService>, Act
 	@Override
 	public void handleStatus(GoalStatus goalStatus) {
 		LOGGER.debug("STATUS: " + goalStatus.toString());	
-		stati.put(goalStatus.getGoalID().getID(), GoalStatusEnum.get(goalStatus.getStatus()));	
+		//stati.put(goalStatus.getGoalID().getID(), GoalStatusEnum.get(goalStatus.getStatus()));	
 		status = GoalStatusEnum.get(goalStatus.getStatus());
 	}
 	

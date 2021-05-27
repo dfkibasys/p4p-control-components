@@ -17,7 +17,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class TakeOffOperationMode extends BaseDroneOperationMode {
 	
-	CountDownLatch counter = new CountDownLatch(1);
+	private CountDownLatch counter;
 
 	public TakeOffOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
@@ -26,6 +26,8 @@ public class TakeOffOperationMode extends BaseDroneOperationMode {
 	@Override
 	public void onStarting() {	
 		super.onStarting();
+		
+		counter = new CountDownLatch(1);
 
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 

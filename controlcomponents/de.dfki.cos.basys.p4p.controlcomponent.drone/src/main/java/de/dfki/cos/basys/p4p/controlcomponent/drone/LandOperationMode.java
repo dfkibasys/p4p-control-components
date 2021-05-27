@@ -18,7 +18,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class LandOperationMode extends BaseDroneOperationMode{
 	
-	CountDownLatch counter = new CountDownLatch(1);
+	private CountDownLatch counter;
 
 	public LandOperationMode(BaseControlComponent<DroneService> component) {
 		super(component);
@@ -27,6 +27,8 @@ public class LandOperationMode extends BaseDroneOperationMode{
 	@Override
 	public void onStarting() {	
 		super.onStarting();
+		
+		counter = new CountDownLatch(1);
 
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 

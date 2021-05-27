@@ -3,6 +3,8 @@ package de.dfki.cos.basys.p4p.controlcomponent.drone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.file.Counters.Counter;
+
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
@@ -19,7 +21,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode {
 	
-	CountDownLatch counter = new CountDownLatch(1);
+	private CountDownLatch counter;
 
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "";
@@ -35,6 +37,8 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
+		
+		counter = new CountDownLatch(1);
 			
 		MissionState.getInstance().addStateListener(new MissionStateListener() {
 
@@ -50,7 +54,6 @@ public class MoveToSymbolicPositionOperationMode extends BaseDroneOperationMode 
 					counter.countDown();
 				}
 			}
-			
 		});
 		
 		// precautionary set timeout error (gets overridden in case of success)

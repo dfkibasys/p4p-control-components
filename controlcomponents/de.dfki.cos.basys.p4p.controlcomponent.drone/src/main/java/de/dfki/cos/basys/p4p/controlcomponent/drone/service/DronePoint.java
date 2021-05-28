@@ -16,20 +16,20 @@ public class DronePoint {
 		this.pitch = pitch;
 	}
 
-	public Vector3d getPosition() {
+	public Vector3d getPos() {
 		return pos;
 	}
 
-	public void setPosition(Vector3d pos) {
+	public void setPos(Vector3d pos) {
 		this.pos = pos;
 	}
 
-	public double getRotation() {
+	public double getRot() {
 		return rot;
 	}
 
-	public void setRotation(double rot2) {
-		this.rot = rot2;
+	public void setRot(double rot) {
+		this.rot = rot;
 	}
 
 	public double getPitch() {

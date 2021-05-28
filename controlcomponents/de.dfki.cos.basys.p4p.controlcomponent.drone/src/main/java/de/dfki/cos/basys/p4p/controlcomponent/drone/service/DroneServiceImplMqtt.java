@@ -233,12 +233,12 @@ public class DroneServiceImplMqtt implements DroneService, ServiceProvider<Drone
 		JsonObject position = Json.createObjectBuilder()
 				.add("pos", 
 						Json.createObjectBuilder()
-						.add("x", point.getPosition().getX())
-						.add("y", point.getPosition().getY())
-						.add("z", point.getPosition().getZ())
+						.add("x", point.getPos().getX())
+						.add("y", point.getPos().getY())
+						.add("z", point.getPos().getZ())
 						.build()
 						)
-				.add("rot", point.getRotation())
+				.add("rot", point.getRot())
 				.add("pitch", point.getPitch())
 				.build();
 	

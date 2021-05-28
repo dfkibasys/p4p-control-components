@@ -8,6 +8,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,7 @@ public class MoveToWaypointsOperationMode extends BaseDroneOperationMode{
 		List<DronePoint> wp = null;
 		try {
 			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
+			//wp = Arrays.asList(new ObjectMapper().readValue(waypoints, DronePoint[].class));
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

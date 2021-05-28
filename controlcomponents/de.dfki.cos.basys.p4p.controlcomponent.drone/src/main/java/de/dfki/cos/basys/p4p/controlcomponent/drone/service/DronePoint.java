@@ -5,11 +5,15 @@ public class DronePoint {
 	private Vector3d pos;
 	private double rot;
 	private double pitch;
+	
+	public DronePoint() {
+		super();
+	}
 
 	public DronePoint(double x, double y, double z, double rot, double pitch) {
-		this.setPosition(new Vector3d(x, y, z));
-		this.setRotation(rot);
-		this.setPitch(pitch);
+		this.pos = new Vector3d(x, y, z);
+		this.rot = rot;
+		this.pitch = pitch;
 	}
 
 	public Vector3d getPosition() {

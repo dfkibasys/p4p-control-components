@@ -6,10 +6,14 @@ public class Vector3d {
 	private double y;
 	private double z;
 	
+	public Vector3d() {
+		super();
+	}
+	
 	public Vector3d(double x, double y, double z) {
-		this.setX(x);
-		this.setY(y);
-		this.setZ(z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public double getX() {

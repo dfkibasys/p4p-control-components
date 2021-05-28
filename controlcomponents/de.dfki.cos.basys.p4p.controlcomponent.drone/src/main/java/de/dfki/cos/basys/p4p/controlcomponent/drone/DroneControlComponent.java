@@ -19,6 +19,7 @@ public class DroneControlComponent extends BaseControlComponent<DroneService> {
 		registerOperationMode(new DetectObstacleOperationMode(this));	
 		registerOperationMode(new LandOperationMode(this));		
 		registerOperationMode(new MoveToPointOperationMode(this));
+		registerOperationMode(new MoveToWaypointsOperationMode(this));
 	}
 	
 }

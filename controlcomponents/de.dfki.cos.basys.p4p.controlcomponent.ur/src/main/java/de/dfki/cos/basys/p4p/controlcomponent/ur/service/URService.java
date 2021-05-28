@@ -1,14 +1,16 @@
 package de.dfki.cos.basys.p4p.controlcomponent.ur.service;
 
-import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
-import edu.wpi.rail.jrosbridge.messages.actionlib.GoalID;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URState.MissionState;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URState.WorkState;
+
 
 public interface URService {
 	
 	void moveToSymbolicPosition(String positionName);
 	
-	GoalStatusEnum getGoalStatus(GoalID goal);
-	GoalStatusEnum getStatus();
+	MissionState getMissionState();
+	WorkState getWorkState();
+	String getStatus();
 	
 	void reset();
 	

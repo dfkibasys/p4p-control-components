@@ -8,10 +8,10 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "ProjectRectangle", shortName = "PR_RECT", description = "projects a rectangle", 
+@OperationMode(name = "ProjectLine", shortName = "PR_LINE", description = "projects a line", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
-public class ProjectRectangleOperationMode extends BaseLapOperationMode {
+public class ProjectLineOperationMode extends BaseLapOperationMode {
 
 	@Parameter(name = "x", direction = ParameterDirection.IN)
 	private double x = 0;
@@ -22,11 +22,14 @@ public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "z", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "width", direction = ParameterDirection.IN)
-	private double width = 0;
+	@Parameter(name = "x2", direction = ParameterDirection.IN)
+	private double x2 = 0;
 	
-	@Parameter(name = "height", direction = ParameterDirection.IN)
-	private double height = 0;
+	@Parameter(name = "y2", direction = ParameterDirection.IN)
+	private double y2 = 0;
+	
+	@Parameter(name = "z2", direction = ParameterDirection.IN)
+	private double z2 = 0;
 	
 	@Parameter(name = "color", direction = ParameterDirection.IN)
 	private int color = 0;
@@ -35,14 +38,14 @@ public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 	private int duration_out = 0;
 	
 		
-	public ProjectRectangleOperationMode(BaseControlComponent<LapService> component) {
+	public ProjectLineOperationMode(BaseControlComponent<LapService> component) {
 		super(component);
 	}
 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		getService(LapService.class).projectRectangle(x, y, z, color, width, height);
+		getService(LapService.class).projectLine(x, y, z, color, x2, y2, z2);
 		executing = true;
 	}
 

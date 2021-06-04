@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<relativePath>../../poms/compiled/</relativePath>
+		<groupId>de.dfki.cos.basys.p4p</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>0.1.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.lap
+		</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.lap
+		</bundle.namespace>
+	</properties>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
+	<artifactId>de.dfki.cos.basys.p4p.controlcomponent.lap</artifactId>
+
+	<name>${bundle.symbolicName}</name>
+
+	<packaging>bundle</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
+			<artifactId>de.dfki.cos.basys.controlcomponent.core</artifactId>
+			<version>${version.basys.controlcomponent}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.common.rest</groupId>
+			<artifactId>de.dfki.cos.basys.common.rest.mir</artifactId>
+			<version>${version.basys.common}</version>
+		</dependency>
+
+		<!-- comment to remove all imported (non-local) bundles from your compilation 
+			classpath -->
+		<dependency>
+			<type>pom</type>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>provision</artifactId>
+			<version>${project.version}</version>
+			<optional>true</optional>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+		    <version>1.1.4</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

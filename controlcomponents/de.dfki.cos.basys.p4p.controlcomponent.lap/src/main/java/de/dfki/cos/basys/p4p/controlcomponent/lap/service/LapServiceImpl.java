@@ -21,8 +21,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 
 	protected final Logger LOGGER = LoggerFactory.getLogger(LapServiceImpl.class.getName());
 	private boolean connected = false;
-	private String connectionString = "http://10.2.0.47:9000/laserControl";
+	//private String connectionString = "http://10.2.0.47:9000/laserControl";
 	private String missionState = "pending";
+	WebTarget resource = null;
 	
 	public LapServiceImpl(Properties config) {
 
@@ -31,9 +32,22 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
 		
-		//TODO: Test if connectionString works
-
-		connected = true;
+		Client client = ClientBuilder.newClient();
+		resource = client.target(connectionString);
+		
+		JsonObject entity = 
+				Json.createObjectBuilder()
+				.add("action", "stop")
+				.build();
+		
+		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		
+		if (response.getStatus() == 200) {
+			connected = true;
+		}
+		else {
+			connected = false;
+		}
 		
 		return connected;
 	}
@@ -57,10 +71,7 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectRectangle(double x, double y, double z, double width, double height, int color) {
 		
 		missionState = "executing";
-		
-		Client client = ClientBuilder.newClient();
-		WebTarget resource = client.target(connectionString);
-		
+
 		JsonObject obj = 
 				Json.createObjectBuilder()
 				.add("x", x)
@@ -80,8 +91,10 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
 		if (response.getStatus() == 200) {
-			LOGGER.debug("success");
 			missionState = "done";
+		}
+		else {
+			missionState = "failed";
 		}
 		
 	}
@@ -90,6 +103,7 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	@Override
 	public void reset() {
 		missionState = "pending";
+		resource = null;
 	}
 
 	@Override

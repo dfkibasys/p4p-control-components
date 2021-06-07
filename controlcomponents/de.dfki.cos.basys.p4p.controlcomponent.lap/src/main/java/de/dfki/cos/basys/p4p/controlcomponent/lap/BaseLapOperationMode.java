@@ -1,10 +1,16 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap;
 
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.lap.service.LapService;
 
 public class BaseLapOperationMode extends BaseOperationMode<LapService>{
+	
+	private static final int MOCKUP_SERVICE_DURATION = 5000;
 	
 	protected int duration = 0;
 	protected long startTime = 0;
@@ -87,7 +93,42 @@ public class BaseLapOperationMode extends BaseOperationMode<LapService>{
 	
 	@Override
 	protected void configureServiceMock(LapService serviceMock) {
-		//TODO
+		Mockito.doNothing().when(serviceMock).projectArrowsAndCircles(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyList(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyInt());
+		Mockito.doNothing().when(serviceMock).projectChar(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectCircle(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectEllipse(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectLine(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectMovingArrows(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyList(), Mockito.anyInt(), Mockito.anyInt());
+		Mockito.doNothing().when(serviceMock).projectMovingETA(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectPulsatingCircle(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt());
+		Mockito.doNothing().when(serviceMock).projectRectangle(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectString(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).stopProjection();
+		Mockito.doNothing().when(serviceMock).reset();
+		Mockito.doNothing().when(serviceMock).abort();
+		Mockito.doNothing().when(serviceMock).pause();
+		Mockito.doNothing().when(serviceMock).resume();
+		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<String>() {
+			boolean accepted = false;
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				if(!accepted)
+				{
+					missionState = "accepted";
+					accepted = true;
+				}
+				else { // accepted
+					long elapsed = System.currentTimeMillis() - startTime;
+					if (elapsed < MOCKUP_SERVICE_DURATION) {
+						missionState = "executing";
+					} else {
+						missionState = "done";
+					}
+			}
+				return missionState;
+			}
+			
+		});
 	}
 
 }

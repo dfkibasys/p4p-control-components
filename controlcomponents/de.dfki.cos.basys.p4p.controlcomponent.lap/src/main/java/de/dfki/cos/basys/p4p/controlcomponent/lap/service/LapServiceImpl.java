@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
+import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.ProjectionStopRequest;
 
 public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 
@@ -39,12 +40,17 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 		Client client = ClientBuilder.newClient();
 		resource = client.target(connectionString);
 		
+		/**
 		JsonObject entity = 
 				Json.createObjectBuilder()
 				.add("action", "stop")
 				.build();
-		
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+				*/
+		ProjectionStopRequest psr = new ProjectionStopRequest();
+		psr.action = "stop";
+
+		//Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).header("Content-Type", "application/json").put(Entity.json(entity));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).header("Content-Type", "application/json").put(Entity.entity(psr, MediaType.APPLICATION_JSON));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			connected = true;

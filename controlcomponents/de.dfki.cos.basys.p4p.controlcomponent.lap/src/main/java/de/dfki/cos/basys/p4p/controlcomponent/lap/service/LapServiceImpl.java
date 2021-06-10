@@ -11,6 +11,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 
 	protected final Logger LOGGER = LoggerFactory.getLogger(LapServiceImpl.class.getName());
 	private boolean connected = false;
-	//private String connectionString = "http://10.2.0.47:9000/laserControl";
 	private String missionState = "pending";
 	WebTarget resource = null;
 	
@@ -44,9 +44,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("action", "stop")
 				.build();
 		
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			connected = true;
 		}
 		else {
@@ -93,9 +93,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -125,9 +125,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -157,9 +157,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -191,9 +191,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -226,9 +226,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -259,9 +259,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -301,9 +301,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -336,9 +336,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -373,9 +373,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -422,9 +422,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("data", Json.createArrayBuilder().add(obj).build())
 				.build();
 
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {
@@ -442,9 +442,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 				.add("action", "stop")
 				.build();
 		
-		Response response = resource.request().put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		if (response.getStatus() == 200) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
 		}
 		else {

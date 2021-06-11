@@ -2,6 +2,8 @@ package de.dfki.cos.basys.p4p.controlcomponent.lap.service;
 
 import java.util.List;
 
+import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.Point;
+
 public interface LapService {
 	void projectString(double x, double y, double z, int color, String text, double height);
 	void projectChar(double x, double y, double z, int color, String chr, double height);

@@ -54,6 +54,13 @@ Start all three of them in the following order:
 
 After a first launch, the three mentioned run configurations should appear in the run section.
 
+---
+**HINT**
+
+ Mac users need to go to `Run Configurations...` and replace the backward with the forward slash in the `Arguments` tab for each of the three launch configurations.
+
+---
+
 <img src='/docs/basys4.2-p4p-demonstrator-startup.png?raw=true' width='50%' height='50%'>
 
 ### Inspecting the OPC-UA Server

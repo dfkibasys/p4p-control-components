@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.p4p.controlcomponent.lap.service;
+package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
 public class Point {
 	

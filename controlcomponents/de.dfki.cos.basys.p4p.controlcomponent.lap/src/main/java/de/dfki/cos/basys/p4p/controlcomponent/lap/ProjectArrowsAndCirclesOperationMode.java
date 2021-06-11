@@ -3,9 +3,8 @@ package de.dfki.cos.basys.p4p.controlcomponent.lap;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.lap.service.LapService;
-import de.dfki.cos.basys.p4p.controlcomponent.lap.service.Point;
+import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.Point;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -80,9 +79,6 @@ public class ProjectArrowsAndCirclesOperationMode extends BaseLapOperationMode {
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		getService(LapService.class).projectArrowsAndCircles(x, y, z, color, pnts, arrowCount, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delayArrows, delayCircles);

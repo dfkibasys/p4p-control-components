@@ -6,7 +6,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.Point;
 
 public interface LapService {
 	void projectString(double x, double y, double z, int color, String text, double height);
-	void projectChar(double x, double y, double z, int color, String chr, double height);
+	void projectChar(double x, double y, double z, int color, char chr, double height);
 	void projectCircle(double x, double y, double z, int color, double radius, double angleStart, double angleLength);
 	void projectEllipse(double x, double y, double z, int color, double majorRadius, double minorRadius, double angleStart, double angleLength);
 	void projectLine(double x, double y, double z, int color, double x2, double y2, double z2);

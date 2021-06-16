@@ -1,15 +1,15 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class CharProjectionData extends GeneralData {
+public class PEChar extends ProjectionEntity {
 	
-	private String chr;
+	private char chr;
 	private double height;
 	
-	public CharProjectionData() {
+	public PEChar() {
 		this.type = "char";
 	}
 	
-	public CharProjectionData(double x, double y, double z, int color, String chr, double height) {
+	public PEChar(double x, double y, double z, int color, char chr, double height) {
 		this.type = "char";
 		this.setX(x);
 		this.setY(y);
@@ -19,10 +19,10 @@ public class CharProjectionData extends GeneralData {
 		this.setHeight(height);
 	}
 	
-	public String getChr() {
+	public char getChr() {
 		return chr;
 	}
-	public void setChr(String chr) {
+	public void setChr(char chr) {
 		this.chr = chr;
 	}
 	public double getHeight() {

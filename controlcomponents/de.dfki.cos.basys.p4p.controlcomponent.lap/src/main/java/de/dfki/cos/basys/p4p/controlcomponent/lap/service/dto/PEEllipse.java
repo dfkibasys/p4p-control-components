@@ -1,17 +1,17 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class EllipseProjectionData extends GeneralData {
+public class PEEllipse extends ProjectionEntity {
 	
 	private double majorRadius;
 	private double minorRadius;
 	private double angleStart;
 	private double angleLength;
 	
-	public EllipseProjectionData() {
+	public PEEllipse() {
 		this.type = "ellipse";
 	}
 	
-	public EllipseProjectionData(double x, double y, double z, int color, double majorRadius, double minorRadius, double angleStart, double angleLength) {
+	public PEEllipse(double x, double y, double z, int color, double majorRadius, double minorRadius, double angleStart, double angleLength) {
 		this.type = "ellipse";
 		this.setX(x);
 		this.setY(y);

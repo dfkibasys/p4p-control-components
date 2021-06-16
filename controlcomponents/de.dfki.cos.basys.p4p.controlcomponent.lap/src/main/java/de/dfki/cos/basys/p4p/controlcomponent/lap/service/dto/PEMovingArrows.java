@@ -2,17 +2,17 @@ package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
 import java.util.List;
 
-public class MovingArrowsProjectionData extends GeneralData {
+public class PEMovingArrows extends ProjectionEntity {
 	
 	private List<Point> points;
 	private int arrowCount;
 	private int delay;
 	
-	public MovingArrowsProjectionData() {
+	public PEMovingArrows() {
 		this.type ="movingArrows";
 	}
 	
-	public MovingArrowsProjectionData(double x, double y, double z, int color, List<Point> points, int arrowCount, int delay) {
+	public PEMovingArrows(double x, double y, double z, int color, List<Point> points, int arrowCount, int delay) {
 		this.type ="movingArrows";
 		this.setX(x);
 		this.setY(y);

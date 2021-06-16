@@ -1,9 +1,9 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class StopProjectionRequest {
+public class StopProjection {
 	private String action;
 	
-	public StopProjectionRequest() {
+	public StopProjection() {
 		this.action = "stop";
 	}
 

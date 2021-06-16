@@ -35,9 +35,13 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 		Client client = ClientBuilder.newClient();
 		resource = client.target(connectionString);
 
-		StopProjectionRequest spr = new StopProjectionRequest();
+		//StopProjection sp = new StopProjection();
+		
+		Projection p = new Projection();
+		p.addEntity(new PERectangle(1, 1, 1, 2, 3, 3));
+		
 
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(spr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			connected = true;
@@ -69,9 +73,10 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 		
 		missionState = "executing";
 		
-		RectangleProjectionRequest rpr = new RectangleProjectionRequest(x, y, z, color, width, height);
+		Projection p = new Projection();
+		p.addEntity(new PERectangle(x, y, z, color, width, height));
 		
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(rpr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -85,10 +90,11 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	@Override
 	public void projectString(double x, double y, double z, int color, String text, double height) {
 		missionState = "executing";
+		
+		Projection p = new Projection();
+		p.addEntity(new PEString(x, y, z, color, text, height));
 
-		StringProjectionRequest spr = new StringProjectionRequest(x, y, z, color, text, height);
-
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(spr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -100,12 +106,13 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	}
 
 	@Override
-	public void projectChar(double x, double y, double z, int color, String chr, double height) {
+	public void projectChar(double x, double y, double z, int color, char chr, double height) {
 		missionState = "executing";
 		
-		CharProjectionRequest cpr = new CharProjectionRequest(x, y, z, color, chr, height);
+		Projection p = new Projection();
+		p.addEntity(new PEChar(x, y, z, color, chr, height));
 
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(cpr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -120,10 +127,11 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectCircle(double x, double y, double z, int color, double radius, double angleStart,
 			double angleLength) {
 		missionState = "executing";
+		
+		Projection p = new Projection();
+		p.addEntity(new PECircle(x, y, z, color, radius, angleStart, angleLength));
 
-		CircleProjectionRequest cpr = new CircleProjectionRequest(x, y, z, color, radius, angleStart, angleLength);
-
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(cpr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -138,10 +146,11 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectEllipse(double x, double y, double z, int color, double majorRadius, double minorRadius,
 			double angleStart, double angleLength) {
 		missionState = "executing";
-
-		EllipseProjectionRequest epr = new EllipseProjectionRequest(x, y, z, color, majorRadius, minorRadius, angleStart, angleLength);
+		
+		Projection p = new Projection();
+		p.addEntity(new PEEllipse(x, y, z, color, majorRadius, minorRadius, angleStart, angleLength));
 				
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(epr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -156,9 +165,10 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectLine(double x, double y, double z, int color, double x2, double y2, double z2) {
 		missionState = "executing";
 		
-		LineProjectionRequest lpr = new LineProjectionRequest(x, y, z, color, x2, y2, z2);
+		Projection p = new Projection();
+		p.addEntity(new PELine(x, y, z, color, x2, y2, z2));
 
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(lpr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -174,9 +184,10 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 			int delay) {
 		missionState = "executing";
 		
-		MovingArrowsProjectionRequest mapr = new MovingArrowsProjectionRequest(x, y, z, color, points, arrowCount, delay);
+		Projection p = new Projection();
+		p.addEntity(new PEMovingArrows(x, y, z, color, points, arrowCount, delay));
 
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(mapr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -191,10 +202,11 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectMovingETA(double x, double y, double z, int color, double radius, double angle, double fullTime,
 			double startTime) {
 		missionState = "executing";
+		
+		Projection p = new Projection();
+		p.addEntity(new PEMovingETA(x, y, z, color, radius, angle, fullTime, startTime));
 
-		MovingETAProjectionRequest mepr = new MovingETAProjectionRequest(x, y, z, color, radius, angle, fullTime, startTime);
-
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(mepr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -209,10 +221,11 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void projectPulsatingCircle(double x, double y, double z, int color, double innerCircleRadius,
 			double middleCircleRadius, double outerCircleRadius, double angleStart, double angleLength, int delay) {
 		missionState = "executing";
+		
+		Projection p = new Projection();
+		p.addEntity(new PEPulsatingCircle(x, y, z, color, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delay));
 
-		PulsatingCirclesProjectionRequest pcpr = new PulsatingCirclesProjectionRequest(x, y, z, color, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delay);
-
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(pcpr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -229,9 +242,10 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 			double angleLength, int delayArrows, int delayCircles) {
 		missionState = "executing";
 		
-		ArrowsAndCirclesProjectionRequest acpr = new ArrowsAndCirclesProjectionRequest(x, y, z, color, points, arrowCount, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delayArrows, delayCircles);
-		
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(acpr));
+		Projection p = new Projection();
+		p.addEntity(new PEArrowsAndCircles(x, y, z, color, points, arrowCount, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delayArrows, delayCircles));
+
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";
@@ -246,9 +260,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	public void stopProjection() {
 		missionState = "executing";	
 
-		StopProjectionRequest spr = new StopProjectionRequest();
+		StopProjection sp = new StopProjection();
 
-		Response response = resource.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(spr));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(sp));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			missionState = "done";

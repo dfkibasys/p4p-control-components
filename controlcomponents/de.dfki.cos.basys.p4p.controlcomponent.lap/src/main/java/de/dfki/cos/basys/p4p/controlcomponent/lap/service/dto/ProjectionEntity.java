@@ -1,6 +1,6 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class GeneralData {
+public abstract class ProjectionEntity {
 	
 	protected String type;
 	private double x;

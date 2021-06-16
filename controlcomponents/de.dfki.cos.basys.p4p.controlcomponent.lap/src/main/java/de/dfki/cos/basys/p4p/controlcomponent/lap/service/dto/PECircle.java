@@ -1,16 +1,16 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class CircleProjectionData extends GeneralData {
+public class PECircle extends ProjectionEntity {
 	
 	private double radius;
 	private double angleStart;
 	private double angleLength;
 	
-	public CircleProjectionData() {
+	public PECircle() {
 		this.type = "circle";
 	}
 	
-	public CircleProjectionData(double x, double y, double z, int color, double radius, double angleStart, double angleLength) {
+	public PECircle(double x, double y, double z, int color, double radius, double angleStart, double angleLength) {
 		this.type = "circle";
 		this.setX(x);
 		this.setY(y);

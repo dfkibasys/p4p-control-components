@@ -1,16 +1,16 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class LineProjectionData extends GeneralData {
+public class PELine extends ProjectionEntity {
 	
 	private double x2;
 	private double y2;
 	private double z2;
 	
-	public LineProjectionData() {
+	public PELine() {
 		this.type = "line";
 	}
 	
-	public LineProjectionData(double x, double y, double z, int color, double x2, double y2, double z2) {
+	public PELine(double x, double y, double z, int color, double x2, double y2, double z2) {
 		this.type = "line";
 		this.setX(x);
 		this.setY(y);

@@ -23,7 +23,7 @@ public class ProjectCharOperationMode extends BaseLapOperationMode {
 	private double z = 0;
 	
 	@Parameter(name = "width", direction = ParameterDirection.IN)
-	private String chr = "";
+	private char chr;
 	
 	@Parameter(name = "height", direction = ParameterDirection.IN)
 	private double height = 0;

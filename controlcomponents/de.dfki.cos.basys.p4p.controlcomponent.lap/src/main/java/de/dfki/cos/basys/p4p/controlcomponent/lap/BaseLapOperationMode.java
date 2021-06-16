@@ -94,7 +94,7 @@ public class BaseLapOperationMode extends BaseOperationMode<LapService>{
 	@Override
 	protected void configureServiceMock(LapService serviceMock) {
 		Mockito.doNothing().when(serviceMock).projectArrowsAndCircles(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyList(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyInt());
-		Mockito.doNothing().when(serviceMock).projectChar(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyDouble());
+		Mockito.doNothing().when(serviceMock).projectChar(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyChar(), Mockito.anyDouble());
 		Mockito.doNothing().when(serviceMock).projectCircle(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
 		Mockito.doNothing().when(serviceMock).projectEllipse(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());
 		Mockito.doNothing().when(serviceMock).projectLine(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());

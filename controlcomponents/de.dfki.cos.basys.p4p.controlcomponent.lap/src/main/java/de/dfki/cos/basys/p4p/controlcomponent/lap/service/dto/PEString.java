@@ -1,15 +1,15 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class StringProjectionData extends GeneralData {
+public class PEString extends ProjectionEntity {
 	
 	private String text;
 	private double height;
 	
-	public StringProjectionData() {
+	public PEString() {
 		this.type = "string";
 	}
 	
-	public StringProjectionData(double x, double y, double z, int color, String text, double height) {
+	public PEString(double x, double y, double z, int color, String text, double height) {
 		this.type = "string";
 		this.setX(x);
 		this.setY(y);

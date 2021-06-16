@@ -1,17 +1,17 @@
 package de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto;
 
-public class MovingETAProjectionData extends GeneralData {
+public class PEMovingETA extends ProjectionEntity {
 	
 	private double radius;
 	private double angle;
 	private double fullTime;
 	private double startTime;
 	
-	public MovingETAProjectionData() {
+	public PEMovingETA() {
 		this.type = "movingETA";
 	}
 	
-	public MovingETAProjectionData(double x, double y, double z, int color, double radius, double angle, double fullTime, double startTime) {
+	public PEMovingETA(double x, double y, double z, int color, double radius, double angle, double fullTime, double startTime) {
 		this.type = "movingETA";
 		this.setX(x);
 		this.setY(y);

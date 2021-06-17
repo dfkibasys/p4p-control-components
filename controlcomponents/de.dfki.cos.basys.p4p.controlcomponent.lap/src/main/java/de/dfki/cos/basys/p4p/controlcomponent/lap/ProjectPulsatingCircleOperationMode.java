@@ -13,34 +13,34 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectPulsatingCircleOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xPuci", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yPuci", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zPuci", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "innerCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "innerCircleRadiusPuci", direction = ParameterDirection.IN)
 	private double innerCircleRadius = 0;
 	
-	@Parameter(name = "middleCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "middleCircleRadiusPuci", direction = ParameterDirection.IN)
 	private double middleCircleRadius = 0;
 	
-	@Parameter(name = "outerCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "outerCircleRadiusPuci", direction = ParameterDirection.IN)
 	private double outerCircleRadius = 0;
 	
-	@Parameter(name = "angleStart", direction = ParameterDirection.IN)
+	@Parameter(name = "angleStartPuci", direction = ParameterDirection.IN)
 	private double angleStart = 0;
 	
-	@Parameter(name = "angleLength", direction = ParameterDirection.IN)
+	@Parameter(name = "angleLengthPuci", direction = ParameterDirection.IN)
 	private double angleLength = 0;
 	
-	@Parameter(name = "delay", direction = ParameterDirection.IN)
+	@Parameter(name = "delayPuci", direction = ParameterDirection.IN)
 	private int delay = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorPuci", direction = ParameterDirection.IN)
 	private int color = 0;
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)

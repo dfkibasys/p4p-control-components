@@ -13,22 +13,22 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectCharOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xChar", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yChar", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zChar", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "width", direction = ParameterDirection.IN)
-	private char chr;
+	@Parameter(name = "chrChar", direction = ParameterDirection.IN)
+	private String chr;
 	
-	@Parameter(name = "height", direction = ParameterDirection.IN)
+	@Parameter(name = "heightChar", direction = ParameterDirection.IN)
 	private double height = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorChar", direction = ParameterDirection.IN)
 	private int color = 0;
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
@@ -42,7 +42,10 @@ public class ProjectCharOperationMode extends BaseLapOperationMode {
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		getService(LapService.class).projectChar(x, y, z, color, chr, height);
+		
+		char c = chr.charAt(0);
+		
+		getService(LapService.class).projectChar(x, y, z, color, c, height);
 		executing = true;
 	}
 

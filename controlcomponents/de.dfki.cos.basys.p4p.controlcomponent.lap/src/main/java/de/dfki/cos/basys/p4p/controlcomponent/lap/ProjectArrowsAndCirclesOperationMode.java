@@ -21,43 +21,43 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectArrowsAndCirclesOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xArci", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yArci", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zArci", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorArci", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "points", direction = ParameterDirection.IN)
+	@Parameter(name = "pointsArci", direction = ParameterDirection.IN)
 	private String points = "";
 	
-	@Parameter(name = "arrowCount", direction = ParameterDirection.IN)
+	@Parameter(name = "arrowCountArci", direction = ParameterDirection.IN)
 	private int arrowCount = 0;
 	
-	@Parameter(name = "innerCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "innerCircleRadiusArci", direction = ParameterDirection.IN)
 	private double innerCircleRadius = 0;
 	
-	@Parameter(name = "middleCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "middleCircleRadiusArci", direction = ParameterDirection.IN)
 	private double middleCircleRadius = 0;
 	
-	@Parameter(name = "outerCircleRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "outerCircleRadiusArci", direction = ParameterDirection.IN)
 	private double outerCircleRadius = 0;
 	
-	@Parameter(name = "angleStart", direction = ParameterDirection.IN)
+	@Parameter(name = "angleStartArci", direction = ParameterDirection.IN)
 	private double angleStart = 0;
 	
-	@Parameter(name = "angleLength", direction = ParameterDirection.IN)
+	@Parameter(name = "angleLengthArci", direction = ParameterDirection.IN)
 	private double angleLength = 0;
 	
-	@Parameter(name = "delayArrows", direction = ParameterDirection.IN)
+	@Parameter(name = "delayArrowsArci", direction = ParameterDirection.IN)
 	private int delayArrows = 0;
 	
-	@Parameter(name = "delayCircles", direction = ParameterDirection.IN)
+	@Parameter(name = "delayCirclesArci", direction = ParameterDirection.IN)
 	private int delayCircles = 0;
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)

@@ -13,28 +13,28 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectEllipseOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xElps", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yElps", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zElps", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "majorRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "majorRadiusElps", direction = ParameterDirection.IN)
 	private double majorRadius = 0;
 	
-	@Parameter(name = "minorRadius", direction = ParameterDirection.IN)
+	@Parameter(name = "minorRadiusElps", direction = ParameterDirection.IN)
 	private double minorRadius = 0;
 	
-	@Parameter(name = "angleStart", direction = ParameterDirection.IN)
+	@Parameter(name = "angleStartElps", direction = ParameterDirection.IN)
 	private double angleStart = 0;
 	
-	@Parameter(name = "angleLength", direction = ParameterDirection.IN)
+	@Parameter(name = "angleLengthElps", direction = ParameterDirection.IN)
 	private double angleLength = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorElps", direction = ParameterDirection.IN)
 	private int color = 0;
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)

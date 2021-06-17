@@ -13,22 +13,22 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xRect", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yRect", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zRect", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "width", direction = ParameterDirection.IN)
+	@Parameter(name = "widthRect", direction = ParameterDirection.IN)
 	private double width = 0;
 	
-	@Parameter(name = "height", direction = ParameterDirection.IN)
+	@Parameter(name = "heightRect", direction = ParameterDirection.IN)
 	private double height = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorRect", direction = ParameterDirection.IN)
 	private int color = 0;
 	
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)

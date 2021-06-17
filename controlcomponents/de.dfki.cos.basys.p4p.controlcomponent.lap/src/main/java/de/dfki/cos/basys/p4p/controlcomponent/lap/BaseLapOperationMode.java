@@ -8,7 +8,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.lap.service.LapService;
 
-public class BaseLapOperationMode extends BaseOperationMode<LapService>{
+public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>{
 	
 	private static final int MOCKUP_SERVICE_DURATION = 5000;
 	

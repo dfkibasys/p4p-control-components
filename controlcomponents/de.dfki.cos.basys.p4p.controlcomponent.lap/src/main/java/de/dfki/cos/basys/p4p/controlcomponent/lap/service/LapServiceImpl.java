@@ -47,7 +47,7 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 			connected = false;
 		}
 		
-		return true;
+		return connected;
 	}
 
 	@Override

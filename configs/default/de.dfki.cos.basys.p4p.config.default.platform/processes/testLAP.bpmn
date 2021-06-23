@@ -17,12 +17,12 @@
           <camunda:inputParameter name="token">PR_RECT</camunda:inputParameter>
           <camunda:inputParameter name="inputParameters">
             <camunda:script scriptFormat="freemarker">[
-{ "name": "x", "type" : "DOUBLE", "value": "${xRect}"},
-{ "name": "y", "type" : "DOUBLE", "value": "${yRect}"},
-{ "name": "z", "type" : "DOUBLE", "value": "${zRect}"},
-{ "name": "width", "type" : "DOUBLE", "value": "${widthRect}"},
-{ "name": "height", "type" : "DOUBLE", "value": "${heightRect}"},
-{ "name": "color", "type" : "INTEGER", "value": "${colorRect}"}
+{ "name": "xRect", "type" : "DOUBLE", "value": "${xRect}"},
+{ "name": "yRect", "type" : "DOUBLE", "value": "${yRect}"},
+{ "name": "zRect", "type" : "DOUBLE", "value": "${zRect}"},
+{ "name": "widthRect", "type" : "DOUBLE", "value": "${widthRect}"},
+{ "name": "heightRect", "type" : "DOUBLE", "value": "${heightRect}"},
+{ "name": "colorRect", "type" : "INTEGER", "value": "${colorRect}"}
 ]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
@@ -59,7 +59,7 @@
           <camunda:formField id="zRect" label="Z" type="string" defaultValue="0" />
           <camunda:formField id="widthRect" label="Width" type="string" defaultValue="0.35" />
           <camunda:formField id="heightRect" label="Height" type="string" defaultValue="0.66" />
-          <camunda:formField id="colorRect" label="Color" type="long" defaultValue="251723520" />
+          <camunda:formField id="colorRect" label="Color" type="string" defaultValue="251723520" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0ysozpq</bpmn:outgoing>

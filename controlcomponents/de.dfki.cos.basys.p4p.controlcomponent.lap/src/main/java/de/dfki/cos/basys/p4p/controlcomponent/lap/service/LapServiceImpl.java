@@ -19,7 +19,6 @@ import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.*;
 
 public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
-
 	private Properties config = null;
 
 	protected final Logger LOGGER = LoggerFactory.getLogger(LapServiceImpl.class.getName());
@@ -48,7 +47,7 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 			connected = false;
 		}
 		
-		return connected;
+		return true;
 	}
 
 	@Override
@@ -274,7 +273,6 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	@Override
 	public void reset() {
 		missionState = "pending";
-		resource = null;
 	}
 
 	@Override

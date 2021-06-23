@@ -42,7 +42,7 @@ public class ProjectMovingArrowsOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "colorMvar", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationMvar", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

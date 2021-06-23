@@ -29,6 +29,7 @@ public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>
 		duration = 0;
 		startTime = 0;
 		endTime = 0;
+		getService(LapService.class).reset();
 		executing = false;
 	}
 

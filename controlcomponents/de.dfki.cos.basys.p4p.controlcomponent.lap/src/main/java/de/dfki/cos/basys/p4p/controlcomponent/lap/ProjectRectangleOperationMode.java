@@ -31,7 +31,7 @@ public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "colorRect", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationRect", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		
@@ -45,12 +45,25 @@ public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 		getService(LapService.class).projectRectangle(x, y, z, color, width, height);
 		executing = true;
 	}
+	
+	@Override
+	public void onResetting() {
+		super.onResetting();
+		sleep(1000);
+	}
 
 
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
 		duration_out = duration;
+		sleep(1000);
+	}
+	
+	@Override
+	public void onStopping() {
+		super.onStopping();
+		sleep(1000);
 	}
 
 }

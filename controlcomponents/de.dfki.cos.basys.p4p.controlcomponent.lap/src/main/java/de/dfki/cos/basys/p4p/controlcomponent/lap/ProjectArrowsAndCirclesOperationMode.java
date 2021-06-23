@@ -60,7 +60,7 @@ public class ProjectArrowsAndCirclesOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "delayCirclesArci", direction = ParameterDirection.IN)
 	private int delayCircles = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationArci", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

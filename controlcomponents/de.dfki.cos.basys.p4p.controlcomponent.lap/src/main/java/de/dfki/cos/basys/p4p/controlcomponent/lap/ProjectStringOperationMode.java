@@ -31,7 +31,7 @@ public class ProjectStringOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "colorStrg", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationStrg", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

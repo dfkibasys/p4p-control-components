@@ -13,7 +13,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class StopProjectionOperationMode extends BaseLapOperationMode {
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationStop", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		
@@ -27,12 +27,23 @@ public class StopProjectionOperationMode extends BaseLapOperationMode {
 		getService(LapService.class).stopProjection();
 		executing = true;
 	}
-
+	
+	@Override
+	public void onResetting() {
+		super.onResetting();
+		sleep(1000);
+	}
 
 	@Override
 	public void onCompleting() {
 		super.onCompleting();
 		duration_out = duration;
+	}
+	
+	@Override
+	public void onStopping() {
+		super.onStopping();
+		sleep(1000);
 	}
 
 }

@@ -43,7 +43,7 @@ public class ProjectPulsatingCircleOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "colorPuci", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationPuci", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

@@ -37,7 +37,7 @@ public class ProjectMovingETAOperationMode extends BaseLapOperationMode {
 	@Parameter(name = "startTimeMeta", direction = ParameterDirection.IN)
 	private double startTime = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationMeta", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

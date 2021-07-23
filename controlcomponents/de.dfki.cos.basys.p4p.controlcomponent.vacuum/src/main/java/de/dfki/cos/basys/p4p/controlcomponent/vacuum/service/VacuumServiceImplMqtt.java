@@ -19,9 +19,12 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.vacuum.service.VacuumStatus.*;
+import de.dfki.cos.basys.p4p.controlcomponent.vacuum.service.dto.StatusEntity;
 
 
 public class VacuumServiceImplMqtt implements VacuumService, ServiceProvider<VacuumService>{
@@ -61,10 +64,12 @@ public class VacuumServiceImplMqtt implements VacuumService, ServiceProvider<Vac
 							
 							@Override
 							public void messageArrived(String topic, MqttMessage message) throws Exception {
-								String sMessage = new String(message.getPayload());		
+								String sMessage = new String(message.getPayload());	
 								
-								//TODO: parse to json object and set "state" as WState
-								//WorkState.getInstance().setState(state);
+								StatusEntity status = new ObjectMapper().readValue(sMessage, StatusEntity.class);
+								
+								//TODO: Set "status.state" or "status.state_code" as WState
+								//WorkState.getInstance().setState(status.state);
 
 							}
 						}).waitForCompletion();
@@ -109,9 +114,9 @@ public class VacuumServiceImplMqtt implements VacuumService, ServiceProvider<Vac
 				/*
 				 * check for WState here and update MState
 				 * 
-				if (newState.equals(WState.REACHED_POINT)) {
+				if (newState.equals(WState.RETURNING)) {
 					MissionState.getInstance().setState(MState.DONE);		
-				} else if (newState.equals(WState.DRIVING_TO_POINT)) {
+				} else if (newState.equals(WState.CLEANING)) {
 					MissionState.getInstance().setState(MState.EXECUTING);		
 				} 
 				*/

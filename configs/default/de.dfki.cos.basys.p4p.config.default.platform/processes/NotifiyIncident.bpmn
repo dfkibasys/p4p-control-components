@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_022o2pi" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="NotifyIncident" name="NotifyIncident" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_026k6ue" sourceRef="StartEvent_1" targetRef="Activity_03arubi" />
+    <bpmn:endEvent id="Event_0zhlt5w">
+      <bpmn:incoming>Flow_1i32cjs</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1i32cjs" sourceRef="Activity_03arubi" targetRef="Event_0zhlt5w" />
+    <bpmn:serviceTask id="Activity_03arubi" name="do notify" camunda:modelerTemplate="de.dfki.cos.basys.notificationRequest" camunda:type="external" camunda:topic="Notification">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="requestType">ServiceRequest</camunda:inputParameter>
+          <camunda:inputParameter name="token">notify</camunda:inputParameter>
+          <camunda:inputParameter name="componentId">notification-service</camunda:inputParameter>
+          <camunda:inputParameter name="criticality">WARNING</camunda:inputParameter>
+          <camunda:inputParameter name="status">OPEN</camunda:inputParameter>
+          <camunda:inputParameter name="skill">UNDEFINED</camunda:inputParameter>
+          <camunda:inputParameter name="role">ALL</camunda:inputParameter>
+          <camunda:inputParameter name="value">
+            <camunda:script scriptFormat="freemarker">${incidentValue}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="message">
+            <camunda:script scriptFormat="freemarker">${incidentMessage}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="timestamp">
+            <camunda:script scriptFormat="freemarker">${incidentTimestamp}</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="signalId">
+            <camunda:script scriptFormat="freemarker">${incidentSignalId}</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_026k6ue</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i32cjs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_026k6ue</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0d6fexv" messageRef="Message_0m7r8uo" />
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0m7r8uo" name="new-incident" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="NotifyIncident">
+      <bpmndi:BPMNEdge id="Flow_1i32cjs_di" bpmnElement="Flow_1i32cjs">
+        <di:waypoint x="380" y="120" />
+        <di:waypoint x="472" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_026k6ue_di" bpmnElement="Flow_026k6ue">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="280" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0zhlt5w_di" bpmnElement="Event_0zhlt5w">
+        <dc:Bounds x="472" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0szx71v_di" bpmnElement="Activity_03arubi">
+        <dc:Bounds x="280" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qrpndb_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

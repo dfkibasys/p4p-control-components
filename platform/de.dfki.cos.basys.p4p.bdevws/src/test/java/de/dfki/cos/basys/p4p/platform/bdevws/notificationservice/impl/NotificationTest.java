@@ -38,7 +38,7 @@ public class NotificationTest {
 		List<BDEVWSNotificationSkill> skills =  List.of(BDEVWSNotificationSkill.UNDEFINED);
 		List<BDEVWSNotificationRole> roles =  List.of(BDEVWSNotificationRole.ALL);
 		
-		BDEVWSNotification notification = new BDEVWSNotification("testSendAlert", "signalId", 42, i.toEpochMilli(), BDEVWSNotificationCriticality.ALERT, BDEVWSNotificationStatus.OPEN, null, null, null, 0, roles, skills);
+		BDEVWSNotification notification = new BDEVWSNotification("testSendAlert", "signalId", "topic", 42, i.toEpochMilli(), BDEVWSNotificationCriticality.ALERT, BDEVWSNotificationStatus.OPEN, null, null, null, 0, roles, skills);
 		
 		BDEVWSNotification result = service.notify(notification);
 	}
@@ -49,7 +49,7 @@ public class NotificationTest {
 		List<BDEVWSNotificationSkill> skills =  List.of(BDEVWSNotificationSkill.UNDEFINED);
 		List<BDEVWSNotificationRole> roles =  List.of(BDEVWSNotificationRole.ALL);
 		
-		BDEVWSNotification notification = new BDEVWSNotification("testSendWarning", "signalId", 42, i.toEpochMilli(), BDEVWSNotificationCriticality.WARNING, BDEVWSNotificationStatus.OPEN, null, null, null, 0, roles, skills);
+		BDEVWSNotification notification = new BDEVWSNotification("testSendWarning", "signalId", "topic", 42, i.toEpochMilli(), BDEVWSNotificationCriticality.WARNING, BDEVWSNotificationStatus.OPEN, null, null, null, 0, roles, skills);
 
 		BDEVWSNotification result = service.notify(notification);
 	}

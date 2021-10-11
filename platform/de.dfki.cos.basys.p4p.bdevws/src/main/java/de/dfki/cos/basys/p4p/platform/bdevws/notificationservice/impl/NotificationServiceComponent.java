@@ -3,6 +3,8 @@ package de.dfki.cos.basys.p4p.platform.bdevws.notificationservice.impl;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -58,6 +60,8 @@ public class NotificationServiceComponent extends BasysComponent<NotificationSer
 		Variable timestampVar = request.getInputParameters().stream().filter(v -> v.getName().equalsIgnoreCase("timestamp")).findFirst().orElse(null);
 		Variable valueVar = request.getInputParameters().stream().filter(v -> v.getName().equalsIgnoreCase("value")).findFirst().orElse(null);
 		
+		String topic = "";
+		
 		BDEVWSNotificationCriticality c = Enum.valueOf(BDEVWSNotificationCriticality.class, criticalityVar.getValue().toString());
 		BDEVWSNotificationStatus      s = Enum.valueOf(BDEVWSNotificationStatus.class, statusVar.getValue().toString());
 		
@@ -70,7 +74,17 @@ public class NotificationServiceComponent extends BasysComponent<NotificationSer
 				List<BDEVWSNotificationRole> roles,List<BDEVWSNotificationSkill> skills) {
 		*/
 		
-		BDEVWSNotification notification = new BDEVWSNotification(messageVar.getValue().toString(), signalIdVar.getValue().toString(), Double.parseDouble(valueVar.getValue().toString()), i.toEpochMilli(), c, s, null, null, null, 0, null, null);
+		BDEVWSNotification notification = new BDEVWSNotification(
+				messageVar.getValue().toString(), 
+				signalIdVar.getValue().toString(), 
+				topic,
+				Double.parseDouble(valueVar.getValue().toString()), 
+				i.toEpochMilli(), 
+				c, 
+				s, 
+				null, null, null, 0, 
+				Collections.singletonList(BDEVWSNotificationRole.ALL),
+				Collections.singletonList(BDEVWSNotificationSkill.UNDEFINED));
 		
 		getService().notify(notification);
 		//TODO: replace NOOP with ACCEPTED and send ComponentResponse later async 

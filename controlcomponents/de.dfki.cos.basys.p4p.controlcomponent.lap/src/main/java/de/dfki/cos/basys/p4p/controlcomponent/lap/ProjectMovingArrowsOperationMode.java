@@ -21,28 +21,28 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectMovingArrowsOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xMvar", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yMvar", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zMvar", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "points", direction = ParameterDirection.IN)
+	@Parameter(name = "pointsMvar", direction = ParameterDirection.IN)
 	private String points = "";
 	
-	@Parameter(name = "arrowCount", direction = ParameterDirection.IN)
+	@Parameter(name = "arrowCountMvar", direction = ParameterDirection.IN)
 	private int arrowCount = 0;
 	
-	@Parameter(name = "delay", direction = ParameterDirection.IN)
+	@Parameter(name = "delayMvar", direction = ParameterDirection.IN)
 	private int delay = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorMvar", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationMvar", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

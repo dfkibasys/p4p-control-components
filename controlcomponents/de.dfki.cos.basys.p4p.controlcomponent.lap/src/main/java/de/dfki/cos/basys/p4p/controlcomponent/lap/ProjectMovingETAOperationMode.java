@@ -13,28 +13,31 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectMovingETAOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xMeta", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yMeta", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zMeta", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "radius", direction = ParameterDirection.IN)
-	private double radius = 0;
-	
-	@Parameter(name = "angle", direction = ParameterDirection.IN)
-	private double angle = 0;
-	
-	@Parameter(name = "fullTime", direction = ParameterDirection.IN)
-	private double fullTime = 0;
-	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorMeta", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "radiusMeta", direction = ParameterDirection.IN)
+	private double radius = 0;
+	
+	@Parameter(name = "angleMeta", direction = ParameterDirection.IN)
+	private double angle = 0;
+	
+	@Parameter(name = "fullTimeMeta", direction = ParameterDirection.IN)
+	private double fullTime = 0;
+	
+	@Parameter(name = "startTimeMeta", direction = ParameterDirection.IN)
+	private double startTime = 0;
+	
+	@Parameter(name = "durationMeta", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		
@@ -45,7 +48,7 @@ public class ProjectMovingETAOperationMode extends BaseLapOperationMode {
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		getService(LapService.class).projectMovingETA(x, y, z, color, radius, angle, fullTime, color);
+		getService(LapService.class).projectMovingETA(x, y, z, color, radius, angle, fullTime, startTime);
 		executing = true;
 	}
 

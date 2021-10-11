@@ -13,25 +13,25 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectStringOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xStrg", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yStrg", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zStrg", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "text", direction = ParameterDirection.IN)
+	@Parameter(name = "textStrg", direction = ParameterDirection.IN)
 	private String text = "";
 	
-	@Parameter(name = "height", direction = ParameterDirection.IN)
+	@Parameter(name = "heightStrg", direction = ParameterDirection.IN)
 	private double height = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorStrg", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationStrg", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

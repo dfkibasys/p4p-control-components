@@ -30,7 +30,13 @@
 			<artifactId>de.dfki.cos.basys.platform.runtime.processcontrol</artifactId>
 			<version>${version.basys.platform}</version>
 		</dependency>
-
+	
+		<dependency>
+		  <groupId>de.dfki.cos.basys.common.rest.camunda</groupId>
+		  <artifactId>client</artifactId>
+		  <version>7.14.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.camunda.bpm</groupId>
 			<artifactId>camunda-external-task-client</artifactId>
@@ -40,7 +46,20 @@
 		<dependency>
 			<groupId>de.eyeled.basyx</groupId>
 			<artifactId>basyx.bdevws.notifications</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1</version>
+		</dependency>		
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		    <version>2.7.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.nextbreakpoint</groupId>
+			<artifactId>com.nextbreakpoint.flinkclient</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->

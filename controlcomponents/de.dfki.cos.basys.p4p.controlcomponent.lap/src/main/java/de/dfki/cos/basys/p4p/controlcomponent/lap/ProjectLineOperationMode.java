@@ -13,28 +13,28 @@ import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class ProjectLineOperationMode extends BaseLapOperationMode {
 
-	@Parameter(name = "x", direction = ParameterDirection.IN)
+	@Parameter(name = "xLine", direction = ParameterDirection.IN)
 	private double x = 0;
 	
-	@Parameter(name = "y", direction = ParameterDirection.IN)
+	@Parameter(name = "yLine", direction = ParameterDirection.IN)
 	private double y = 0;
 	
-	@Parameter(name = "z", direction = ParameterDirection.IN)
+	@Parameter(name = "zLine", direction = ParameterDirection.IN)
 	private double z = 0;
 	
-	@Parameter(name = "x2", direction = ParameterDirection.IN)
+	@Parameter(name = "x2Line", direction = ParameterDirection.IN)
 	private double x2 = 0;
 	
-	@Parameter(name = "y2", direction = ParameterDirection.IN)
+	@Parameter(name = "y2Line", direction = ParameterDirection.IN)
 	private double y2 = 0;
 	
-	@Parameter(name = "z2", direction = ParameterDirection.IN)
+	@Parameter(name = "z2Line", direction = ParameterDirection.IN)
 	private double z2 = 0;
 	
-	@Parameter(name = "color", direction = ParameterDirection.IN)
+	@Parameter(name = "colorLine", direction = ParameterDirection.IN)
 	private int color = 0;
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "durationLine", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 	
 		

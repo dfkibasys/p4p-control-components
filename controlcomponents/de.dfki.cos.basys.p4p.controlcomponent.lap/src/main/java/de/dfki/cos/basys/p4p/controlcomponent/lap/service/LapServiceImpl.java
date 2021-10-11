@@ -19,6 +19,7 @@ import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.lap.service.dto.*;
 
 public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
+	private Properties config = null;
 
 	protected final Logger LOGGER = LoggerFactory.getLogger(LapServiceImpl.class.getName());
 	private boolean connected = false;
@@ -26,7 +27,7 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	WebTarget resource = null;
 	
 	public LapServiceImpl(Properties config) {
-
+		this.config = config;
 	}
 	
 	@Override
@@ -35,13 +36,9 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 		Client client = ClientBuilder.newClient();
 		resource = client.target(connectionString);
 
-		//StopProjection sp = new StopProjection();
+		StopProjection sp = new StopProjection();
 		
-		Projection p = new Projection();
-		p.addEntity(new PERectangle(1, 1, 1, 2, 3, 3));
-		
-
-		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(p));
+		Response response = resource.request(MediaType.APPLICATION_JSON).put(Entity.json(sp));
 		
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			connected = true;
@@ -276,7 +273,6 @@ public class LapServiceImpl implements LapService, ServiceProvider<LapService> {
 	@Override
 	public void reset() {
 		missionState = "pending";
-		resource = null;
 	}
 
 	@Override

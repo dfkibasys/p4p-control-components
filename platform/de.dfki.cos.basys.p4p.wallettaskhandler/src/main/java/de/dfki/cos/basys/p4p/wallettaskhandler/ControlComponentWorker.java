@@ -1,43 +1,29 @@
 package de.dfki.cos.basys.p4p.wallettaskhandler;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.camunda.bpm.client.task.ExternalTask;
-import org.camunda.bpm.client.variable.value.JsonValue;
 import org.camunda.bpm.engine.variable.value.ObjectValue;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
-import de.dfki.cos.basys.controlcomponent.ExecutionMode;
-import de.dfki.cos.basys.controlcomponent.OccupationCommand;
 import de.dfki.cos.basys.platform.runtime.component.model.ComponentRequest;
 import de.dfki.cos.basys.platform.runtime.component.model.ComponentResponse;
-import de.dfki.cos.basys.platform.runtime.component.model.ExecutionCommandRequest;
-import de.dfki.cos.basys.platform.runtime.component.model.ExecutionModeRequest;
-import de.dfki.cos.basys.platform.runtime.component.model.OccupationCommandRequest;
 import de.dfki.cos.basys.platform.runtime.component.model.OperationModeRequest;
 import de.dfki.cos.basys.platform.runtime.component.model.RequestStatus;
 import de.dfki.cos.basys.platform.runtime.component.model.Variable;
 import de.dfki.cos.basys.platform.runtime.component.model.VariableType;
-import de.dfki.cos.basys.platform.runtime.processcontrol.ComponentRequestExecutionManager;
 import de.dfki.cos.basys.platform.runtime.processcontrol.camunda.CamundaExternalTaskWorker;
-import de.wallet.model.Lift;
 import de.wallet.model.Plan;
 import de.wallet.model.Request;
 import de.wallet.model.custom.Command;
 import de.wallet.model.custom.LiftFirstLevelCommand;
 import de.wallet.model.custom.LiftGroundLevelCommand;
+import de.wallet.model.custom.LiftHeightCommand;
 import de.wallet.model.custom.LiftSecondLevelCommand;
 import de.wallet.model.custom.LiftThirdLevelCommand;
 import de.wallet.model.custom.Utils;
+import de.wallet.model.Lift;
 
 /**
  * 
@@ -54,30 +40,34 @@ public class ControlComponentWorker extends CamundaExternalTaskWorker {
 
 	public ComponentRequest createComponentRequest(ExternalTask externalTask) {		
 		ComponentRequest componentReq = null;
-		Long level = null;
+		Double liftHeight = null;
 		
-		ObjectValue planObjVal = externalTask.getVariableTyped("plan", true);
-		plan = (Plan) planObjVal.getValue(Plan.class);
+		ObjectValue planObjVal = externalTask.getVariableTyped("plan", false);
+		String value = "{\"Plan\" : " + planObjVal.getValueSerialized() + "}";
+		plan = (Plan) Utils.makeJsonToObject(value, Plan.class);
 		
 		Request request = plan.getRequests().get(0);
 		Command command = null;
-		if(request.getCommand().contains("LiftGroundLevelCommand")) {
+		if(request.getCommand().contains(LiftGroundLevelCommand.class.getSimpleName())) {
 			command = Utils.makeJsonToCommand(request.getCommand(), LiftGroundLevelCommand.class);
-		} else if(request.getCommand().contains("LiftFirstLevelCommand")) {
+		} else if(request.getCommand().contains(LiftFirstLevelCommand.class.getSimpleName())) {
 			command = Utils.makeJsonToCommand(request.getCommand(), LiftFirstLevelCommand.class);
-		} else if (request.getCommand().contains("LiftSecondLevelCommand")) {
-			command = Utils.makeJsonToCommand(request.getCommand(), LiftSecondLevelCommand.class);		
-		} else if (request.getCommand().contains("LiftThirdLevelCommand")) {
-			command = Utils.makeJsonToCommand(request.getCommand(), LiftThirdLevelCommand.class);			
+		} else if (request.getCommand().contains(LiftSecondLevelCommand.class.getSimpleName())) {
+			command = Utils.makeJsonToCommand(request.getCommand(), LiftSecondLevelCommand.class);       
+		} else if (request.getCommand().contains(LiftThirdLevelCommand.class.getSimpleName())) {
+			command = Utils.makeJsonToCommand(request.getCommand(), LiftThirdLevelCommand.class);             
+		} else if (request.getCommand().contains(LiftHeightCommand.class.getSimpleName())) {
+			command = Utils.makeJsonToCommand(request.getCommand(), LiftHeightCommand.class);            
 		}
+
 		command.execute();
 		if(command.getReceiver() instanceof Lift) {
 			Lift receiver = (Lift)command.getReceiver();
-			level = receiver.getLevel();
+			liftHeight = receiver.getHeight();
 			plan.setResult(Utils.getJsonFormObject(receiver));
 		}
-			
-		Variable levelVar = new Variable.Builder().name("level").value(level).type(VariableType.LONG).build();
+		
+		Variable levelVar = new Variable.Builder().name("height").value(liftHeight).type(VariableType.DOUBLE).build();
 		componentReq = new OperationModeRequest();
 		OperationModeRequest req = (OperationModeRequest) componentReq;
 		req.getInputParameters().add(levelVar);
@@ -98,6 +88,6 @@ public class ControlComponentWorker extends CamundaExternalTaskWorker {
 		} else {
 			externalTaskService.handleFailure(externalTask, response.getMessage(), "", maxRetryCount, retryTimeout);
 		}
-	}
+	}	
 
 }

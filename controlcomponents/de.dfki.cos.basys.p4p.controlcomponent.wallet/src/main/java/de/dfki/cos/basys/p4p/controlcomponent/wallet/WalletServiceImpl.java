@@ -39,7 +39,7 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 
 	private Ros ros = null;	
 	private String protocol = "ws";
-	private String host = "localhost";
+	private String host = "192.168.1.100";
 	private int port = 9090;
 
 	private ActionClient gotoClient;
@@ -80,8 +80,8 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 			gotoClient = new ActionClient(ros, gotoServerName, gotoActionName);
 			gotoClient.initialize();
 			
-			String liftServerName = config.getProperty("gotoServerName");
-			String liftActionName = config.getProperty("gotoActionName");
+			String liftServerName = config.getProperty("liftServerName");
+			String liftActionName = config.getProperty("liftActionName");
 			liftClient = new ActionClient(ros, liftServerName, liftActionName);
 			liftClient.initialize();
 		}
@@ -189,8 +189,8 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 	}
 
 	@Override
-	public void moveLiftToLevel(long level) {
-		LOGGER.debug("Move lift to level %d.", level);
+	public void moveLiftToHeight(double height) {
+		LOGGER.debug("Move lift to height %d.", height);
 		
 		liftStatus = GoalStatusEnum.PENDING;
 		
@@ -213,8 +213,8 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 			}
 		});
 		
-		JsonObject targetLevel = Json.createObjectBuilder().add("tbd", level).build();
-		goal.submit(targetLevel);
+		JsonObject targetHeight = Json.createObjectBuilder().add("height", height).build();
+		goal.submit(targetHeight);
 	}
 	
 	@Override

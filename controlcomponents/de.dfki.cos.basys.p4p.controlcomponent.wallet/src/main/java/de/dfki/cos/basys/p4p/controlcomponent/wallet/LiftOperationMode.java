@@ -17,13 +17,13 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
-@OperationMode(name = "Lift", shortName = "LIFT", description = "Lift to level", 
+@OperationMode(name = "Lift", shortName = "LIFT", description = "Lift to height", 
 		allowedCommands = { ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
-	@Parameter(name = "level", direction = ParameterDirection.IN)
-	private long level;
+	@Parameter(name = "height", direction = ParameterDirection.IN)
+	private double height;
 
 	@Parameter(name = "duration_LIFT", direction = ParameterDirection.OUT)
 	private int duration = 0;
@@ -45,7 +45,7 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	@Override
 	public void onStarting() {		
 		startTime = System.currentTimeMillis();
-		getService(WalletService.class).moveLiftToLevel(level);
+		getService(WalletService.class).moveLiftToHeight(height);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
 public interface WalletService {
 		
 	void gotoSymbolicPosition(String positionName);
-	void moveLiftToLevel(long level);
+	void moveLiftToHeight(double height);
 	
 	GoalStatusEnum getLiftStatus();
 	GoalStatusEnum getGotoStatus();

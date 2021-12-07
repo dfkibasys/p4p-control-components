@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+     <persistence-unit name="WWModel">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>de.wallet.model.Activity</class>
+		<class>de.wallet.model.Aisle</class>
+		<class>de.wallet.model.Box</class>
+		<class>de.wallet.model.Cell</class>
+		<class>de.wallet.model.Intention</class>
+		<class>de.wallet.model.Layout</class>
+		<class>de.wallet.model.Lift</class>
+		<class>de.wallet.model.Load</class>
+		<class>de.wallet.model.Plan</class>
+		<class>de.wallet.model.Rack</class>
+		<class>de.wallet.model.Request</class>
+		<class>de.wallet.model.Robot</class>
+		<class>de.wallet.model.Site</class>
+		<class>de.wallet.model.Warehouse</class>
+		<class>de.wallet.model.Wuser</class>
+     	<properties>
+      		<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/wwm" />
+      		<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      		<property name="javax.persistence.jdbc.user" value="postgres" />
+      		<property name="javax.persistence.jdbc.password" value="postgres" />
+      		<property name="eclipselink.logging.level" value="ALL" />
+      	</properties>		
+	</persistence-unit>	
+</persistence>

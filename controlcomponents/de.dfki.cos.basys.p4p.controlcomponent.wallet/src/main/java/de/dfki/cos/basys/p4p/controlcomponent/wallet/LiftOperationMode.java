@@ -30,6 +30,8 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 	
 	private long startTime = 0;
 	private long endTime = 0;
+	
+	protected boolean executing = false;
 
 	public LiftOperationMode(BaseControlComponent<WalletService> component) {
 		super(component);
@@ -40,17 +42,21 @@ public class LiftOperationMode extends BaseOperationMode<WalletService> {
 		duration = 0;
 		startTime = 0;
 		endTime = 0;
+		executing = false;	
 	}
 
 	@Override
-	public void onStarting() {		
+	public void onStarting() {
+//		super.onStart
 		startTime = System.currentTimeMillis();
 		getService(WalletService.class).moveLiftToHeight(height);
+		sleep(1000);
+		executing = true;
 	}
 
 	@Override
 	public void onExecute() {
-		boolean executing = true;
+		executing = true;
 		while(executing) {
 			GoalStatusEnum status = getService(WalletService.class).getLiftStatus();
 			LOGGER.debug("Status : " + status);

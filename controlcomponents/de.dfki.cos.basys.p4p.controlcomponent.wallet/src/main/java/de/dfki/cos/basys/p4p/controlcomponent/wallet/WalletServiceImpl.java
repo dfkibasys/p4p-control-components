@@ -26,6 +26,7 @@ import edu.wpi.rail.jrosbridge.callback.TopicCallback;
 import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.messages.actionlib.GoalStatus;
 import edu.wpi.rail.jrosbridge.messages.geometry.Point;
+import edu.wpi.rail.jrosbridge.messages.geometry.PointStamped;
 import edu.wpi.rail.jrosbridge.messages.geometry.Pose;
 import edu.wpi.rail.jrosbridge.messages.geometry.PoseStamped;
 import edu.wpi.rail.jrosbridge.messages.geometry.Quaternion;
@@ -213,7 +214,15 @@ public class WalletServiceImpl implements WalletService, ServiceProvider<WalletS
 			}
 		});
 		
-		JsonObject targetHeight = Json.createObjectBuilder().add("height", height).build();
+		PointStamped ps = new PointStamped(
+				
+				new Header(0, new Time(), "/wallet_lift"), 
+				
+				new Point(0, 0, height)
+			
+			);
+		
+		JsonObject targetHeight = Json.createObjectBuilder().add("target_height", ps.toJsonObject()).build();
 		goal.submit(targetHeight);
 	}
 	

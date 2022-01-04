@@ -19,7 +19,7 @@ import de.wallet.model.Request;
 import de.wallet.model.custom.Command;
 import de.wallet.model.custom.LiftFirstLevelCommand;
 import de.wallet.model.custom.LiftGroundLevelCommand;
-import de.wallet.model.custom.LiftHeightCommand;
+//import de.wallet.model.custom.LiftHeightCommand;
 import de.wallet.model.custom.LiftSecondLevelCommand;
 import de.wallet.model.custom.LiftThirdLevelCommand;
 import de.wallet.model.custom.Utils;
@@ -56,14 +56,14 @@ public class ControlComponentWorker extends CamundaExternalTaskWorker {
 			command = Utils.makeJsonToCommand(request.getCommand(), LiftSecondLevelCommand.class);       
 		} else if (request.getCommand().contains(LiftThirdLevelCommand.class.getSimpleName())) {
 			command = Utils.makeJsonToCommand(request.getCommand(), LiftThirdLevelCommand.class);             
-		} else if (request.getCommand().contains(LiftHeightCommand.class.getSimpleName())) {
+		} /* else if (request.getCommand().contains(LiftHeightCommand.class.getSimpleName())) {
 			command = Utils.makeJsonToCommand(request.getCommand(), LiftHeightCommand.class);            
-		}
+		}*/
 
 		command.execute();
 		if(command.getReceiver() instanceof Lift) {
 			Lift receiver = (Lift)command.getReceiver();
-			liftHeight = receiver.getHeight();
+			//liftHeight = receiver.getHeight();
 			plan.setResult(Utils.getJsonFormObject(receiver));
 		}
 		

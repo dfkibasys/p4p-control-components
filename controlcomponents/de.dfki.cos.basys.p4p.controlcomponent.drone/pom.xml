@@ -25,9 +25,17 @@
 
 	<dependencies>
 
+		<!-- for standalone use -->
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.event.mqtt</artifactId>
+			<version>${version.basys.aas}</version>
+		</dependency>
+
+		<!-- for standalone use -->
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
-			<artifactId>de.dfki.cos.basys.controlcomponent.core</artifactId>
+			<artifactId>de.dfki.cos.basys.controlcomponent.server</artifactId>
 			<version>${version.basys.controlcomponent}</version>
 		</dependency>
 

@@ -11,13 +11,13 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.drone</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.drone</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.vacuum</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.vacuum</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
-	<artifactId>de.dfki.cos.basys.p4p.controlcomponent.drone</artifactId>
+	<artifactId>de.dfki.cos.basys.p4p.controlcomponent.vacuum</artifactId>
 
 	<name>${bundle.symbolicName}</name>
 
@@ -25,17 +25,9 @@
 
 	<dependencies>
 
-		<!-- for standalone use -->
-		<dependency>
-			<groupId>de.dfki.cos.basys.aas</groupId>
-			<artifactId>de.dfki.cos.basys.aas.event.mqtt</artifactId>
-			<version>${version.basys.aas}</version>
-		</dependency>
-
-		<!-- for standalone use -->
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
-			<artifactId>de.dfki.cos.basys.controlcomponent.server</artifactId>
+			<artifactId>de.dfki.cos.basys.controlcomponent.core</artifactId>
 			<version>${version.basys.controlcomponent}</version>
 		</dependency>
 

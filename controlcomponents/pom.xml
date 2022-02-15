@@ -23,6 +23,7 @@
 	<module>de.dfki.cos.basys.p4p.controlcomponent.lap</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.smartwatch</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.ur</module>
+	<module>de.dfki.cos.basys.p4p.controlcomponent.vacuum</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.wallet</module>
 	<module>de.dfki.cos.basys.p4p.controlcomponent.worker</module>
   </modules>

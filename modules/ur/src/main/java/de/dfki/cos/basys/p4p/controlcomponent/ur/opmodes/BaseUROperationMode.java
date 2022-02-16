@@ -6,18 +6,17 @@ import org.mockito.stubbing.Answer;
 
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
-import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URService;
+import de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrService;
 import de.dfki.cos.basys.p4p.controlcomponent.ur.service.URState.MissionState;
-import edu.wpi.rail.jrosbridge.Goal.GoalStatusEnum;
 
-public class BaseUROperationMode extends BaseOperationMode<URService>{
+public class BaseUROperationMode extends BaseOperationMode<UrService>{
 	private static final int MOCKUP_SERVICE_DURATION = 5000;
 	
 	protected long startTime = 0;
 	protected long endTime = 0;
 	protected int duration = 0;
 	
-	public BaseUROperationMode(BaseControlComponent<URService> component) {
+	public BaseUROperationMode(BaseControlComponent<UrService> component) {
 		super(component);
 	}
 
@@ -26,7 +25,7 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 		duration = 0;
 		startTime = 0;
 		endTime = 0;
-		getService(URService.class).reset();
+		getService(UrService.class).reset();
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 	public void onExecute() {
 		boolean executing = true;
 		while(executing) {
-			MissionState state = getService(URService.class).getMissionState();
+			MissionState state = getService(UrService.class).getMissionState();
 			LOGGER.debug("Status : " + state);
 			 
 			switch (state) {		
@@ -88,7 +87,7 @@ public class BaseUROperationMode extends BaseOperationMode<URService>{
 	
 	
 	@Override
-	protected void configureServiceMock(URService serviceMock) {
+	protected void configureServiceMock(UrService serviceMock) {
 		Mockito.doNothing().when(serviceMock).reset();		
 		Mockito.doNothing().when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
 		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<MissionState>() {

@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapService;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
 import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.dto.Point;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class ProjectArrowsAndCirclesOperationMode extends BaseLapOperationMode {
 	private int duration_out = 0;
 	
 		
-	public ProjectArrowsAndCirclesOperationMode(BaseControlComponent<LapService> component) {
+	public ProjectArrowsAndCirclesOperationMode(BaseControlComponent<LapLaserService> component) {
 		super(component);
 	}
 
@@ -81,7 +81,7 @@ public class ProjectArrowsAndCirclesOperationMode extends BaseLapOperationMode {
 			e1.printStackTrace();
 		}
 		
-		getService(LapService.class).projectArrowsAndCircles(x, y, z, color, pnts, arrowCount, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delayArrows, delayCircles);
+		getService(LapLaserService.class).projectArrowsAndCircles(x, y, z, color, pnts, arrowCount, innerCircleRadius, middleCircleRadius, outerCircleRadius, angleStart, angleLength, delayArrows, delayCircles);
 		executing = true;
 	}
 

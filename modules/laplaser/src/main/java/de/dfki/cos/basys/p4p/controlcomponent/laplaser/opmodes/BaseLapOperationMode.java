@@ -6,9 +6,9 @@ import org.mockito.stubbing.Answer;
 
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
-import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapService;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
 
-public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>{
+public abstract class BaseLapOperationMode extends BaseOperationMode<LapLaserService>{
 	
 	private static final int MOCKUP_SERVICE_DURATION = 5000;
 	
@@ -20,7 +20,7 @@ public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>
 	
 	protected boolean executing = false;
 
-	public BaseLapOperationMode(BaseControlComponent<LapService> component) {
+	public BaseLapOperationMode(BaseControlComponent<LapLaserService> component) {
 		super(component);
 	}
 
@@ -29,7 +29,7 @@ public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>
 		duration = 0;
 		startTime = 0;
 		endTime = 0;
-		getService(LapService.class).reset();
+		getService(LapLaserService.class).reset();
 		executing = false;
 	}
 
@@ -42,7 +42,7 @@ public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>
 	public void onExecute() {
 		try {
 			while(executing) {
-				missionState = getService(LapService.class).getMissionState();
+				missionState = getService(LapLaserService.class).getMissionState();
 				 
 				switch (missionState) {
 				case "pending":
@@ -93,7 +93,7 @@ public abstract class BaseLapOperationMode extends BaseOperationMode<LapService>
 	}
 	
 	@Override
-	protected void configureServiceMock(LapService serviceMock) {
+	protected void configureServiceMock(LapLaserService serviceMock) {
 		Mockito.doNothing().when(serviceMock).projectArrowsAndCircles(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyList(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyInt());
 		Mockito.doNothing().when(serviceMock).projectChar(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyChar(), Mockito.anyDouble());
 		Mockito.doNothing().when(serviceMock).projectCircle(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyInt(), Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyDouble());

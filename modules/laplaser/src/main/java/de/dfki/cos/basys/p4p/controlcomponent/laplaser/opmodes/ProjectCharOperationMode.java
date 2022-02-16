@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapService;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
@@ -35,7 +35,7 @@ public class ProjectCharOperationMode extends BaseLapOperationMode {
 	private int duration_out = 0;
 	
 		
-	public ProjectCharOperationMode(BaseControlComponent<LapService> component) {
+	public ProjectCharOperationMode(BaseControlComponent<LapLaserService> component) {
 		super(component);
 	}
 
@@ -45,7 +45,7 @@ public class ProjectCharOperationMode extends BaseLapOperationMode {
 		
 		char c = chr.charAt(0);
 		
-		getService(LapService.class).projectChar(x, y, z, color, c, height);
+		getService(LapLaserService.class).projectChar(x, y, z, color, c, height);
 		executing = true;
 	}
 

@@ -25,7 +25,7 @@
 
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>spring</artifactId>
 			<version>${basys-controlcomponent.version}</version>
 		</dependency>
 
@@ -71,4 +71,12 @@
 
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

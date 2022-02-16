@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapService;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
@@ -38,14 +38,14 @@ public class ProjectCircleOperationMode extends BaseLapOperationMode {
 	private int duration_out = 0;
 	
 		
-	public ProjectCircleOperationMode(BaseControlComponent<LapService> component) {
+	public ProjectCircleOperationMode(BaseControlComponent<LapLaserService> component) {
 		super(component);
 	}
 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		getService(LapService.class).projectCircle(x, y, z, color, radius, angleStart, angleLength);
+		getService(LapLaserService.class).projectCircle(x, y, z, color, radius, angleStart, angleLength);
 		executing = true;
 	}
 

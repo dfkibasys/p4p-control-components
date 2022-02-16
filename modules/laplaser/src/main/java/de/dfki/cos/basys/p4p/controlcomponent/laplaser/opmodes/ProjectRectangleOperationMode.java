@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
-import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapService;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
@@ -35,14 +35,14 @@ public class ProjectRectangleOperationMode extends BaseLapOperationMode {
 	private int duration_out = 0;
 	
 		
-	public ProjectRectangleOperationMode(BaseControlComponent<LapService> component) {
+	public ProjectRectangleOperationMode(BaseControlComponent<LapLaserService> component) {
 		super(component);
 	}
 
 	@Override
 	public void onStarting() {	
 		super.onStarting();
-		getService(LapService.class).projectRectangle(x, y, z, color, width, height);
+		getService(LapLaserService.class).projectRectangle(x, y, z, color, width, height);
 		executing = true;
 	}
 	

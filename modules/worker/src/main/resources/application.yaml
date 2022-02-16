@@ -13,7 +13,7 @@ basys:
     type: mqtt
     service:
       implementationJavaClass: de.dfki.cos.basys.aas.event.mqtt.MqttEventTransmitter
-      connectionString: tcp://dockerhost.fritz.box:1883
+      connectionString: tcp://localhost:1883
   opcuaServer:
     certsFolder: ./certs
     tcpPort: 12685
@@ -28,7 +28,7 @@ basys:
       disableOccupationCheck: false
       service:
         implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.worker.service.NotificationServiceImpl
-        connectionString: tcp://dockerhost.fritz.box:1883
+        connectionString: mq3t.rpc://smartwatch-lg-3691.mrk40.dfki.lan:9030
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true

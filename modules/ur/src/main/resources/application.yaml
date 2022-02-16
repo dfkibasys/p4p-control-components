@@ -13,7 +13,7 @@ basys:
     type: mqtt
     service:
       implementationJavaClass: de.dfki.cos.basys.aas.event.mqtt.MqttEventTransmitter
-      connectionString: tcp://dockerhost.fritz.box:1883
+      connectionString: tcp://localhost:1883
   opcuaServer:
     certsFolder: ./certs
     tcpPort: 12685
@@ -34,6 +34,6 @@ basys:
       disableOccupationCheck: true
       service:
         implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrServiceImplROS
-        connectionString: ws://127.0.0.1:9100
+        connectionString: ws://localhost:9100
         serverName: movsym_action
         actionNameMove: simrk40_msgs/MoveToSymbolicPositionAction

@@ -13,7 +13,7 @@ basys:
     type: mqtt
     service:
       implementationJavaClass: de.dfki.cos.basys.aas.event.mqtt.MqttEventTransmitter
-      connectionString: tcp://dockerhost.fritz.box:1883
+      connectionString: tcp://localhost:1883
   opcuaServer:
     certsFolder: ./certs
     tcpPort: 12685

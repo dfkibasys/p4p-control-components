@@ -34,8 +34,14 @@
 			<artifactId>MQ3T</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>jar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>de.dfki.iui</groupId>
 			<artifactId>libHRC</artifactId>

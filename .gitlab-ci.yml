@@ -47,8 +47,8 @@ docker:
   tags:
     - basys
     - docker
-  script:    
-    - mvn $MAVEN_CLI_OPTS spring-boot:build-image -Ddocker_username=$DOCKER_REGISTRY_USERNAME -Ddocker_password=$DOCKER_REGISTRY_PASSWORD
+  script:
+    - mvn $MAVEN_CLI_OPTS spring-boot:build-image -Ddocker_username=dfkibasys -Ddocker_password=b645943c-d8ab-4d84-a25a-5ae2b9cb9d9a
   only:
     - master
     - develop

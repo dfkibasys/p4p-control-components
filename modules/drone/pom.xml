@@ -14,6 +14,7 @@
 	<properties>
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.drone</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.drone</bundle.namespace>
+		<docker.imagename>controlcomponent-${project.artifactId}:${project.version}</docker.imagename>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>

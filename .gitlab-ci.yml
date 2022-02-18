@@ -13,6 +13,7 @@ stages:
   - build
   - test
   - deploy
+  - publish
 
 build:
   stage: build
@@ -37,6 +38,17 @@ deploy:
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS deploy
+  only:
+    - master
+    - develop
+
+docker:
+  stage: publish
+  tags:
+    - basys
+    - docker
+  script:
+    - mvn $MAVEN_CLI_OPTS spring-boot:build-image -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
   only:
     - master
     - develop

@@ -21,6 +21,7 @@ build:
     - basys
     - maven
   script:
+    - echo $DOCKER_REGISTRY_USER
     - mvn -V $MAVEN_CLI_OPTS compile
 
 test:

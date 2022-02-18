@@ -14,7 +14,7 @@
 	<properties>
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.baxter</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.baxter</bundle.namespace>
-		<docker.imagename>controlcomponent-${project.artifactId}:${project.version}</docker.imagename>
+		<docker_imagename>controlcomponent-${project.artifactId}:${project.version}</docker_imagename>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
@@ -49,6 +49,18 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<publish>true</publish>
+						<name>docker.io/${docker_username}/${docker_imagename}</name>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>${docker_username}</username>
+							<password>${docker_password}</password>
+						</publishRegistry>
+					</docker>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

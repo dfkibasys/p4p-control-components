@@ -58,6 +58,7 @@
 						<publishRegistry>
 							<username>${docker_username}</username>
 							<password>${docker_password}</password>
+							<url>https://registry-1.docker.io/v2/</url>
 						</publishRegistry>
 					</docker>
 				</configuration>

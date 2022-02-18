@@ -48,6 +48,7 @@ docker:
     - basys
     - docker
   script:
+    - echo "-Ddocker.username=$DOCKER_REGISTRY_USERNAME -Ddocker.password=$DOCKER_REGISTRY_PASSWORD"
     - mvn $MAVEN_CLI_OPTS spring-boot:build-image -Ddocker.username="$DOCKER_REGISTRY_USERNAME" -Ddocker.password="$DOCKER_REGISTRY_PASSWORD"
   only:
     - master

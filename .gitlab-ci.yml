@@ -43,6 +43,13 @@ deploy:
     - develop
 
 docker:
+  image: docker:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2   
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
   stage: publish
   tags:
     - basys

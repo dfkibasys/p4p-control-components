@@ -12,7 +12,7 @@ cache:
 stages:
   - build
   - test
-  #- deploy
+  - deploy
   - publish
 
 build:
@@ -44,12 +44,16 @@ deploy:
 
 docker:
   stage: publish
-  image: dfkibasys/docker-temurin11jdk:20.10.12
-  services:
-    - docker:20.10.12-dind
   tags:
     - basys
     - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.12-dind
+     # explicitly disable tls to avoid docker startup interruption
+     # - command: ["--tls=false"]
   before_script:
     - docker info
   script:

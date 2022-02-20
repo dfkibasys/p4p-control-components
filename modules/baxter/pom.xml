@@ -49,19 +49,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<image>
-						<publish>true</publish>
-						<name>docker.io/${docker_username}/${docker_imagename}</name>
-					</image>
-					<docker>
-						<publishRegistry>
-							<username>${docker_username}</username>
-							<password>${docker_password}</password>
-							<url></url>
-						</publishRegistry>
-					</docker>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

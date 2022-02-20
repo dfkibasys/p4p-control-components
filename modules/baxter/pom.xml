@@ -14,7 +14,7 @@
 	<properties>
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.baxter</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.baxter</bundle.namespace>
-		<docker_imagename>controlcomponent-${project.artifactId}:${project.version}</docker_imagename>
+		<docker.imagename>controlcomponent-${project.artifactId}:${project.version}</docker.imagename>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>

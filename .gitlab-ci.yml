@@ -12,7 +12,7 @@ cache:
 stages:
   - build
   - test
-  - deploy
+  #- deploy
   - publish
 
 build:
@@ -44,11 +44,17 @@ deploy:
 
 docker:
   stage: publish
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  services:
+    - docker:20.10.12-dind
   tags:
     - basys
     - docker
+  before_script:
+    - docker info
   script:
-    - mvn $MAVEN_CLI_OPTS spring-boot:build-image -Ddocker.username="$DOCKER_REGISTRY_USERNAME" -Ddocker.password="$DOCKER_REGISTRY_PASSWORD"
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker_username=$DOCKER_REGISTRY_USER -Ddocker_password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image
   only:
     - master
     - develop

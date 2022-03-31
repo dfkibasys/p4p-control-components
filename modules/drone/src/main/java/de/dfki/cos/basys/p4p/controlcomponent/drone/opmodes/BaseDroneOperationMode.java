@@ -96,19 +96,57 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 	protected void configureServiceMock(DroneService serviceMock) {
 		Mockito.when(serviceMock.detectObstacles(Mockito.anyString())).thenReturn(Collections.emptyList());
 		Mockito.when(serviceMock.getWorkState()).thenReturn(WorkState.getInstance());
-		Mockito.doNothing().when(serviceMock).takeOff();
 		Mockito.doNothing().when(serviceMock).reset();
-		Mockito.doNothing().when(serviceMock).startLiveImage();
-		Mockito.doNothing().when(serviceMock).stopLiveImage();
-		Mockito.doNothing().when(serviceMock).startRTMPStream();
-		Mockito.doNothing().when(serviceMock).stopRTMPStream();
-		Mockito.doNothing().when(serviceMock).land();
-		Mockito.doNothing().when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
-		Mockito.doNothing().when(serviceMock).moveToPoint(Mockito.any());
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).takeOff();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).startLiveImage();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).stopLiveImage();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).startRTMPStream();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).stopRTMPStream();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).land();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).moveToSymbolicPosition(Mockito.anyString());
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).moveToPoint(Mockito.any());
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).moveToWaypoints(Mockito.any());
+
 		Mockito.when(serviceMock.getMissionState()).thenAnswer(new Answer<MissionState>() {
 			boolean accepted = false;
 			@Override
-			public MissionState answer(InvocationOnMock invocation) throws Throwable {
+			public MissionState answer(InvocationOnMock invocation) {
 				if(!accepted)
 				{
 					MissionState.getInstance().setState(MState.ACCEPTED);

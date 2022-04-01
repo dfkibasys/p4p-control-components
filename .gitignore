@@ -53,8 +53,6 @@ build.properties
 
 ### IntelliJ IDEA ###
 .idea
-# Avoid ignoring IDEA launch configuration file
-!/.idea/workspace.xml
 *.iws
 *.iml
 *.ipr

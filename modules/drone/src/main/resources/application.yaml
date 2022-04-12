@@ -8,12 +8,12 @@ basys:
   aasRegistry:
     type: dotaas
     service:
-      connectionString: http://localhost:8080
+      connectionString: http://aasregistry.basys-lnv-1.mrk40.dfki.lan
   eventTransmitter:
     type: mqtt
     service:
       implementationJavaClass: de.dfki.cos.basys.aas.event.mqtt.MqttEventTransmitter
-      connectionString: tcp://localhost:1883
+      connectionString: tcp://basys-lnv-1.mrk40.dfki.lan:1883
   opcuaServer:
     certsFolder: ./certs
     tcpPort: 12685
@@ -32,3 +32,7 @@ basys:
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true
+      disableServiceMock: true
+      service:
+        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneServiceImpl
+        connectionString: tcp://10.2.10.4:1883

@@ -27,8 +27,8 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 		// Start Video Streaming with endpoint of obstacle detection service
 		getService(DroneService.class).startLiveImage();
 		sleep(1000);
-		getService(DroneService.class).detectObstacles(type);
 		executing = true;
+		getService(DroneService.class).detectObstacles(type);
 		
 	}
 

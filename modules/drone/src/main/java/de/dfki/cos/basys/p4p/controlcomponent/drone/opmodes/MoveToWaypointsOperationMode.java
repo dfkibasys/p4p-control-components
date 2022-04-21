@@ -52,21 +52,16 @@ public class MoveToWaypointsOperationMode extends BaseDroneOperationMode{
 			e1.printStackTrace();
 		}
 		
-		MissionState.getInstance().addStateListener(new MissionStateListener() {
-
-			@Override
-			public void stateChangedEvent(MState oldState, MState newState) {
-				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
-					executing = true;
-					component.setErrorStatus(0, "OK");
-					counter.countDown();
-				}
-				else if (newState.equals(MState.REJECTED)) {
-					component.setErrorStatus(3, "rejected");
-					counter.countDown();
-				}
+		MissionState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
+				executing = true;
+				component.setErrorStatus(0, "OK");
+				counter.countDown();
 			}
-			
+			else if (newState.equals(MState.REJECTED)) {
+				component.setErrorStatus(3, "rejected");
+				counter.countDown();
+			}
 		});
 		
 		// precautionary set timeout error (gets overridden in case of success)

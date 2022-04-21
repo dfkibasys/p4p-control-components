@@ -1,11 +1,9 @@
 package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -315,38 +313,30 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	}
 
 	@Override
-	public List<String> detectObstacles(String type) {
-		MissionState.getInstance().setState(MState.EXECUTING);
+	public List<String> detectObstacles(List<DronePoint> wp) {
+		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(PState.MOVING)) {
+				MissionState.getInstance().setState(MState.EXECUTING);
+			}
+		});
 
-		String serviceEndpoint = "http://localhost:5000/inspection_flight/start-inspection-flight-test";
+		String serviceEndpoint = "http://10.2.0.18:5000/inspection_flight/start-inspection-flight-test";
 		List<String> result = Collections.emptyList();
-		sleep(5000);
-		MissionState.getInstance().setState(MState.DONE);
+
 		// determine the waypoints
-		List<DronePoint> waypoints = getDefaultWayPoints();
+		List<DronePoint> waypoints = (wp != null) ? wp : getDefaultWayPoints();
 		Map<String,Object> params = new HashMap<>();
-		params.put("waypoints",waypoints);
-		com.google.gson.JsonObject json = new com.google.gson.JsonObject();
-		json.addProperty("waypoints", String.valueOf(waypoints));
+		params.put("waypoints", waypoints);
 		String payload = new Gson().toJson(params);
-		String output = callInspectionFlightEndPoint(serviceEndpoint, payload);
-		System.out.println(output);
-//		try {
-////			String payload = new ObjectMapper().writeValueAsString(params);
-//			//post to end point
-//			String output = callInspectionFlightEndPoint(serviceEndpoint,payload);
-//			System.out.println(output);
-//		} catch (JsonProcessingException e) {
-//			e.printStackTrace();
-//		}
+
 		// call the api for detecting obstacles
+		int output = callInspectionFlightEndPoint(serviceEndpoint, payload);
+
 		// check the output it produces
-		if(output.equals(String.valueOf(false))){
-			MissionState.getInstance().setState(MState.REJECTED);
-		} else if (output.equals(String.valueOf(true))){
-			MissionState.getInstance().setState(MState.ACCEPTED);
-			//Check for object detection
+		if (output == 200) { // will be returned after full inspection flight
 			MissionState.getInstance().setState(MState.DONE);
+		} else { // errors will be returned immediately
+			MissionState.getInstance().setState(MState.REJECTED);
 		}
 		return result;
 	}
@@ -370,39 +360,22 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		}
 	}
 
-	private String callInspectionFlightEndPoint(String endPoint,String payload){
+	private int callInspectionFlightEndPoint(String endPoint, String payload){
 		HttpURLConnection conn = createConnection(endPoint,true);
-		input_post(conn, payload);
-		return output_post(conn);
-	}
+		if (conn == null) return -1;
 
-	public void input_post(HttpURLConnection con,String jsonInputString){
-		try(OutputStream os=con.getOutputStream()){
-			byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-			os.write(input,0,input.length);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+		byte[] input = payload.getBytes(StandardCharsets.UTF_8);
 
-	public String output_post(HttpURLConnection con){
-		try(BufferedReader br1 = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
-			StringBuilder response = new StringBuilder();
-			String responseLine = null;
-			while ((responseLine = br1.readLine()) != null) {
-				response.append(responseLine.trim());
-			}
-
-			return (response.toString());
-		}
-		catch(Exception e){
-			return "Error in output post";
+		try {
+			conn.getOutputStream().write(input,0,input.length);
+			return conn.getResponseCode();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
 	private List<DronePoint> getDefaultWayPoints(){
-		List<DronePoint> waypoints = new ArrayList<DronePoint>();
+		List<DronePoint> waypoints = new ArrayList<>();
 		waypoints.add(new DronePoint(1.6, 0.7, 2.3, 0, -90));
 		waypoints.add(new DronePoint(1.6, 2.2, 2.3, 0, -90));
 		waypoints.add(new DronePoint(1.6, 3.7, 2.3, 0, -90));

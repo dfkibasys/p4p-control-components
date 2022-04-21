@@ -39,7 +39,7 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 		// convert JSON string to List<DronePoint> using Jackson
 		List<DronePoint> wp = null;
 		try {
-			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
+			wp = new ObjectMapper().readValue(waypoints, new TypeReference<>() {});
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

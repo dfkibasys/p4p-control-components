@@ -34,14 +34,16 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.*;
 
 
 public class DroneServiceImpl implements DroneService, ServiceProvider<DroneService>{
+	private Properties config = null;
 	private static final Logger LOG = LoggerFactory.getLogger(DroneServiceImpl.class);
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
 	private static final Integer QOS = 0;
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
-	
-	public DroneServiceImpl() {
+
+	public DroneServiceImpl(Properties config) {
 		clientId = PREFIX + UUID.randomUUID().toString();
+		this.config = config;
 	}
 	
 	@Override
@@ -313,15 +315,14 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	}
 
 	@Override
-	public List<String> detectObstacles(List<DronePoint> wp) {
+	public void detectObstacles(List<DronePoint> wp) {
+		String serviceEndpoint = config.getProperty("droneInspectionServiceEndpoint");
+
 		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
 			if (newState.equals(PState.MOVING)) {
 				MissionState.getInstance().setState(MState.EXECUTING);
 			}
 		});
-
-		String serviceEndpoint = "http://10.2.0.18:5000/inspection_flight/start-inspection-flight-test";
-		List<String> result = Collections.emptyList();
 
 		// determine the waypoints
 		List<DronePoint> waypoints = (wp != null) ? wp : getDefaultWayPoints();
@@ -338,7 +339,6 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		} else { // errors will be returned immediately
 			MissionState.getInstance().setState(MState.REJECTED);
 		}
-		return result;
 	}
 
 	private HttpURLConnection createConnection(String URI,boolean isPost){

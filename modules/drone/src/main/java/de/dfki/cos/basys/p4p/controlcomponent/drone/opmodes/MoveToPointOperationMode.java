@@ -5,7 +5,6 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DronePoint;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 
 import java.util.concurrent.CountDownLatch;

@@ -94,9 +94,13 @@ public abstract class BaseDroneOperationMode extends BaseOperationMode<DroneServ
 	
 	@Override
 	protected void configureServiceMock(DroneService serviceMock) {
-		Mockito.when(serviceMock.detectObstacles(Mockito.any())).thenReturn(Collections.emptyList());
 		Mockito.when(serviceMock.getWorkState()).thenReturn(WorkState.getInstance());
 		Mockito.doNothing().when(serviceMock).reset();
+
+		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
+			MissionState.getInstance().setState(MState.EXECUTING);
+			return null;
+		}).when(serviceMock).detectObstacles(Mockito.any());
 
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
 			MissionState.getInstance().setState(MState.EXECUTING);

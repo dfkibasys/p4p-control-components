@@ -12,7 +12,6 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 
 @OperationMode(name = "MoveSymbolic", shortName = "MOVE_SYM", description = "moves component to a symbolic position", 
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 

@@ -8,7 +8,6 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
 

@@ -39,7 +39,7 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 		// convert JSON string to List<DronePoint> using Jackson
 		List<DronePoint> wp = null;
 		try {
-			wp = new ObjectMapper().readValue(waypoints, new TypeReference<>() {});
+			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -86,6 +86,6 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 	public void onStopping() {	
 		super.onStopping();
 		getService(DroneService.class).stopLiveImage();
-		getService(DroneService.class).reset();		
+		getService(DroneService.class).reset();
 	}
 }

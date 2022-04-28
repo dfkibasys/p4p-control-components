@@ -5,7 +5,6 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DronePoint;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class MoveToWaypointsOperationMode extends BaseDroneOperationMode{
 		// convert JSON string to List<DronePoint> using Jackson
 		List<DronePoint> wp = null;
 		try {
-			wp = new ObjectMapper().readValue(waypoints, new TypeReference<>() {});
+			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

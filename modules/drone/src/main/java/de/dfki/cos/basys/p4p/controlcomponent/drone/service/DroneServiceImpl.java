@@ -1,11 +1,9 @@
 package de.dfki.cos.basys.p4p.controlcomponent.drone.service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +16,6 @@ import javax.json.JsonObject;
 import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -37,14 +34,16 @@ import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.*;
 
 
 public class DroneServiceImpl implements DroneService, ServiceProvider<DroneService>{
+	private Properties config = null;
 	private static final Logger LOG = LoggerFactory.getLogger(DroneServiceImpl.class);
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
 	private static final Integer QOS = 0;
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
-	
-	public DroneServiceImpl() {
+
+	public DroneServiceImpl(Properties config) {
 		clientId = PREFIX + UUID.randomUUID().toString();
+		this.config = config;
 	}
 	
 	@Override
@@ -69,22 +68,18 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 					// Subscribe to drone work state
 					String workStateTopic = "Mavic2/state/flightPhase";
 					try {
-						mqttClient.subscribe(workStateTopic, QOS, new IMqttMessageListener() {
-							
-							@Override
-							public void messageArrived(String topic, MqttMessage message) throws Exception {
-								String sMessage = new String(message.getPayload());		
-								if (sMessage.contains("Phase Idle")) {
-									WorkState.getInstance().setState(WState.PHASE_IDLE);
-								} else if (sMessage.contains("Phase 0")) {
-									WorkState.getInstance().setState(WState.PHASE0);
-								} else if (sMessage.contains("Phase 1")) {
-									WorkState.getInstance().setState(WState.PHASE1);
-								} else if (sMessage.contains("Phase 2")) {
-									WorkState.getInstance().setState(WState.PHASE2);
-								}
-								
+						mqttClient.subscribe(workStateTopic, QOS, (topic, message) -> {
+							String sMessage = new String(message.getPayload());
+							if (sMessage.contains("Phase Idle")) {
+								WorkState.getInstance().setState(WState.PHASE_IDLE);
+							} else if (sMessage.contains("Phase 0")) {
+								WorkState.getInstance().setState(WState.PHASE0);
+							} else if (sMessage.contains("Phase 1")) {
+								WorkState.getInstance().setState(WState.PHASE1);
+							} else if (sMessage.contains("Phase 2")) {
+								WorkState.getInstance().setState(WState.PHASE2);
 							}
+
 						}).waitForCompletion();
 					} catch (MqttException e) {
 						LOG.warn(clientId + " could not subscribe to topic {}!", workStateTopic);		
@@ -93,26 +88,22 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 					// Subscribe to drone physical state
 					String physicalStateTopic = "Mavic2/state/physical";
 					try {
-						mqttClient.subscribe(physicalStateTopic, QOS, new IMqttMessageListener() {
-							
-							@Override
-							public void messageArrived(String topic, MqttMessage message) throws Exception {
-								String sMessage = new String(message.getPayload());
-								if (sMessage.contains("ONGROUND")) {
-									PhysicalState.getInstance().setState(PState.ONGROUND);
-								}
-								else if (sMessage.contains("TAKINGOFF")) {
-									PhysicalState.getInstance().setState(PState.TAKINGOFF);
-								}	
-								else if (sMessage.contains("HOVERING")) {
-									PhysicalState.getInstance().setState(PState.HOVERING);
-								}	
-								else if (sMessage.contains("MOVING")) {
-									PhysicalState.getInstance().setState(PState.MOVING);
-								}	
-								else if (sMessage.contains("LANDING")) {
-									PhysicalState.getInstance().setState(PState.LANDING);
-								}	
+						mqttClient.subscribe(physicalStateTopic, QOS, (topic, message) -> {
+							String sMessage = new String(message.getPayload());
+							if (sMessage.contains("ONGROUND")) {
+								PhysicalState.getInstance().setState(PState.ONGROUND);
+							}
+							else if (sMessage.contains("TAKINGOFF")) {
+								PhysicalState.getInstance().setState(PState.TAKINGOFF);
+							}
+							else if (sMessage.contains("HOVERING")) {
+								PhysicalState.getInstance().setState(PState.HOVERING);
+							}
+							else if (sMessage.contains("MOVING")) {
+								PhysicalState.getInstance().setState(PState.MOVING);
+							}
+							else if (sMessage.contains("LANDING")) {
+								PhysicalState.getInstance().setState(PState.LANDING);
 							}
 						}).waitForCompletion();
 					} catch (MqttException e) {
@@ -126,7 +117,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 				}
 			}).waitForCompletion();
 		} catch (MqttException e) {
-			LOG.error("Estalishing connection to {} failed with {}!", connectionString, e);
+			LOG.error("Establishing connection to {} failed with {}!", connectionString, e);
 			return false;
 		}
 
@@ -147,43 +138,20 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		String requestTopic = "Mavic2/command/moveToKnownPosition/req";
 		String responseTopic = "Mavic2/command/moveToKnownPosition/res";
 
-		WorkState.getInstance().addStateListener(new WorkStateListener() {
-
-			@Override
-			public void stateChangedEvent(WState oldState, WState newState) {
-
-				if (newState.equals(WState.PHASE_IDLE)) {
-					MissionState.getInstance().setState(MState.DONE);
-				} else if (
-						newState.equals(WState.PHASE0) || 
-						newState.equals(WState.PHASE1) || 
-						newState.equals(WState.PHASE2)
-						) {
-					MissionState.getInstance().setState(MState.EXECUTING);		
-				} 
+		WorkState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(WState.PHASE_IDLE)) {
+				// TODO: Improve for Drone-Home since landing follows Phase Idle here
+				MissionState.getInstance().setState(MState.DONE);
+			} else if (
+					newState.equals(WState.PHASE0) ||
+					newState.equals(WState.PHASE1) ||
+					newState.equals(WState.PHASE2)
+					) {
+				MissionState.getInstance().setState(MState.EXECUTING);
 			}
-				
 		});
-		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());				
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-						
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
+
+		subscribeToResponse(responseTopic);
 		
 		if ("_HOME_".equals(position)) {
 			position = "Drone-Home";
@@ -200,43 +168,19 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		String requestTopic = "Mavic2/command/moveToPoint/req";
 		String responseTopic = "Mavic2/command/moveToPoint/res";
 	
-		WorkState.getInstance().addStateListener(new WorkStateListener() {
-	
-			@Override
-			public void stateChangedEvent(WState oldState, WState newState) {
-	
-				if (newState.equals(WState.PHASE_IDLE)) {
-					MissionState.getInstance().setState(MState.DONE);		
-				} else if (
-						newState.equals(WState.PHASE0) || 
-						newState.equals(WState.PHASE1) || 
-						newState.equals(WState.PHASE2)
-						) {
-					MissionState.getInstance().setState(MState.EXECUTING);		
-				} 
+		WorkState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(WState.PHASE_IDLE)) {
+				MissionState.getInstance().setState(MState.DONE);
+			} else if (
+					newState.equals(WState.PHASE0) ||
+					newState.equals(WState.PHASE1) ||
+					newState.equals(WState.PHASE2)
+					) {
+				MissionState.getInstance().setState(MState.EXECUTING);
 			}
-				
 		});
-		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());		
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-						
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
+
+		subscribeToResponse(responseTopic);
 		
 		JsonObject position = Json.createObjectBuilder()
 				.add("pos", 
@@ -259,43 +203,19 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		String requestTopic = "Mavic2/command/moveToWaypoints/req";
 		String responseTopic = "Mavic2/command/moveToWaypoints/res";
 	
-		WorkState.getInstance().addStateListener(new WorkStateListener() {
-	
-			@Override
-			public void stateChangedEvent(WState oldState, WState newState) {
-	
-				if (newState.equals(WState.PHASE_IDLE)) {
-					MissionState.getInstance().setState(MState.DONE);		
-				} else if (
-						newState.equals(WState.PHASE0) || 
-						newState.equals(WState.PHASE1) || 
-						newState.equals(WState.PHASE2)
-						) {
-					MissionState.getInstance().setState(MState.EXECUTING);		
-				} 
+		WorkState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(WState.PHASE_IDLE)) {
+				MissionState.getInstance().setState(MState.DONE);
+			} else if (
+					newState.equals(WState.PHASE0) ||
+					newState.equals(WState.PHASE1) ||
+					newState.equals(WState.PHASE2)
+					) {
+				MissionState.getInstance().setState(MState.EXECUTING);
 			}
-				
 		});
-		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());		
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-						
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
+
+		subscribeToResponse(responseTopic);
 		
 		String payload = "";
 		try {
@@ -314,39 +234,17 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		String responseTopic = "Mavic2/command/takeOffAndHandOverControl/res";
 		String requestTopic = "Mavic2/command/takeOffAndHandOverControl/req";
 
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}		
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
+		subscribeToResponse(responseTopic);
 		
-		PhysicalState.getInstance().addStateListener(new PhysicalStateListener() {
-
-			@Override
-			public void stateChangedEvent(PState oldState, PState newState) {
-				if (newState.equals(PState.TAKINGOFF)) {
-					MissionState.getInstance().setState(MState.EXECUTING);		
-				}
-				else if (newState.equals(PState.HOVERING)) {
-					MissionState.getInstance().setState(MState.DONE);		
-				}
-				
+		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(PState.TAKINGOFF)) {
+				MissionState.getInstance().setState(MState.EXECUTING);
 			}
-			
-		});		
+			else if (newState.equals(PState.HOVERING)) {
+				MissionState.getInstance().setState(MState.DONE);
+			}
+
+		});
 		
 		publish(requestTopic, "");
 	}
@@ -355,42 +253,17 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void land() {
 		String responseTopic = "Mavic2/command/emergencyLanding/res";
 		String requestTopic = "Mavic2/command/emergencyLanding/req";
+
+		subscribeToResponse(responseTopic);
 		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-	
-					
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-		
-		PhysicalState.getInstance().addStateListener(new PhysicalStateListener() {
-	
-			@Override
-			public void stateChangedEvent(PState oldState, PState newState) {
-				if (newState.equals(PState.LANDING)) {
-					MissionState.getInstance().setState(MState.EXECUTING);		
-				}
-				else if (newState.equals(PState.ONGROUND)) {
-					MissionState.getInstance().setState(MState.DONE);		
-				}
-				
+		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(PState.LANDING)) {
+				MissionState.getInstance().setState(MState.EXECUTING);
 			}
-			
-		});	
+			else if (newState.equals(PState.ONGROUND)) {
+				MissionState.getInstance().setState(MState.DONE);
+			}
+		});
 	
 		publish(requestTopic, "");
 	}
@@ -399,25 +272,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void startLiveImage() {
 		String responseTopic = "Mavic2/command/startLiveImage/res";
 		String requestTopic = "Mavic2/command/startLiveImage/req";
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}			
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-		
+
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 	}
 
@@ -425,26 +281,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void stopLiveImage() {
 		String responseTopic = "Mavic2/command/stopLiveImage/res";
 		String requestTopic = "Mavic2/command/stopLiveImage/req";
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-					
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-		
+
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 
 	}
@@ -454,26 +292,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void startRTMPStream() {
 		String responseTopic = "Mavic2/command/startRTMPStream/res";
 		String requestTopic = "Mavic2/command/startRTMPStream/req";
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
 
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-		
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 		
 	}
@@ -482,27 +302,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void stopRTMPStream() {
 		String responseTopic = "Mavic2/command/stopRTMPStream/res";
 		String requestTopic = "Mavic2/command/stopRTMPStream/req";
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
 
-					
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-		
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 		
 	}
@@ -514,40 +315,30 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	}
 
 	@Override
-	public List<String> detectObstacles(String type) {
-		MissionState.getInstance().setState(MState.EXECUTING);
+	public void detectObstacles(List<DronePoint> wp) {
+		String serviceEndpoint = config.getProperty("droneInspectionServiceEndpoint") + "/inspection_flight/start-inspection-flight-test";
 
-		String serviceEndpoint = "http://localhost:5000/inspection_flight/start-inspection-flight-test";
-		List<String> result = Collections.emptyList();
-		sleep(5000);
-		MissionState.getInstance().setState(MState.DONE);
+		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(PState.MOVING)) {
+				MissionState.getInstance().setState(MState.EXECUTING);
+			}
+		});
+
 		// determine the waypoints
-		List<DronePoint> waypoints = getDefaultWayPoints();
+		List<DronePoint> waypoints = (wp != null) ? wp : getDefaultWayPoints();
 		Map<String,Object> params = new HashMap<>();
-		params.put("waypoints",waypoints);
-		com.google.gson.JsonObject json = new com.google.gson.JsonObject();
-		json.addProperty("waypoints", String.valueOf(waypoints));
+		params.put("waypoints", waypoints);
 		String payload = new Gson().toJson(params);
-		String output = callInspectionFlightEndPoint(serviceEndpoint, payload);
-		System.out.println(output);
-//		try {
-////			String payload = new ObjectMapper().writeValueAsString(params);
-//			//post to end point
-//			String output = callInspectionFlightEndPoint(serviceEndpoint,payload);
-//			System.out.println(output);
-//		} catch (JsonProcessingException e) {
-//			e.printStackTrace();
-//		}
-		// call the api for detecting obstacles
+
+		// call the api for detecting obstacles (long polling)
+		int output = callInspectionFlightEndPoint(serviceEndpoint, payload);
+
 		// check the output it produces
-		if(output.equals(String.valueOf(false))){
-			MissionState.getInstance().setState(MState.REJECTED);
-		} else if (output.equals(String.valueOf(true))){
-			MissionState.getInstance().setState(MState.ACCEPTED);
-			//Check for object detection
+		if (output == 200) { // will be returned after full inspection flight
 			MissionState.getInstance().setState(MState.DONE);
+		} else { // errors will be returned immediately
+			MissionState.getInstance().setState(MState.REJECTED);
 		}
-		return result;
 	}
 
 	private HttpURLConnection createConnection(String URI,boolean isPost){
@@ -569,54 +360,30 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		}
 	}
 
-	private String callInspectionFlightEndPoint(String endPoint,String payload){
+	private int callInspectionFlightEndPoint(String endPoint, String payload){
 		HttpURLConnection conn = createConnection(endPoint,true);
-		input_post(conn, payload);
-		return output_post(conn);
-	}
+		if (conn == null) return -1;
 
-	public void input_post(HttpURLConnection con,String jsonInputString){
-		try(OutputStream os=con.getOutputStream()){
-			byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-			os.write(input,0,input.length);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+		byte[] input = payload.getBytes(StandardCharsets.UTF_8);
 
-	public String output_post(HttpURLConnection con){
-		try(BufferedReader br1 = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
-			StringBuilder response = new StringBuilder();
-			String responseLine = null;
-			while ((responseLine = br1.readLine()) != null) {
-				response.append(responseLine.trim());
-			}
-
-			return (response.toString());
+		try {
+			conn.getOutputStream().write(input,0,input.length);
+			return conn.getResponseCode();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		catch(Exception e){
-			return "Error in output post";
-		}
-	}
-
-	private DronePoint getWayPoint(double x, double y) {
-		return new DronePoint(x, y, 2.3, 0, -90);
-	}
-	private DronePoint getWayPointWithRotation(double x, double y, double rot) {
-		return new DronePoint(x, y, 2.3, rot, -90);
 	}
 
 	private List<DronePoint> getDefaultWayPoints(){
-		List<DronePoint> waypoints = new ArrayList<DronePoint>();
-		waypoints.add(getWayPoint(1.6,0.7));
-		waypoints.add(getWayPoint(1.6,2.2));
-		waypoints.add(getWayPoint(1.6,3.7));
-		waypoints.add(getWayPoint(1.6,5.2));
-		waypoints.add(getWayPointWithRotation(0.5,5.2,90));
-		waypoints.add(getWayPointWithRotation(0.5,3.7,-180));
-		waypoints.add(getWayPointWithRotation(0.5,2.2,-180));
-		waypoints.add(getWayPointWithRotation(0.5,0.7,-180));
+		List<DronePoint> waypoints = new ArrayList<>();
+		waypoints.add(new DronePoint(1.6, 0.7, 2.3, 0, -90));
+		waypoints.add(new DronePoint(1.6, 2.2, 2.3, 0, -90));
+		waypoints.add(new DronePoint(1.6, 3.7, 2.3, 0, -90));
+		waypoints.add(new DronePoint(1.6, 5.2, 2.3, 0, -90));
+		waypoints.add(new DronePoint(0.5, 5.2, 2.3, 90, -90));
+		waypoints.add(new DronePoint(0.5, 3.7, 2.3, -180, -90));
+		waypoints.add(new DronePoint(0.5, 2.2, 2.3, -180, -90));
+		waypoints.add(new DronePoint(0.5, 0.7, 2.3, -180, -90));
 		return waypoints;
 	}
 
@@ -632,6 +399,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		unsubscribe("Mavic2/command/emergencyLanding/res");
 		unsubscribe("Mavic2/command/moveToKnownPosition/res");
 		unsubscribe("Mavic2/command/moveToPoint/res");
+		unsubscribe("Mavic2/command/moveToWaypoints/res");
 		
 		MissionState.getInstance().setState(MState.PENDING);		
 		WorkState.getInstance().removeStateListeners();
@@ -642,26 +410,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void pause() {
 		String responseTopic = "Mavic2/command/pauseMotion/res";
 		String requestTopic = "Mavic2/command/pauseMotion/req";
-		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}				
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-	
+
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 	}
 
@@ -669,28 +419,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 	public void resume() {
 		String responseTopic = "Mavic2/command/continueMotion/res";
 		String requestTopic = "Mavic2/command/continueMotion/req";
-		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-	
-					
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-	
+
+		subscribeToResponse(responseTopic);
 		publish(requestTopic, "");
 	}
 
@@ -699,33 +429,13 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		String responseTopic = "Mavic2/command/emergencyLanding/res";
 		String requestTopic = "Mavic2/command/emergencyLanding/req";
 		
-		try {
-			mqttClient.subscribe(responseTopic, QOS, new IMqttMessageListener() {
-				
-				@Override
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					String sMessage = new String(message.getPayload());
-					if (sMessage.contains("Accepted")) {
-						MissionState.getInstance().setState(MState.ACCEPTED);			
-					}
-					else // Rejected
-					{
-						MissionState.getInstance().setState(MState.REJECTED);	
-					}
-	
-					
-				}
-			}).waitForCompletion();
-		} catch (MqttException e) {
-			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
-		}
-	
-		publish(requestTopic, "from ControlComponent");
+		subscribeToResponse(responseTopic);
+		publish(requestTopic, "");
 	}
 
 	@Override
 	public boolean isConnected() {
-		return mqttClient == null ? false : mqttClient.isConnected();
+		return mqttClient != null && mqttClient.isConnected();
 	}
 
 	@Override
@@ -749,12 +459,29 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		return null;
 	}
 
-	private  void sleep(long millis) {
+	private void sleep(long millis) {
 		try {
 			TimeUnit.MILLISECONDS.sleep(millis);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	private void subscribeToResponse(String responseTopic){
+		try {
+			mqttClient.subscribe(responseTopic, QOS, (topic, message) -> {
+				String sMessage = new String(message.getPayload());
+				if (sMessage.contains("Accepted")) {
+					MissionState.getInstance().setState(MState.ACCEPTED);
+				}
+				else // Rejected
+				{
+					MissionState.getInstance().setState(MState.REJECTED);
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
 		}
 	}
 
@@ -774,7 +501,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		try {
 			mqttClient.unsubscribe(topic).waitForCompletion();
 		} catch (MqttException e) {
-			LOG.warn("Failed to unsubscribe from topic {} with {}!", e);
+			LOG.warn("Failed to unsubscribe from topic {} with {}!", topic, e);
 		}
 	}
 }

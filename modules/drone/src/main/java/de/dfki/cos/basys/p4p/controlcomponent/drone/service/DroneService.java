@@ -16,7 +16,7 @@ public interface DroneService {
 	WorkState getWorkState();
 	String getStatus();
 	List<String> getSymbolicPositions();
-	List<String> detectObstacles(String type);
+	void detectObstacles(List<DronePoint> waypoints);
 	void reset();
 	void abort();
 	void pause();

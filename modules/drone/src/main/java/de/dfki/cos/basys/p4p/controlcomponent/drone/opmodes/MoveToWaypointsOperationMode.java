@@ -5,7 +5,6 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DronePoint;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneService;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionState;
-import de.dfki.cos.basys.p4p.controlcomponent.drone.service.MissionStateListener;
 import de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneStatus.MState;
 
 import java.util.List;
@@ -46,27 +45,21 @@ public class MoveToWaypointsOperationMode extends BaseDroneOperationMode{
 		List<DronePoint> wp = null;
 		try {
 			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
-			//wp = Arrays.asList(new ObjectMapper().readValue(waypoints, DronePoint[].class));
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		MissionState.getInstance().addStateListener(new MissionStateListener() {
-
-			@Override
-			public void stateChangedEvent(MState oldState, MState newState) {
-				if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
-					executing = true;
-					component.setErrorStatus(0, "OK");
-					counter.countDown();
-				}
-				else if (newState.equals(MState.REJECTED)) {
-					component.setErrorStatus(3, "rejected");
-					counter.countDown();
-				}
+		MissionState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(MState.ACCEPTED) || newState.equals(MState.EXECUTING)) {
+				executing = true;
+				component.setErrorStatus(0, "OK");
+				counter.countDown();
 			}
-			
+			else if (newState.equals(MState.REJECTED)) {
+				component.setErrorStatus(3, "rejected");
+				counter.countDown();
+			}
 		});
 		
 		// precautionary set timeout error (gets overridden in case of success)

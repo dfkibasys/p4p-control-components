@@ -316,7 +316,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 
 	@Override
 	public void detectObstacles(List<DronePoint> wp) {
-		String serviceEndpoint = config.getProperty("droneInspectionServiceEndpoint");
+		String serviceEndpoint = config.getProperty("droneInspectionServiceEndpoint") + "/inspection_flight/start-inspection-flight-test";
 
 		PhysicalState.getInstance().addStateListener((oldState, newState) -> {
 			if (newState.equals(PState.MOVING)) {

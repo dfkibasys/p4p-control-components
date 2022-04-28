@@ -57,6 +57,9 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 			}
 		});
 
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");
+
 		// Start Video Streaming with endpoint of obstacle detection service
 		getService(DroneService.class).startLiveImage();
 		sleep(1000);

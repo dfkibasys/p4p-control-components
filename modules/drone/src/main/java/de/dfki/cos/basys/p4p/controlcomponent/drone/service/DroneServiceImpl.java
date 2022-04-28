@@ -330,7 +330,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		params.put("waypoints", waypoints);
 		String payload = new Gson().toJson(params);
 
-		// call the api for detecting obstacles
+		// call the api for detecting obstacles (long polling)
 		int output = callInspectionFlightEndPoint(serviceEndpoint, payload);
 
 		// check the output it produces

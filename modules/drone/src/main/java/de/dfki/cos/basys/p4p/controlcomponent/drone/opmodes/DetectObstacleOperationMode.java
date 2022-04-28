@@ -36,18 +36,9 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 
 		counter = new CountDownLatch(1);
 
-		// convert JSON string to List<DronePoint> using Jackson
-		List<DronePoint> wp = null;
-		try {
-			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
-		} catch (JsonProcessingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
+		// start live image listeners
 		MissionState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(DroneStatus.MState.EXECUTING)) {
-				executing = true;
+			if (newState.equals(DroneStatus.MState.ACCEPTED)) {
 				component.setErrorStatus(0, "OK");
 				counter.countDown();
 			}
@@ -63,7 +54,6 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 		// Start Video Streaming with endpoint of obstacle detection service
 		getService(DroneService.class).startLiveImage();
 		sleep(1000);
-		getService(DroneService.class).detectObstacles(wp);
 
 		try {
 			counter.await(20, TimeUnit.SECONDS);
@@ -72,6 +62,29 @@ public class DetectObstacleOperationMode extends BaseDroneOperationMode {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void onExecute() {
+		// detect obstacle listener
+		MissionState.getInstance().addStateListener((oldState, newState) -> {
+			if (newState.equals(DroneStatus.MState.REJECTED)) {
+				component.setErrorStatus(2, "aborted");
+				component.stop(component.getOccupierId());
+			}
+		});
+
+		// convert JSON string to List<DronePoint> using Jackson
+		List<DronePoint> wp = null;
+		try {
+			wp = new ObjectMapper().readValue(waypoints, new TypeReference<List<DronePoint>>() {});
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// long polling
+		getService(DroneService.class).detectObstacles(wp);
 	}
 
 	@Override

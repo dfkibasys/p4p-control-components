@@ -24,6 +24,7 @@
 		<module>modules/smartwatch</module>
 		<module>modules/ur</module>
 		<module>modules/vacuum</module>
+		<module>modules/virtual</module>
 		<module>modules/wallet</module>
 		<module>modules/worker</module>
 	</modules>

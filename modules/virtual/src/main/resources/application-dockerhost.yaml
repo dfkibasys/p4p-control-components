@@ -1,0 +1,10 @@
+basys:
+  aasRegistry:
+    type: dotaas
+    service:
+      connectionString: http://aasregistry.dockerhost
+  eventTransmitter:
+    type: mqtt
+    service:
+      implementationJavaClass: de.dfki.cos.basys.aas.event.mqtt.MqttEventTransmitter
+      connectionString: tcp://dockerhost:1883

@@ -36,13 +36,36 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 
-# Eclipse IDE settings
-.settings/
+!**/src/main/**/target/
+!**/src/test/**/target/
 
+### STS / Eclipse IDE ###
+.settings/
 .classpath
 .project
 MANIFEST.MF
 build.properties
+.apt_generated
+.factorypath
+.settings
+.springBeans
+.sts4-cache
 
-/src/main/resources/components/
-.DS_Store
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/

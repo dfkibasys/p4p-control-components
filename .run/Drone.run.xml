@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Drone" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="11" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="EXTERNAL_HOSTNAME" value="localhost" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.drone.ControlComponentApplication" />
+    <module name="drone" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.dfki.cos.basys.p4p.controlcomponent.drone.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

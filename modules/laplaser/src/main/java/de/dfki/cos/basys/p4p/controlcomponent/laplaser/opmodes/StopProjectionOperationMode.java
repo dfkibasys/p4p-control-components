@@ -1,0 +1,49 @@
+package de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes;
+
+import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
+import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserService;
+import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
+import de.dfki.cos.basys.controlcomponent.ExecutionMode;
+import de.dfki.cos.basys.controlcomponent.ParameterDirection;
+import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
+
+@OperationMode(name = "StopProjection", shortName = "PR_STOP", description = "stops the projection", 
+		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
+public class StopProjectionOperationMode extends BaseLapOperationMode {
+	
+	@Parameter(name = "durationStop", direction = ParameterDirection.OUT)
+	private int duration_out = 0;
+	
+		
+	public StopProjectionOperationMode(BaseControlComponent<LapLaserService> component) {
+		super(component);
+	}
+
+	@Override
+	public void onStarting() {	
+		super.onStarting();
+		getService(LapLaserService.class).stopProjection();
+		executing = true;
+	}
+	
+	@Override
+	public void onResetting() {
+		super.onResetting();
+		sleep(1000);
+	}
+
+	@Override
+	public void onCompleting() {
+		super.onCompleting();
+		duration_out = duration;
+	}
+	
+	@Override
+	public void onStopping() {
+		super.onStopping();
+		sleep(1000);
+	}
+
+}

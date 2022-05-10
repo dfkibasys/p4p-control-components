@@ -14,6 +14,8 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -22,13 +24,14 @@ import java.util.Properties;
 
 public class AgvServiceImpl implements  AgvService, ServiceProvider<AgvService>, Unit.Callback {
 
-    KafkaProducer<SimpleKey, Pose3dStamped> poseProducer = null;
-    KafkaProducer<String, String> stringProducer = null;
+    private Logger log = LoggerFactory.getLogger(getClass().getName());
+
+    private KafkaProducer<SimpleKey, Pose3dStamped> poseProducer = null;
+    private KafkaProducer<String, String> stringProducer = null;
 
     private final Properties config;
     private final String topicPose, topicStatus;
     private final SimpleKey key;
-
 
     private Map<String, Pose3d> knownPositions = null;
 
@@ -39,18 +42,13 @@ public class AgvServiceImpl implements  AgvService, ServiceProvider<AgvService>,
         this.config = config;
         this.topicStatus = config.getProperty("topicStatus");
         this.topicPose = config.getProperty("topicPose");
-        key = SimpleKey.newBuilder().setKey(config.getProperty("id")).build();
-
-        float startX = 9.060f;
-        float startY = -8.736f;
-        float startZ = 3.559f;
-
-        Pose3d home = getKnownPoses().get("_HOME_");
+        this.key = SimpleKey.newBuilder().setKey(config.getProperty("id")).build();
 
         this.grid = MapUtils.fromResourceStream(getClass().getClassLoader().getResourceAsStream("map_basys3.png"));
         this.grid.setScaleFactor(0.01f);
         this.grid.setOffset(new Vector3f(8.310f,-8.736f,-1.073f));
 
+        Pose3d home = getKnownPoses().get("_HOME_");
         this.unit = new Unit(
                 new Vector3f(home.getPosition().getX(), home.getPosition().getY(), home.getPosition().getZ()),
                 new Quaternion(home.getOrientation().getX(), home.getOrientation().getY(), home.getOrientation().getZ(), home.getOrientation().getW()),
@@ -104,7 +102,6 @@ public class AgvServiceImpl implements  AgvService, ServiceProvider<AgvService>,
         }
     }
 
-
     private void sendPose(Pose3dStamped pose) {
         if (poseProducer != null) {
             poseProducer.send(new ProducerRecord<SimpleKey, Pose3dStamped>(topicPose, key, pose));
@@ -147,17 +144,13 @@ public class AgvServiceImpl implements  AgvService, ServiceProvider<AgvService>,
                             .setPosition(Point3d.newBuilder().setX(9.060f).setY(-8.736f).setZ(-0.873f).build())
                             .setOrientation(de.dfki.cos.mrk40.avro.Quaternion.newBuilder().setX(0).setY(0).setZ(0).setW(1).build())
                             .build() );
-            knownPositions.put("TEST",
-                    Pose3d.newBuilder()
-                            .setPosition(Point3d.newBuilder().setX(30f).setY(0).setZ(30f).build())
-                            .setOrientation(de.dfki.cos.mrk40.avro.Quaternion.newBuilder().setX(0).setY(0).setZ(0).setW(1).build())
-                            .build() );
         }
         return knownPositions;
     }
 
     @Override
     public void gotoKnownPose(String poseId) {
+        log.info("gotoKnownPose {}", poseId);
         Pose3d pose = getKnownPoses().get(poseId);
         if (pose != null) {
 

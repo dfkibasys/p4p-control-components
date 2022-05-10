@@ -4,6 +4,7 @@ import de.dfki.cos.basys.common.component.ComponentContext;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
 
 public class TestMain {
 
@@ -19,47 +20,61 @@ public class TestMain {
         service.connect(ComponentContext.getStaticContext(), "");
 
         while (true) {
-            service.gotoKnownPose("LID_STORAGE");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            service.gotoKnownPose("LID_JOINING_STATION");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            service.gotoKnownPose("_HOME_");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            service.gotoKnownPose("SCREW_STORAGE");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            service.gotoKnownPose("SCREW_JOINING_STATION");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            service.gotoKnownPose("_HOME_");
+            Random generator = new Random();
+            String[] values = service.getKnownPoses().keySet().toArray(new String[0]);
+            String target = values[generator.nextInt(values.length)];
+            service.gotoKnownPose(target);
             try {
                 System.in.read();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+//        while (true) {
+//
+//            service.gotoKnownPose("LID_STORAGE");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            service.gotoKnownPose("LID_JOINING_STATION");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            service.gotoKnownPose("_HOME_");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            service.gotoKnownPose("SCREW_STORAGE");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            service.gotoKnownPose("SCREW_JOINING_STATION");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            service.gotoKnownPose("_HOME_");
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

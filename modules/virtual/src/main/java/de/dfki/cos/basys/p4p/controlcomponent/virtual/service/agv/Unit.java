@@ -7,6 +7,8 @@ import com.jme3.math.Vector3f;
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.pathfinding.AStarGrid;
 import de.dfki.cos.basys.common.pathfinding.AStarLogic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,6 +17,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class Unit {
+
+    private Logger log = LoggerFactory.getLogger(getClass().getName());
 
     public interface Callback {
         void handleStateChange(State state);
@@ -35,7 +39,7 @@ public class Unit {
 
 
     public float turnSpeed = 3.0f;
-    public float turnDst = 0.1f;
+    public float turnDst = 0.2f;
     public float stoppingDst = 0.1f;
 
     private Callback callback = null;
@@ -94,11 +98,15 @@ public class Unit {
     }
 
     private Path findPath(Vector3f targetPosition, Quaternion targetOrientation) {
+        log.info("findPath to {} with orientation {}", targetPosition, targetOrientation);
         List<Vector3f> waypoints = logic.getWaypoints(transform.getTranslation(), targetPosition);
         if (waypoints == null) {
             setState(State.FAILED);
+            log.warn("no path found");
             return null;
         }
+
+
 
         Path path = new Path(waypoints.toArray(new Vector3f[0]), transform.getTranslation(), turnDst, stoppingDst);
         path.targetOrientation = targetOrientation;
@@ -146,7 +154,7 @@ public class Unit {
     }
 
     private void followPath(Path path) {
-
+        log.info("followPath - start");
         boolean followingPath = true;
         int pathIndex = 0;
 
@@ -160,7 +168,7 @@ public class Unit {
 
         float speedPercent = 1;
 
-        System.out.println("initial rotation");
+        log.info("followPath - perform initial rotation");
         while (true) {
             if (transform.getRotation().isSimilar(newOrientation, 0.04f)) {
                 break;
@@ -181,7 +189,7 @@ public class Unit {
         }
 
 
-        System.out.println("followPath");
+        log.info("followPath - perform path traversal");
         while (followingPath) {
             Vector2f pos2D = new Vector2f (transform.getTranslation().x, transform.getTranslation().z);
             while (path.turnBoundaries [pathIndex].HasCrossedLine (pos2D)) {
@@ -225,7 +233,7 @@ public class Unit {
             }
         }
 
-        System.out.println("final rotation");
+        log.info("followPath - perform final rotation");
         while (true) {
             if (transform.getRotation().isSimilar(path.targetOrientation, 0.025f)) {
                 break;
@@ -244,7 +252,7 @@ public class Unit {
             }
 
         }
-        System.out.println("followPath finished");
+        log.info("followPath - finished");
     }
 
     public static float clamp(float val, float min, float max) {

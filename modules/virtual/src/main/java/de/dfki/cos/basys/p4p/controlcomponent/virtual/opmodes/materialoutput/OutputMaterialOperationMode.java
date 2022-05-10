@@ -7,6 +7,8 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.virtual.service.materialoutput.MaterialOutputService;
 
+import java.util.concurrent.TimeUnit;
+
 @OperationMode(name = "OutputMaterial", shortName = "OUTPUTMT", description = "Outputs material",
         allowedCommands = { ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
         allowedModes = { ExecutionMode.SIMULATE })
@@ -18,26 +20,46 @@ public class OutputMaterialOperationMode extends BaseOperationMode<MaterialOutpu
 
     @Override
     public void onResetting() {
-
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onStarting() {
-
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onExecute() {
-
+        try {
+            TimeUnit.MILLISECONDS.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onCompleting() {
-
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onStopping() {
-
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

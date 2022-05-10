@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: agv_1
+logging:
+  level:
+    org.springframework.boot.autoconfigure: INFO
+server:
+  port: 8088
+  accessibleEndpoint: http://localhost:8088
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12685
+    httpsPort: 8443
+  controlcomponent:
+    id: agv_1
+    name: agv-1
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.virtual.opmodes.agv
+    executionMode: SIMULATE
+    auto:
+      disableExecutionModeChange: false
+      disableOccupationCheck: false
+    simulate:
+      disableExecutionModeChange: true
+      disableOccupationCheck: true
+      service:
+        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.virtual.service.agv.AgvServiceImpl
+        connectionString: ${KAFKA_BROKER_ENDPOINT}:9092
+        schemaRegistryUrl: ${SCHEMA_REGISTRY_ENDPOINT}
+        topicStatus: agv_1_status
+        topicPose: agv_1_pose

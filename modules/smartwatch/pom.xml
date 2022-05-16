@@ -14,7 +14,7 @@
 	<properties>
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.smartwatch</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.smartwatch</bundle.namespace>
-		<docker.imagename>controlcomponent-${project.artifactId}:${project.version}</docker.imagename>
+		<docker.image.name>controlcomponent-${project.artifactId}</docker.image.name>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
@@ -52,12 +52,4 @@
 
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

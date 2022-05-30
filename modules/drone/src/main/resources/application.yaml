@@ -1,6 +1,11 @@
 logging:
   level:
     org.springframework.boot.autoconfigure: INFO
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics"
 server:
   port: 8088
   accessibleEndpoint: http://localhost:8088

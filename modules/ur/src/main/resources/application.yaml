@@ -37,8 +37,3 @@ basys:
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true
-      service:
-        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrServiceImplROS
-        connectionString: ws://localhost:9100
-        serverName: movsym_action
-        actionNameMove: simrk40_msgs/MoveToSymbolicPositionAction

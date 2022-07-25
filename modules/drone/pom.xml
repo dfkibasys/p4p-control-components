@@ -149,7 +149,7 @@
 												<buildx>
 													<platforms>${docker.target.platforms}</platforms>
 												</buildx>
-												<noCache>
+												<noCache/>
 											</build>
 										</image>
 									</images>

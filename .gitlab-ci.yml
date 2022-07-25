@@ -88,7 +88,7 @@ maven-docker-publish-baxter:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl baxter
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/baxter
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -113,7 +113,7 @@ maven-docker-publish-drone:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl drone
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/drone
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -138,7 +138,7 @@ maven-docker-publish-laplaser:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl laplaser
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/laplaser
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -163,7 +163,7 @@ maven-docker-publish-mir:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl mir
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/mir
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'    
@@ -188,7 +188,7 @@ maven-docker-publish-smartwatch:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl smartwatch
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/smartwatch
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -213,7 +213,7 @@ maven-docker-publish-ur:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl ur
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/ur
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -238,7 +238,7 @@ maven-docker-publish-vacuum:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl vacuum
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/vacuum
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -263,7 +263,7 @@ maven-docker-publish-virtual:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl virtual
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/virtual
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -288,7 +288,7 @@ maven-docker-publish-wallet:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl wallet
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/wallet
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -313,7 +313,7 @@ maven-docker-publish-worker:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl worker
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/worker
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'

@@ -68,7 +68,7 @@ mvn-docker-install:
   dependencies:
     - mvn-compile
     
-maven-docker-publish:
+maven-docker-publish-baxter:
   stage: deploy
   tags:
     - basys
@@ -88,7 +88,232 @@ maven-docker-publish:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl baxter
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-drone:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl drone
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-laplaser:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl laplaser
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-mir:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl mir
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'    
+
+maven-docker-publish-smartwatch:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl smartwatch
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-ur:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl ur
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-vacuum:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl vacuum
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-virtual:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl virtual
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-wallet:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl wallet
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+maven-docker-publish-worker:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+     - mvn-docker-install
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl worker
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'

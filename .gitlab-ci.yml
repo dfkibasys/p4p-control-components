@@ -72,19 +72,20 @@ mvn-docker-install:
       - $MAVEN_TARGET_JARS
     expire_in: 3 hour
 
-mvn-deploy:
-  stage: deploy
-  tags:
-    - basys
-    - maven
-  script:
-    - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
-  dependencies:
-    - mvn-docker-install
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
+# mvn-deploy:
+#   stage: deploy
+#   tags:
+#     - basys
+#     - maven
+#   script:
+#     - chmod 775 ./mvnw
+#     - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
+#   dependencies:
+#     - mvn-docker-install
+#     - mvn-docker-install
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == 'master'
+#     - if: $CI_COMMIT_BRANCH == 'develop'
     
 docker-publish:
   stage: deploy
@@ -102,10 +103,11 @@ docker-publish:
     - docker info
   dependencies:
      - mvn-compile
+     - mvn-docker-install
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true  -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.package.skip -Dmaven.install.skip -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'

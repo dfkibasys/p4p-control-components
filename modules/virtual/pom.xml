@@ -12,15 +12,22 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.ur</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.ur</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.virtual</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.virtual</bundle.namespace>
 		<docker.image.name>controlcomponent-${project.artifactId}</docker.image.name>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
-	<artifactId>ur</artifactId>
+	<artifactId>virtual</artifactId>
 	<name>${bundle.symbolicName}</name>
 	<packaging>jar</packaging>
+
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<url>http://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 
@@ -29,28 +36,27 @@
 			<artifactId>spring</artifactId>
 			<version>${basys-controlcomponent.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>de.dfki.cos.mrk40</groupId>
+			<artifactId>avro</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-avro-serializer</artifactId>
+			<version>7.1.1</version>
+		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>jrosbridge</artifactId>
-			<version>${basys-common.version}</version>
+			<artifactId>mir-restclient</artifactId>
+			<version>0.3.0-SNAPSHOT</version>
 		</dependency>
-				
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.xmlrpc</groupId>
-			<artifactId>xmlrpc-client</artifactId>
-			<version>3.1.3</version>
-		</dependency>	
-		
-		<dependency>
-		    <groupId>org.eclipse.jetty.websocket</groupId>
-		    <artifactId>javax-websocket-client-impl</artifactId>
-		    <version>9.4.12.v20180830</version>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>pathfinding</artifactId>
+			<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

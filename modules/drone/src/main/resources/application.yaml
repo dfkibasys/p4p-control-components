@@ -1,6 +1,11 @@
 logging:
   level:
     org.springframework.boot.autoconfigure: INFO
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics"
 server:
   port: 8088
   accessibleEndpoint: http://localhost:8088
@@ -33,8 +38,3 @@ basys:
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true
-      disableServiceMock: true
-      service:
-        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.drone.service.DroneServiceImpl
-        connectionString: tcp://10.2.10.4:1883
-        droneInspectionServiceEndpoint: http://10.2.0.18:5000

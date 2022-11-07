@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="EXTERNAL_HOSTNAME" value="localhost" />
+      <env name="EXTERNAL_HOSTNAME" value="10.107.0.136" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.mir.ControlComponentApplication" />
     <module name="mir" />

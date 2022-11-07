@@ -75,35 +75,37 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 		try {
 			boolean executing = true;
 			while(executing) {
-				currentMission = getService(MirService.class).getMissionInstanceInfo(currentMission.id);
-				LOGGER.debug("MissionState is " + currentMission.state);
-				 
-				switch (currentMission.state.toLowerCase()) {
-				case "pending":
-					break;
-				case "executing":
-					break;
-				case "done":
-					executing=false;
-					break;
-				case "failed":
-					executing=false;
-					component.setErrorStatus(1, "failed");
-					component.stop(component.getOccupierId());
-					break;
-				case "aborted":
-					executing=false;
-					component.setErrorStatus(2, "aborted");
-					component.stop(component.getOccupierId());
-					break;
-				default:
-					break;
-				}
-	
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				if (currentMission != null) {
+					currentMission = getService(MirService.class).getMissionInstanceInfo(currentMission.id);
+					LOGGER.info("MissionState is " + currentMission.state);
+
+					switch (currentMission.state.toLowerCase()) {
+						case "pending":
+							break;
+						case "executing":
+							break;
+						case "done":
+							executing = false;
+							break;
+						case "failed":
+							executing = false;
+							component.setErrorStatus(1, "failed");
+							component.stop(component.getOccupierId());
+							break;
+						case "aborted":
+							executing = false;
+							component.setErrorStatus(2, "aborted");
+							component.stop(component.getOccupierId());
+							break;
+						default:
+							break;
+					}
+
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		} catch (Exception e) {

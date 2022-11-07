@@ -21,7 +21,7 @@ import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
 @OperationMode(name = "MoveSymbolic", shortName = "MVSYM", description = "moves MiR to a symbolic position", 
-		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
+		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP, ExecutionCommand.UNHOLD },
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirService> {
 
@@ -136,6 +136,24 @@ public class MoveToSymbolicPositionOperationMode extends BaseOperationMode<MirSe
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
 		}	
+	}
+
+	@Override
+	public void onHolding() {
+		try {
+			Status status = getService(MirService.class).setRobotStatus(MiRState.PAUSED);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onUnholding() {
+		try {
+			Status status = getService(MirService.class).setRobotStatus(MiRState.READY);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

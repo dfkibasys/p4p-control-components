@@ -15,10 +15,13 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-@OperationMode(name = "PlayHorn", shortName = "HORN", description = "plays horn sound",
+@OperationMode(name = "PlaySound", shortName = "SOUND", description = "plays sound",
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
-public class PlayHornOperationMode extends BaseOperationMode<MirService> {
+public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
+
+	@Parameter(name = "type", direction = ParameterDirection.IN)
+	private String type = "Horn";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration = 0;
@@ -28,7 +31,7 @@ public class PlayHornOperationMode extends BaseOperationMode<MirService> {
 	private long startTime = 0;
 	private long endTime = 0;
 
-	public PlayHornOperationMode(BaseControlComponent<MirService> component) {
+	public PlaySoundOperationMode(BaseControlComponent<MirService> component) {
 		super(component);
 	}
 
@@ -53,7 +56,7 @@ public class PlayHornOperationMode extends BaseOperationMode<MirService> {
 	public void onStarting() {		
 		startTime = System.currentTimeMillis();	
 		try {
-			currentMission = getService(MirService.class).enqueueMissionInstanceByName("Horn");
+			currentMission = getService(MirService.class).playSound(type);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
@@ -134,8 +137,7 @@ public class PlayHornOperationMode extends BaseOperationMode<MirService> {
 	protected void configureServiceMock(MirService serviceMock) {
 		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());
 		Mockito.when(serviceMock.dequeueMissionInstance(Mockito.anyInt())).thenReturn(true);
-		Mockito.when(serviceMock.gotoSymbolicPosition(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
-		Mockito.when(serviceMock.gotoSymbolicPosition(null)).thenReturn(new MissionInstanceInfo());
+		Mockito.when(serviceMock.playSound(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
 		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
 
 			@Override

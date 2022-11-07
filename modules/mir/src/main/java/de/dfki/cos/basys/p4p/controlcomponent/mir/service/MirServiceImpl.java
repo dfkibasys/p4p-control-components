@@ -3,6 +3,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.mir.service;
 import java.util.List;
 import java.util.Properties;
 
+import de.dfki.cos.basys.common.rest.mir.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +12,6 @@ import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.common.rest.mir.MiRState;
 import de.dfki.cos.basys.common.rest.mir.MirRestService;
 import de.dfki.cos.basys.common.rest.mir.MirService;
-import de.dfki.cos.basys.common.rest.mir.dto.MissionDefinition;
-import de.dfki.cos.basys.common.rest.mir.dto.MissionInstance;
-import de.dfki.cos.basys.common.rest.mir.dto.MissionInstanceInfo;
-import de.dfki.cos.basys.common.rest.mir.dto.MissionOrder;
-import de.dfki.cos.basys.common.rest.mir.dto.Status;
-import de.dfki.cos.basys.common.rest.mir.dto.SymbolicPosition;
-import de.dfki.cos.basys.common.rest.mir.dto.SymbolicPositionInfo;
 
 public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 
@@ -152,6 +146,16 @@ public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 	@Override
 	public boolean isMissionInQueue(String missionDefinitionId) {
 		return service.isMissionInQueue(missionDefinitionId);
+	}
+
+	@Override
+	public MissionInstanceInfo playSound(String soundName) {
+		return service.playSound(soundName);
+	}
+
+	@Override
+	public List<Sound> getSounds() {
+		return service.getSounds();
 	}
 
 }

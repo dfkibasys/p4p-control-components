@@ -51,6 +51,8 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		MemoryPersistence persistence = new MemoryPersistence();
 		final MqttConnectOptions options = new MqttConnectOptions();
 
+		options.setUserName(config.getProperty("mqttUsername"));
+		options.setPassword(config.getProperty("mqttPassword").toCharArray());
 		options.setCleanSession(true);
 		try {
 			mqttClient = new MqttAsyncClient(connectionString, clientId, persistence);
@@ -60,7 +62,7 @@ public class DroneServiceImpl implements DroneService, ServiceProvider<DroneServ
 		}
 		
 		try {
-			mqttClient.connect(options, new IMqttActionListener() {
+			mqttClient.connect(options, null, new IMqttActionListener() {
 				@Override
 				public void onSuccess(IMqttToken asyncActionToken) {
 					LOG.debug(clientId + " successfully connected to {}.", connectionString);	

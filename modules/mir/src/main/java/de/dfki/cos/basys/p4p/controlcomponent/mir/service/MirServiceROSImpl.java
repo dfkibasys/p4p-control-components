@@ -309,6 +309,16 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
+    public MissionInstanceInfo playSound(String soundName) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public List<Sound> getSounds() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
     public void handleMission(MissionInstanceInfo mii) {
         LOGGER.info("HANDLE_MISSION");
         switch(mii.mission) {

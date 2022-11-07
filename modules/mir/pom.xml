@@ -15,6 +15,7 @@
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.mir</bundle.namespace>
 		<docker.image.name>controlcomponent-${project.artifactId}</docker.image.name>
+		<basys-common.version>0.4.3-SNAPSHOT</basys-common.version>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>

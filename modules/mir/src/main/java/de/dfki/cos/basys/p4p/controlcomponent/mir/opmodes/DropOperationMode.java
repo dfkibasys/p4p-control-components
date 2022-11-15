@@ -2,7 +2,6 @@ package de.dfki.cos.basys.p4p.controlcomponent.mir.opmodes;
 
 import de.dfki.cos.basys.common.rest.mir.MiRState;
 import de.dfki.cos.basys.common.rest.mir.MirService;
-import de.dfki.cos.basys.common.rest.mir.dto.MissionInstanceInfo;
 import de.dfki.cos.basys.common.rest.mir.dto.Status;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
@@ -12,26 +11,25 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-@OperationMode(name = "PlaySound", shortName = "SOUND", description = "plays sound",
+@OperationMode(name = "Drop", shortName = "DROP", description = "drops an object",
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
-public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
+public class DropOperationMode extends BaseOperationMode<MirService> {
 
-	@Parameter(name = "type", direction = ParameterDirection.IN)
-	private String type = "Horn";
+	@Parameter(name = "stationType", direction = ParameterDirection.IN)
+	private String stationType = "floor-1";
+
+	@Parameter(name = "loadType", direction = ParameterDirection.IN)
+	private String loadType = "EPAL";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration = 0;
 
-	private MissionInstanceInfo currentMission = null;
-
 	private long startTime = 0;
 	private long endTime = 0;
 
-	public PlaySoundOperationMode(BaseControlComponent<MirService> component) {
+	public DropOperationMode(BaseControlComponent<MirService> component) {
 		super(component);
 	}
 
@@ -40,7 +38,6 @@ public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
 		duration = 0;
 		startTime = 0;
 		endTime = 0;
-		currentMission = null;
 		try {			
 			Status status = getService(MirService.class).setRobotStatus(MiRState.READY);	
 			//TODO check status
@@ -54,9 +51,10 @@ public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
 
 	@Override
 	public void onStarting() {		
-		startTime = System.currentTimeMillis();	
+		startTime = System.currentTimeMillis();
 		try {
-			currentMission = getService(MirService.class).playSound(type);
+			//TODO: Implement starting behaviour
+			Thread.sleep(1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
@@ -68,39 +66,8 @@ public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
 	@Override
 	public void onExecute() {
 		try {
-			boolean executing = true;
-			while(executing) {
-				currentMission = getService(MirService.class).getMissionInstanceInfo(currentMission.id);
-				LOGGER.debug("MissionState is " + currentMission.state);
-				 
-				switch (currentMission.state.toLowerCase()) {
-				case "pending":
-					break;
-				case "executing":
-					break;
-				case "done":
-					executing=false;
-					break;
-				case "failed":
-					executing=false;
-					component.setErrorStatus(1, "failed");
-					component.stop(component.getOccupierId());
-					break;
-				case "aborted":
-					executing=false;
-					component.setErrorStatus(2, "aborted");
-					component.stop(component.getOccupierId());
-					break;
-				default:
-					break;
-				}
-	
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			//TODO: Implement execution behaviour
+			Thread.sleep(5000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
@@ -121,12 +88,8 @@ public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
 		duration = (int) (endTime - startTime);
 		try {
 			Status status = getService(MirService.class).setRobotStatus(MiRState.PAUSED);
-			//TODO: check status
-			if (currentMission != null) {
-				getService(MirService.class).dequeueMissionInstance(currentMission.id);
-				currentMission = null;
-			}
-			
+			//TODO: Implement stopping behaviour
+			Thread.sleep(1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
@@ -135,23 +98,8 @@ public class PlaySoundOperationMode extends BaseOperationMode<MirService> {
 
 	@Override
 	protected void configureServiceMock(MirService serviceMock) {
+		Mockito.when(serviceMock.setRobotStatus(MiRState.READY)).thenReturn(new Status());
 		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());
-		Mockito.when(serviceMock.dequeueMissionInstance(Mockito.anyInt())).thenReturn(true);
-		Mockito.when(serviceMock.playSound(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
-		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
-
-			@Override
-			public MissionInstanceInfo answer(InvocationOnMock invocation) throws Throwable {
-				long elapsed = System.currentTimeMillis() - startTime;
-				MissionInstanceInfo result = new MissionInstanceInfo();
-				if (elapsed < 10000) {
-					result.state = "executing";
-				} else {
-					result.state = "done";
-				}
-				return result;
-			}
-
-	    }); 
+		// Not much to do here since the real implementation is still mocking everything
 	}
 }

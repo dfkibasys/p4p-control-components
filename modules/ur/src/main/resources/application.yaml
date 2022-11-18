@@ -13,7 +13,7 @@ basys:
   aasRegistry:
     type: dotaas
     service:
-      connectionString: http://localhost:8080
+      connectionString: http://localhost:8020
   eventTransmitter:
     type: mqtt
     service:
@@ -37,3 +37,10 @@ basys:
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true
+      service:
+        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrServiceImplROS
+        connectionString: ws://localhost:9100
+        movSymServerName: /movsym/ur10_1
+        movSymActionName: /simrk40_msgs/MoveToSymbolicPositionAction
+        ppSymServerName: /ppsym/ur10_1
+        ppSymActionName: /simrk40_msgs/PickAndPlaceSymbolicAction

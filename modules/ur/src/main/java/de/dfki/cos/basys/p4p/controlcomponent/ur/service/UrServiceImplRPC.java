@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -74,6 +75,11 @@ public class UrServiceImplRPC implements UrService, ServiceProvider<UrService>{
 	}
 
 	@Override
+	public void pickAndPlaceSymbolic(String objectType, String sourceLocation, String targetLocation) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
 	public MissionState getMissionState() {
 		// Infer mission state via workstate . . .
 		WorkState wState = getWorkState();
@@ -113,7 +119,6 @@ public class UrServiceImplRPC implements UrService, ServiceProvider<UrService>{
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	/*

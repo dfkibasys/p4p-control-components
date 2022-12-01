@@ -37,6 +37,9 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	
 	private ActionClient movSymActionClient;
 	private ActionClient ppSymActionClient;
+	private ActionClient pickSymActionClient;
+	private ActionClient placeSymActionClient;
+	private ActionClient joinSymActionClient;
 
 	private GoalStatusEnum status;
 	
@@ -61,6 +64,38 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 		JsonObject ppJson = Json.createObjectBuilder().add("source_location", sourceLocation)
 													  .add("object_type", objectType)
 													  .add("target_location", targetLocation)
+				.build();
+		goal.submit(ppJson);
+	}
+
+	@Override
+	public void pickSymbolic(String objectType, String sourceLocation) {
+		Goal goal = pickSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject ppJson = Json.createObjectBuilder().add("source_location", sourceLocation)
+				.add("object_type", objectType)
+				.build();
+		goal.submit(ppJson);
+	}
+
+	@Override
+	public void placeSymbolic(String objectType, String targetLocation) {
+		Goal goal = placeSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject ppJson = Json.createObjectBuilder().add("targetLocation", targetLocation)
+				.add("object_type", objectType)
+				.build();
+		goal.submit(ppJson);
+	}
+	@Override
+	public void joinSymbolic(String objectTypeA, String objectTypeB) {
+		Goal goal = joinSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject ppJson = Json.createObjectBuilder().add("object_type_a", objectTypeA)
+				.add("object_type_b", objectTypeB)
 				.build();
 		goal.submit(ppJson);
 	}
@@ -109,9 +144,20 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 			ppSymActionClient = new ActionClient(ros, ppSymServerName, ppSymActionName);
 			ppSymActionClient.initialize();
 			// Pick
-			// TODO
+			String pickSymServerName = config.getProperty("pickSymServerName");
+			String pickSymActionName = config.getProperty("pickSymActionName");
+			pickSymActionClient = new ActionClient(ros, pickSymServerName, pickSymActionName);
+			pickSymActionClient.initialize();
+			// Place
+			String placeSymServerName = config.getProperty("placeSymServerName");
+			String placeSymActionName = config.getProperty("placeSymActionName");
+			placeSymActionClient = new ActionClient(ros, placeSymServerName, placeSymActionName);
+			placeSymActionClient.initialize();
 			// Join
-			// TODO
+			String joinSymServerName = config.getProperty("joinSymServerName");
+			String joinSymActionName = config.getProperty("joinSymActionName");
+			joinSymActionClient = new ActionClient(ros, joinSymServerName, joinSymActionName);
+			joinSymActionClient.initialize();
 		}
 		else
 			LOGGER.error("Connection to specified connection string {} failed!", connectionString);

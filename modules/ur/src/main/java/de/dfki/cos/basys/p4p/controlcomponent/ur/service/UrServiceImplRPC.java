@@ -80,6 +80,19 @@ public class UrServiceImplRPC implements UrService, ServiceProvider<UrService>{
 	}
 
 	@Override
+	public void pickSymbolic(String objectType, String sourceLocation) {
+		throw new NotImplementedException("TODO");
+	}
+	@Override
+	public void placeSymbolic(String objectType, String targetLocation) {
+		throw new NotImplementedException("TODO");
+	}
+	@Override
+	public void joinSymbolic(String objectTypeA, String objectTypeB) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
 	public MissionState getMissionState() {
 		// Infer mission state via workstate . . .
 		WorkState wState = getWorkState();

@@ -14,9 +14,9 @@ import de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrService;
 		allowedModes = { ExecutionMode.SIMULATE })
 public class PlaceSymbolicOperationMode extends BaseUROperationMode {
 
-	@Parameter(name = "target_location", direction = ParameterDirection.IN)
+	@Parameter(name = "place_target_location", direction = ParameterDirection.IN)
 	private String target_location = "";
-	@Parameter(name = "object_type", direction = ParameterDirection.IN)
+	@Parameter(name = "place_object_type", direction = ParameterDirection.IN)
 	private String object_type = "";
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;

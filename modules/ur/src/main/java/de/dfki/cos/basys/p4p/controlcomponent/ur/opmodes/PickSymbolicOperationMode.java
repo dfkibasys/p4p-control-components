@@ -14,9 +14,9 @@ import de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrService;
 		allowedModes = { ExecutionMode.SIMULATE })
 public class PickSymbolicOperationMode extends BaseUROperationMode {
 
-	@Parameter(name = "source_location", direction = ParameterDirection.IN)
+	@Parameter(name = "pick_source_location", direction = ParameterDirection.IN)
 	private String source_location = "";
-	@Parameter(name = "object_type", direction = ParameterDirection.IN)
+	@Parameter(name = "pick_object_type", direction = ParameterDirection.IN)
 	private String object_type = "";
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;

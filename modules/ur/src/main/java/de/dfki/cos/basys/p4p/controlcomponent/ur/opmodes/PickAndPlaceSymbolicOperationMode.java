@@ -14,11 +14,11 @@ import de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrService;
 		allowedModes = { ExecutionMode.SIMULATE })
 public class PickAndPlaceSymbolicOperationMode extends BaseUROperationMode {
 
-	@Parameter(name = "source_location", direction = ParameterDirection.IN)
+	@Parameter(name = "pps_source_location", direction = ParameterDirection.IN)
 	private String source_location = "";
-	@Parameter(name = "object_type", direction = ParameterDirection.IN)
+	@Parameter(name = "pps_object_type", direction = ParameterDirection.IN)
 	private String object_type = "";
-	@Parameter(name = "target_location", direction = ParameterDirection.IN)
+	@Parameter(name = "pps_target_location", direction = ParameterDirection.IN)
 	private String target_location = "";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)

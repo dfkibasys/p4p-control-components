@@ -73,10 +73,10 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 		Goal goal = pickSymActionClient.createGoal(this);
 		status = GoalStatusEnum.PENDING;
 
-		JsonObject ppJson = Json.createObjectBuilder().add("source_location", sourceLocation)
+		JsonObject pJson = Json.createObjectBuilder().add("source_location", sourceLocation)
 				.add("object_type", objectType)
 				.build();
-		goal.submit(ppJson);
+		goal.submit(pJson);
 	}
 
 	@Override
@@ -84,20 +84,20 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 		Goal goal = placeSymActionClient.createGoal(this);
 		status = GoalStatusEnum.PENDING;
 
-		JsonObject ppJson = Json.createObjectBuilder().add("targetLocation", targetLocation)
+		JsonObject pJson = Json.createObjectBuilder().add("target_location", targetLocation)
 				.add("object_type", objectType)
 				.build();
-		goal.submit(ppJson);
+		goal.submit(pJson);
 	}
 	@Override
 	public void joinSymbolic(String objectTypeA, String objectTypeB) {
 		Goal goal = joinSymActionClient.createGoal(this);
 		status = GoalStatusEnum.PENDING;
 
-		JsonObject ppJson = Json.createObjectBuilder().add("object_type_a", objectTypeA)
+		JsonObject jJson = Json.createObjectBuilder().add("object_type_a", objectTypeA)
 				.add("object_type_b", objectTypeB)
 				.build();
-		goal.submit(ppJson);
+		goal.submit(jJson);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ import edu.wpi.rail.jrosbridge.messages.actionlib.GoalStatus;
 
 public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, ActionCallback{
 
+	protected final Logger LOGGER;
 	private Properties config = null;
 
 	private Ros ros = null;	
@@ -33,29 +35,71 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	private String host = "localhost";
 	private int port = 9090;
 	
-	private ActionClient actionClient;
-	
-	private Map<String, String> stati = new HashMap<String, String>();
+	private ActionClient movSymActionClient;
+	private ActionClient ppSymActionClient;
+	private ActionClient pickSymActionClient;
+	private ActionClient placeSymActionClient;
+	private ActionClient joinSymActionClient;
+
 	private GoalStatusEnum status;
-	
-	private final Logger LOGGER;	
 	
 	public UrServiceImplROS(Properties config) {
 		this.config = config;
-		LOGGER =  LoggerFactory.getLogger("URServiceImpl");
+		LOGGER =  LoggerFactory.getLogger("URServiceImplROS");
 	}
 	@Override
 	public void moveToSymbolicPosition(String positionName) {
-		Goal goal = actionClient.createGoal(this);
+		Goal goal = movSymActionClient.createGoal(this);
 		status = GoalStatusEnum.PENDING;
 			
 		JsonObject symbolicPosition = Json.createObjectBuilder().add("target_pos", positionName).build();
 		goal.submit(symbolicPosition);
-		
 	}
 
+	@Override
+	public void pickAndPlaceSymbolic(String objectType, String sourceLocation, String targetLocation) {
+		Goal goal = ppSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
 
-	
+		JsonObject ppJson = Json.createObjectBuilder().add("source_location", sourceLocation)
+													  .add("object_type", objectType)
+													  .add("target_location", targetLocation)
+				.build();
+		goal.submit(ppJson);
+	}
+
+	@Override
+	public void pickSymbolic(String objectType, String sourceLocation) {
+		Goal goal = pickSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject pJson = Json.createObjectBuilder().add("source_location", sourceLocation)
+				.add("object_type", objectType)
+				.build();
+		goal.submit(pJson);
+	}
+
+	@Override
+	public void placeSymbolic(String objectType, String targetLocation) {
+		Goal goal = placeSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject pJson = Json.createObjectBuilder().add("target_location", targetLocation)
+				.add("object_type", objectType)
+				.build();
+		goal.submit(pJson);
+	}
+	@Override
+	public void joinSymbolic(String objectTypeA, String objectTypeB) {
+		Goal goal = joinSymActionClient.createGoal(this);
+		status = GoalStatusEnum.PENDING;
+
+		JsonObject jJson = Json.createObjectBuilder().add("object_type_a", objectTypeA)
+				.add("object_type_b", objectTypeB)
+				.build();
+		goal.submit(jJson);
+	}
+
 	@Override
 	public String getStatus() {
 		return status.toString();
@@ -65,7 +109,6 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	public void reset() {
 		// Cancel active goals?
 		// TODO
-		stati.clear();	
 	}
 	
 	
@@ -90,10 +133,31 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 		ros = new Ros(host, port, WebSocketType.valueOf(protocol));
 		
 		if (ros.connect()) {
-			String serverName = config.getProperty("serverName");
-			String actionNameMove = config.getProperty("actionNameMove");
-			actionClient = new ActionClient(ros, serverName, actionNameMove);
-			actionClient.initialize();
+			// MoveSym
+			String movSymServerName = config.getProperty("movSymServerName");
+			String movSymActionName = config.getProperty("movSymActionName");
+			movSymActionClient = new ActionClient(ros, movSymServerName, movSymActionName);
+			movSymActionClient.initialize();
+			// Pick&Place
+			String ppSymServerName = config.getProperty("ppSymServerName");
+			String ppSymActionName = config.getProperty("ppSymActionName");
+			ppSymActionClient = new ActionClient(ros, ppSymServerName, ppSymActionName);
+			ppSymActionClient.initialize();
+			// Pick
+			String pickSymServerName = config.getProperty("pickSymServerName");
+			String pickSymActionName = config.getProperty("pickSymActionName");
+			pickSymActionClient = new ActionClient(ros, pickSymServerName, pickSymActionName);
+			pickSymActionClient.initialize();
+			// Place
+			String placeSymServerName = config.getProperty("placeSymServerName");
+			String placeSymActionName = config.getProperty("placeSymActionName");
+			placeSymActionClient = new ActionClient(ros, placeSymServerName, placeSymActionName);
+			placeSymActionClient.initialize();
+			// Join
+			String joinSymServerName = config.getProperty("joinSymServerName");
+			String joinSymActionName = config.getProperty("joinSymActionName");
+			joinSymActionClient = new ActionClient(ros, joinSymServerName, joinSymActionName);
+			joinSymActionClient.initialize();
 		}
 		else
 			LOGGER.error("Connection to specified connection string {} failed!", connectionString);
@@ -105,7 +169,8 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	@Override
 	public void disconnect() {
 		if (ros.isConnected()) {
-			actionClient.dispose();
+			movSymActionClient.dispose();
+			ppSymActionClient.dispose();
 			ros.disconnect();	
 		}
 	}
@@ -123,62 +188,69 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	@Override
 	public void handleStatus(GoalStatus goalStatus) {
 		LOGGER.debug("STATUS: " + goalStatus.toString());	
-		//stati.put(goalStatus.getGoalID().getID(), GoalStatusEnum.get(goalStatus.getStatus()));	
 		status = GoalStatusEnum.get(goalStatus.getStatus());
 	}
 	
 	@Override
 	public void handleResult(JsonObject result) {
-		LOGGER.debug("RESULT: " + result.toString());								
+		LOGGER.debug("RESULT: " + result.toString());
 	}
 	
 	@Override
 	public void handleFeedback(JsonObject feedback) {
-		LOGGER.debug("FEEDBK: " + feedback.toString());				
+		LOGGER.debug("FEEDBK: " + feedback.toString());
 	}
+
 	@Override
 	public MissionState getMissionState() {
-		// Map goal state to mission state, REMOVE THIS once we have an action server implementation for the UR
 		MissionState mState = null;
 		switch(status) {
-		case ABORTED:
-			mState = MissionState.CANCELLED;
-			break;
-		case ACTIVE:
-			mState = MissionState.EXECUTING;
-			break;
-		case LOST:
-			mState = MissionState.FAILED;			
-			break;
-		case PENDING:
-			mState = MissionState.PENDING;
-			break;
-		case PREEMPTED:
-			mState = MissionState.CANCELLED;
-			break;
-		case PREEMPTING:
-			mState = MissionState.CANCELLED;
-			break;
-		case RECALLED:
-			mState = MissionState.CANCELLED;			
-			break;
-		case RECALLING:
-			mState = MissionState.CANCELLED;			
-			break;
-		case REJECTED:
-			mState = MissionState.REJECTED;
-			break;
-		case SUCCEEDED:
-			mState = MissionState.DONE;
-			break;
-			default:
+			case ACTIVE:
+				mState = MissionState.EXECUTING;
 				break;
+			case PENDING:
+				mState = MissionState.PENDING;
+				break;
+			case PREEMPTED:
+			case PREEMPTING:
+			case RECALLED:
+			case RECALLING:
+				mState = MissionState.CANCELLED;
+				break;
+			case LOST:
+			case ABORTED:
+				mState = MissionState.FAILED;
+				break;
+			case REJECTED:
+				mState = MissionState.REJECTED;
+				break;
+			case SUCCEEDED:
+				mState = MissionState.DONE;
+				break;
+			default:
+				throw new IllegalStateException("Unexpected value: " + status);
 		}
 		return mState;
 	}
 	@Override
 	public WorkState getWorkState() {
-		return null;
+		WorkState wstate = null;
+		switch(status) {
+			case ABORTED:
+			case REJECTED:
+			case LOST:
+			case RECALLED:
+			case PREEMPTED:
+			case SUCCEEDED:
+				wstate = WorkState.FINISHED;
+				break;
+			case ACTIVE:
+			case RECALLING:
+			case PENDING:
+			case PREEMPTING:
+				wstate = WorkState.BUSY;
+		}
+		return wstate;
 	}
 
 }

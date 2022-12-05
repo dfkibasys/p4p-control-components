@@ -205,28 +205,28 @@ public class UrServiceImplROS implements UrService, ServiceProvider<UrService>, 
 	public MissionState getMissionState() {
 		MissionState mState = null;
 		switch(status) {
-		case ACTIVE:
-			mState = MissionState.EXECUTING;
-			break;
-		case PENDING:
-			mState = MissionState.PENDING;
-			break;
-		case PREEMPTED:
-		case PREEMPTING:
-		case RECALLED:
+			case ACTIVE:
+				mState = MissionState.EXECUTING;
+				break;
+			case PENDING:
+				mState = MissionState.PENDING;
+				break;
+			case PREEMPTED:
+			case PREEMPTING:
+			case RECALLED:
 			case RECALLING:
-			mState = MissionState.CANCELLED;
-			break;
-		case LOST:
-		case ABORTED:
-			mState = MissionState.FAILED;
-			break;
-		case REJECTED:
-			mState = MissionState.REJECTED;
-			break;
+				mState = MissionState.CANCELLED;
+				break;
+			case LOST:
+			case ABORTED:
+				mState = MissionState.FAILED;
+				break;
+			case REJECTED:
+				mState = MissionState.REJECTED;
+				break;
 			case SUCCEEDED:
-			mState = MissionState.DONE;
-			break;
+				mState = MissionState.DONE;
+				break;
 			default:
 				throw new IllegalStateException("Unexpected value: " + status);
 		}

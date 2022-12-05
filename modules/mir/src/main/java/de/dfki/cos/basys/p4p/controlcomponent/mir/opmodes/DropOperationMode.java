@@ -17,10 +17,10 @@ import org.mockito.Mockito;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class DropOperationMode extends BaseOperationMode<MirService> {
 
-	@Parameter(name = "stationType", direction = ParameterDirection.IN)
+	@Parameter(name = "drop_stationType", direction = ParameterDirection.IN)
 	private String stationType = "floor-1";
 
-	@Parameter(name = "loadType", direction = ParameterDirection.IN)
+	@Parameter(name = "drop_loadType", direction = ParameterDirection.IN)
 	private String loadType = "EPAL";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
@@ -67,6 +67,7 @@ public class DropOperationMode extends BaseOperationMode<MirService> {
 	public void onExecute() {
 		try {
 			//TODO: Implement execution behaviour
+			LOGGER.info("StationType: {}, LoadType: {}", stationType, loadType);
 			Thread.sleep(5000);
 		} catch (Exception e) {
 			e.printStackTrace();

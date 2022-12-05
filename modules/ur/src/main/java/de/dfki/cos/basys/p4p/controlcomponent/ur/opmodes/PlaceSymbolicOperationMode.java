@@ -8,7 +8,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.ur.service.UrService;
 
-@OperationMode(name = "PlaceSymbolic", shortName = "PLACE_SYM", description = "Place a picked object of specified type to a symbolic " +
+@OperationMode(name = "PlaceSymbolic", shortName = "PLACESYM", description = "Place a picked object of specified type to a symbolic " +
 		"target location.",
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
 		allowedModes = { ExecutionMode.SIMULATE })

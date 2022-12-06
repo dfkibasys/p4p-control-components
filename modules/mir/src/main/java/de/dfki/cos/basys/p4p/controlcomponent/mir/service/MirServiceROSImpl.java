@@ -319,6 +319,16 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
+    public MissionInstanceInfo pick(String stationType, String loadType) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public MissionInstanceInfo drop(String stationType, String loadType) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
     public void handleMission(MissionInstanceInfo mii) {
         LOGGER.info("HANDLE_MISSION");
         switch(mii.mission) {

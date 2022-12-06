@@ -2,6 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.mir.opmodes;
 
 import de.dfki.cos.basys.common.rest.mir.MiRState;
 import de.dfki.cos.basys.common.rest.mir.MirService;
+import de.dfki.cos.basys.common.rest.mir.dto.MissionInstanceInfo;
 import de.dfki.cos.basys.common.rest.mir.dto.Status;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
@@ -11,6 +12,8 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 @OperationMode(name = "Pick", shortName = "PICK", description = "picks an object",
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
@@ -65,9 +68,8 @@ public class PickOperationMode extends BaseOperationMode<MirService> {
 	@Override
 	public void onExecute() {
 		try {
-			//TODO: Implement execution behaviour
 			LOGGER.info("StationType: {}, LoadType: {}", stationType, loadType);
-			Thread.sleep(5000);
+			getService(MirService.class).pick(stationType, loadType);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
@@ -100,6 +102,21 @@ public class PickOperationMode extends BaseOperationMode<MirService> {
 	protected void configureServiceMock(MirService serviceMock) {
 		Mockito.when(serviceMock.setRobotStatus(MiRState.READY)).thenReturn(new Status());
 		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());
-		// Not much to do here since the real implementation is still mocking everything
+		Mockito.when(serviceMock.pick(Mockito.anyString(), Mockito.anyString())).thenReturn(new MissionInstanceInfo());
+		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
+
+			@Override
+			public MissionInstanceInfo answer(InvocationOnMock invocation) throws Throwable {
+				long elapsed = System.currentTimeMillis() - startTime;
+				MissionInstanceInfo result = new MissionInstanceInfo();
+				if (elapsed < 10000) {
+					result.state = "executing";
+				} else {
+					result.state = "done";
+				}
+				return result;
+			}
+
+		});
 	}
 }

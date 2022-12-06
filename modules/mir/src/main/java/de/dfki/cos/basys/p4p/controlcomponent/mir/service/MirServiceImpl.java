@@ -158,4 +158,14 @@ public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 		return service.getSounds();
 	}
 
+	@Override
+	public MissionInstanceInfo pick(String stationType, String loadType) {
+		return service.pick(stationType, loadType);
+	}
+
+	@Override
+	public MissionInstanceInfo drop(String stationType, String loadType) {
+		return service.drop(stationType, loadType);
+	}
+
 }

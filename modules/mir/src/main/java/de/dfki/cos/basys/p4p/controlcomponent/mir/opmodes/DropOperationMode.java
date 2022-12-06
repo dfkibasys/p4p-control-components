@@ -16,9 +16,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 @OperationMode(name = "Drop", shortName = "DROP", description = "drops an object",
-		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
-public class DropOperationMode extends BaseOperationMode<MirService> {
+		allowedCommands = {	ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
+		allowedModes = { ExecutionMode.SIMULATE})
+public class DropOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "drop_stationType", direction = ParameterDirection.IN)
 	private String stationType = "floor-1";
@@ -27,97 +27,30 @@ public class DropOperationMode extends BaseOperationMode<MirService> {
 	private String loadType = "EPAL";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
-	private int duration = 0;
-
-	private long startTime = 0;
-	private long endTime = 0;
+	private int duration_out = 0;
 
 	public DropOperationMode(BaseControlComponent<MirService> component) {
 		super(component);
 	}
 
-	@Override
-	public void onResetting() {
-		duration = 0;
-		startTime = 0;
-		endTime = 0;
-		try {			
-			Status status = getService(MirService.class).setRobotStatus(MiRState.READY);	
-			//TODO check status
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-			component.setErrorStatus(3, e.getMessage());
-			component.stop(component.getOccupierId());
-		}
-	}
 
 	@Override
-	public void onStarting() {		
-		startTime = System.currentTimeMillis();
-		try {
-			//TODO: Implement starting behaviour
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-			component.setErrorStatus(3, e.getMessage());
-			component.stop(component.getOccupierId());
-		}
-	}
-
-	@Override
-	public void onExecute() {
-		try {
-			LOGGER.info("StationType: {}, LoadType: {}", stationType, loadType);
-			getService(MirService.class).drop(stationType, loadType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-			component.setErrorStatus(3, e.getMessage());
-			component.stop(component.getOccupierId());
-		}
+	public void onStarting() {
+		super.onStarting();
+		getService(MirService.class).drop(stationType, loadType);
+		sleep(1000);
 	}
 
 	@Override
 	public void onCompleting() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
+		super.onCompleting();
+		duration_out = duration;
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
-		endTime = System.currentTimeMillis();
-		duration = (int) (endTime - startTime);
-		try {
-			Status status = getService(MirService.class).setRobotStatus(MiRState.PAUSED);
-			//TODO: Implement stopping behaviour
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-		}	
-	}
-
-	@Override
-	protected void configureServiceMock(MirService serviceMock) {
-		Mockito.when(serviceMock.setRobotStatus(MiRState.READY)).thenReturn(new Status());
-		Mockito.when(serviceMock.setRobotStatus(MiRState.PAUSED)).thenReturn(new Status());
-		Mockito.when(serviceMock.drop(Mockito.anyString(), Mockito.anyString())).thenReturn(new MissionInstanceInfo());
-		Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
-
-			@Override
-			public MissionInstanceInfo answer(InvocationOnMock invocation) throws Throwable {
-				long elapsed = System.currentTimeMillis() - startTime;
-				MissionInstanceInfo result = new MissionInstanceInfo();
-				if (elapsed < 10000) {
-					result.state = "executing";
-				} else {
-					result.state = "done";
-				}
-				return result;
-			}
-
-		});
+		super.onStopping();
+		sleep(1000);
 	}
 }

@@ -37,7 +37,7 @@ public class DropOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		getService(MirService.class).drop(stationType, loadType);
+		currentMission = getService(MirService.class).drop(stationType, loadType);
 		sleep(1000);
 	}
 

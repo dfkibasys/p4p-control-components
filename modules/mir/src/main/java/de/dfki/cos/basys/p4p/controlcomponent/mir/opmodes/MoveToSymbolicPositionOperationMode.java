@@ -38,7 +38,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		getService(MirService.class).gotoSymbolicPosition(position);
+		currentMission = getService(MirService.class).gotoSymbolicPosition(position);
 		sleep(1000);
 	}
 

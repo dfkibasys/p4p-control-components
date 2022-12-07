@@ -35,7 +35,7 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		getService(MirService.class).pick(stationType, loadType);
+		currentMission = getService(MirService.class).pick(stationType, loadType);
 		sleep(1000);
 	}
 

@@ -33,7 +33,7 @@ public class PlaySoundOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		getService(MirService.class).playSound(type);
+		currentMission = getService(MirService.class).playSound(type);
 		sleep(1000);
 	}
 

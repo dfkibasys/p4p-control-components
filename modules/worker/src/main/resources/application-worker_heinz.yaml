@@ -1,0 +1,20 @@
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12685
+    httpsPort: 8443
+  controlcomponent:
+    id: worker_heinz
+    name: Heinz
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.worker.opmodes
+    executionMode: SIMULATE
+    auto:
+      disableExecutionModeChange: false
+      disableOccupationCheck: false
+      service:
+        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.worker.service.NotificationServiceImpl
+        connectionString: mq3t.rpc://smartwatch-lg-3691.mrk40.dfki.lan:9030
+    simulate:
+      disableExecutionModeChange: true
+      disableOccupationCheck: true
+

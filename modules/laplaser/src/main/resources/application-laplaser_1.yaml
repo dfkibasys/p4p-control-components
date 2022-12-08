@@ -1,0 +1,19 @@
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12685
+    httpsPort: 8443
+  controlcomponent:
+    id: laplaser_1
+    name: LapLaser-1
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes
+    executionMode: SIMULATE
+    auto:
+      disableExecutionModeChange: false
+      disableOccupationCheck: false
+      service:
+        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.laplaser.service.LapLaserServiceImpl
+        connectionString: http://10.2.0.47:9000/laserControl
+    simulate:
+      disableExecutionModeChange: true
+      disableOccupationCheck: true

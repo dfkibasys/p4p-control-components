@@ -92,6 +92,8 @@ mvn-docker-install:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
+      changes:
+        - modules/$PROJECT_NAME/**/*
 
     
 maven-docker-publish-baxter:

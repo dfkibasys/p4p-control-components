@@ -38,6 +38,8 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     private int port = 9090;
 
     private ActionClient gotoClient;
+    private ActionClient pickClient;
+    private ActionClient dropClient;
 
     private Status status = new Status();
 
@@ -82,10 +84,18 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
         ros = new Ros(host, port, JRosbridge.WebSocketType.valueOf(protocol));
 
        if (ros.connect()) {
-            String gotoServerName = config.getProperty("gotoServerName");
-            String gotoActionName = config.getProperty("gotoActionName");
-            gotoClient = new ActionClient(ros, gotoServerName, gotoActionName);
-            gotoClient.initialize();
+           String gotoServerName = config.getProperty("gotoServerName");
+           String gotoActionName = config.getProperty("gotoActionName");
+           gotoClient = new ActionClient(ros, gotoServerName, gotoActionName);
+           gotoClient.initialize();
+           String pickServerName = config.getProperty("pickServerName");
+           String pickActionName = config.getProperty("pickActionName");
+           pickClient = new ActionClient(ros, pickServerName, pickActionName);
+           pickClient.initialize();
+           String dropServerName = config.getProperty("dropServerName");
+           String dropActionName = config.getProperty("dropActionName");
+           dropClient = new ActionClient(ros, dropServerName, dropActionName);
+           dropClient.initialize();
         }
 
         return ros.isConnected();
@@ -123,6 +133,8 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
             case PAUSED:
             case ABORTED:
                 gotoClient.cancelAll();
+                pickClient.cancelAll();
+                dropClient.cancelAll();
                 break;
             case EXECUTING:
             case FINISHED:
@@ -319,11 +331,40 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
+    public MissionInstanceInfo pick(String stationType, String loadType) {
+        return createPPMission("PICK_SYM", stationType, loadType);
+    }
+
+    private MissionInstanceInfo createPPMission(String missionType, String stationType, String loadType) {
+        // Create mission order of type PICK_SYM
+        MissionOrder order = new MissionOrder(missionType, "");
+        order.priority = 0;
+        var params = new ArrayList<Parameter>();
+        var location = new Parameter();
+        location.label = missionType == "PICK_SYM"? "SourceLocation":"TargetLocation";
+        location.value = stationType;
+        var objectType = new Parameter();
+        objectType.label = "ObjectType";
+        objectType.value = loadType;
+        params.add(location);
+        params.add(objectType);
+        order.parameters = params;
+        // Enqueue mission
+        return enqueueMissionInstance(order);
+    }
+
+    @Override
+    public MissionInstanceInfo drop(String stationType, String loadType) {
+        return createPPMission("PLACE_SYM", stationType, loadType);
+    }
+
+    @Override
     public void handleMission(MissionInstanceInfo mii) {
         LOGGER.info("HANDLE_MISSION");
+        Goal goal;
         switch(mii.mission) {
             case "MOVSYM":
-            Goal goal = gotoClient.createGoal(new ActionCallback() {
+            goal = gotoClient.createGoal(new ActionCallback() {
 
                 @Override
                 public void handleStatus(GoalStatus gs) {
@@ -349,6 +390,68 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
                 goal.submit(targetPos);
             }
             break;
+            case "PICK_SYM":
+                goal = pickClient.createGoal(new ActionCallback() {
+
+                    @Override
+                    public void handleStatus(GoalStatus gs) {
+                        LOGGER.info("PICK-STATUS: " + gs.toString());
+                        //mii.state = convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus()));
+                        updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
+                    }
+
+                    @Override
+                    public void handleResult(JsonObject result) {
+                        LOGGER.info("PICK-RESULT: " + result.toString());
+                    }
+
+                    @Override
+                    public void handleFeedback(JsonObject feedback) {
+                        LOGGER.info("PICK-FEEDBK: " + feedback.toString());
+                    }
+                });
+
+                Parameter sourceLocation = mii.parameters.stream().filter((Parameter p) -> p.label == "SourceLocation").findAny().orElse(null);
+                Parameter objectType = mii.parameters.stream().filter((Parameter p) -> p.label == "ObjectType").findAny().orElse(null);
+                if(sourceLocation!=null && objectType!=null ) {
+                    JsonObject jsonGoal = Json.createObjectBuilder().add("source_location", (String) sourceLocation.value).
+                            add("object_type", (String) objectType.value).
+                            build();
+                    goal.submit(jsonGoal);
+                }
+                break;
+
+            case "PLACE_SYM":
+                goal = dropClient.createGoal(new ActionCallback() {
+
+                    @Override
+                    public void handleStatus(GoalStatus gs) {
+                        LOGGER.info("PLACE-STATUS: " + gs.toString());
+                        //mii.state = convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus()));
+                        updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
+                    }
+
+                    @Override
+                    public void handleResult(JsonObject result) {
+                        LOGGER.info("PLACE-RESULT: " + result.toString());
+                    }
+
+                    @Override
+                    public void handleFeedback(JsonObject feedback) {
+                        LOGGER.info("PLACE-FEEDBK: " + feedback.toString());
+                    }
+                });
+
+                Parameter targetLocation = mii.parameters.stream().filter((Parameter p) -> p.label == "TargetLocation").findAny().orElse(null);
+                objectType = mii.parameters.stream().filter((Parameter p) -> p.label == "ObjectType").findAny().orElse(null);
+                if(targetLocation!=null && objectType!=null ) {
+                    JsonObject jsonGoal = Json.createObjectBuilder().add("target_location", (String) targetLocation.value).
+                            add("object_type", (String) objectType.value).
+                            build();
+                    goal.submit(jsonGoal);
+                }
+                break;
+
         }
     }
 

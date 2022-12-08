@@ -1,0 +1,7 @@
+basys:
+  aasRegistry:
+    service:
+      connectionString: http://aasregistry.basys-lnv-1.mrk40.dfki.lan
+  eventTransmitter:
+    service:
+      connectionString: tcp://basys-lnv-1.mrk40.dfki.lan:1883

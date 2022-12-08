@@ -15,28 +15,31 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-@OperationMode(name = "PlaySound", shortName = "SOUND", description = "plays sound",
-		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
-public class PlaySoundOperationMode extends BaseMiROperationMode {
+@OperationMode(name = "Drop", shortName = "DROP", description = "drops an object",
+		allowedCommands = {	ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
+		allowedModes = { ExecutionMode.SIMULATE})
+public class DropOperationMode extends BaseMiROperationMode {
 
-	@Parameter(name = "type", direction = ParameterDirection.IN)
-	private String type = "Horn";
+	@Parameter(name = "drop_stationType", direction = ParameterDirection.IN)
+	private String stationType = "floor-1";
+
+	@Parameter(name = "drop_loadType", direction = ParameterDirection.IN)
+	private String loadType = "EPAL";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
-	public PlaySoundOperationMode(BaseControlComponent<MirService> component) {
+	public DropOperationMode(BaseControlComponent<MirService> component) {
 		super(component);
 	}
+
 
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).playSound(type);
+		currentMission = getService(MirService.class).drop(stationType, loadType);
 		sleep(1000);
 	}
-
 
 	@Override
 	public void onCompleting() {
@@ -50,5 +53,4 @@ public class PlaySoundOperationMode extends BaseMiROperationMode {
 		super.onStopping();
 		sleep(1000);
 	}
-
 }

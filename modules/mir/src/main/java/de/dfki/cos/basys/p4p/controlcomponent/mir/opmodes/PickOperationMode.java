@@ -21,10 +21,17 @@ import org.mockito.stubbing.Answer;
 public class PickOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "pick_stationType", direction = ParameterDirection.IN)
-	private String stationType = "floor-1";
+	private String stationType = "floor-2";
 
 	@Parameter(name = "pick_loadType", direction = ParameterDirection.IN)
-	private String loadType = "EPAL";
+	private String loadType = "TypeCaseTop";
+
+	@Parameter(name = "pick_stationName", direction = ParameterDirection.IN)
+	private String stationName = "";
+
+	@Parameter(name = "pick_loadId", direction = ParameterDirection.IN)
+	private String loadId = "";
+
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
@@ -35,7 +42,7 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).pick(stationType, loadType);
+		currentMission = getService(MirService.class).pick(stationType, loadType, stationName, loadId);
 		sleep(1000);
 	}
 

@@ -21,10 +21,16 @@ import org.mockito.stubbing.Answer;
 public class DropOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "drop_stationType", direction = ParameterDirection.IN)
-	private String stationType = "floor-1";
+	private String stationType = "";
 
 	@Parameter(name = "drop_loadType", direction = ParameterDirection.IN)
-	private String loadType = "EPAL";
+	private String loadType = "";
+
+	@Parameter(name = "drop_stationName", direction = ParameterDirection.IN)
+	private String stationName = "";
+
+	@Parameter(name = "drop_loadId", direction = ParameterDirection.IN)
+	private String loadId = "";
 
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
@@ -37,7 +43,7 @@ public class DropOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).drop(stationType, loadType);
+		currentMission = getService(MirService.class).drop(stationType, loadType, stationName, loadId);
 		sleep(1000);
 	}
 

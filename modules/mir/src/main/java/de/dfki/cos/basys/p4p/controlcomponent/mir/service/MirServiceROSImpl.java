@@ -331,18 +331,18 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
-    public MissionInstanceInfo pick(String stationType, String loadType) {
-        return createPPMission("PICK_SYM", stationType, loadType);
+    public MissionInstanceInfo pick(String stationType, String loadType, String stationName, String loadId) {
+        return createPPMission("PICK_SYM", stationType, loadType, stationName, loadId);
     }
 
-    private MissionInstanceInfo createPPMission(String missionType, String stationType, String loadType) {
+    private MissionInstanceInfo createPPMission(String missionType, String stationType, String loadType, String stationName, String loadId) {
         // Create mission order of type PICK_SYM
         MissionOrder order = new MissionOrder(missionType, "");
         order.priority = 0;
         var params = new ArrayList<Parameter>();
         var location = new Parameter();
-        location.label = missionType == "PICK_SYM"? "SourceLocation":"TargetLocation";
-        location.value = stationType;
+        location.label = Objects.equals(missionType, "PICK_SYM") ? "SourceLocation":"TargetLocation";
+        location.value = stationName;
         var objectType = new Parameter();
         objectType.label = "ObjectType";
         objectType.value = loadType;
@@ -354,8 +354,8 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
-    public MissionInstanceInfo drop(String stationType, String loadType) {
-        return createPPMission("PLACE_SYM", stationType, loadType);
+    public MissionInstanceInfo drop(String stationType, String loadType, String stationName, String loadId) {
+        return createPPMission("PLACE_SYM", stationType, loadType, stationName, loadId);
     }
 
     @Override

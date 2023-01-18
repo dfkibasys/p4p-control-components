@@ -32,6 +32,9 @@ public class DropOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "drop_loadId", direction = ParameterDirection.IN)
 	private String loadId = "";
 
+	@Parameter(name = "drop_quantity", direction = ParameterDirection.IN)
+	private int quantity = 1;
+
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
@@ -43,7 +46,7 @@ public class DropOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).drop(stationType, loadType, stationName, loadId);
+		currentMission = getService(MirService.class).drop(stationType, loadType, stationName, loadId, quantity);
 		sleep(1000);
 	}
 

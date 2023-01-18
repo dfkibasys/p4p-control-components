@@ -141,8 +141,8 @@ public class BaseMiROperationMode extends BaseOperationMode<MirService> {
         Mockito.when(serviceMock.dequeueMissionInstance(Mockito.anyInt())).thenReturn(true);
         Mockito.when(serviceMock.gotoSymbolicPosition(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
         Mockito.when(serviceMock.gotoSymbolicPosition(null)).thenReturn(new MissionInstanceInfo());
-        Mockito.when(serviceMock.drop(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(new MissionInstanceInfo());
-        Mockito.when(serviceMock.pick(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(new MissionInstanceInfo());
+        Mockito.when(serviceMock.drop(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt())).thenReturn(new MissionInstanceInfo());
+        Mockito.when(serviceMock.pick(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt())).thenReturn(new MissionInstanceInfo());
         Mockito.when(serviceMock.playSound(Mockito.anyString())).thenReturn(new MissionInstanceInfo());
         Mockito.when(serviceMock.getMissionInstanceInfo(Mockito.anyInt())).thenAnswer(new Answer<MissionInstanceInfo>() {
 

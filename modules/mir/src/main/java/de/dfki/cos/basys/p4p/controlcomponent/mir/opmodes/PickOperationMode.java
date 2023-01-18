@@ -32,6 +32,9 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "pick_loadId", direction = ParameterDirection.IN)
 	private String loadId = "";
 
+	@Parameter(name = "pick_quantity", direction = ParameterDirection.IN)
+	private int quantity = 1;
+
 	@Parameter(name = "duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
@@ -42,7 +45,7 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).pick(stationType, loadType, stationName, loadId);
+		currentMission = getService(MirService.class).pick(stationType, loadType, stationName, loadId, quantity);
 		sleep(1000);
 	}
 

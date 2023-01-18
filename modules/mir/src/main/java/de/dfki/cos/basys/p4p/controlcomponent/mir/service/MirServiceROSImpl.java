@@ -331,11 +331,11 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     @Override
-    public MissionInstanceInfo pick(String stationType, String loadType, String stationName, String loadId) {
-        return createPPMission("PICK_SYM", stationType, loadType, stationName, loadId);
+    public MissionInstanceInfo pick(String stationType, String loadType, String stationName, String loadId, int quantity) {
+        return createPPMission("PICK_SYM", stationType, loadType, stationName, loadId, quantity);
     }
 
-    private MissionInstanceInfo createPPMission(String missionType, String stationType, String loadType, String stationName, String loadId) {
+    private MissionInstanceInfo createPPMission(String missionType, String stationType, String loadType, String stationName, String loadId, int quantity) {
         // Create mission order of type PICK_SYM
         MissionOrder order = new MissionOrder(missionType, "");
         order.priority = 0;
@@ -346,16 +346,20 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
         var objectType = new Parameter();
         objectType.label = "ObjectType";
         objectType.value = loadType;
+        var objectQuantity = new Parameter();
+        objectQuantity.label = "Quantity";
+        objectQuantity.value = quantity;
         params.add(location);
         params.add(objectType);
+        params.add(objectQuantity);
         order.parameters = params;
         // Enqueue mission
         return enqueueMissionInstance(order);
     }
 
     @Override
-    public MissionInstanceInfo drop(String stationType, String loadType, String stationName, String loadId) {
-        return createPPMission("PLACE_SYM", stationType, loadType, stationName, loadId);
+    public MissionInstanceInfo drop(String stationType, String loadType, String stationName, String loadId, int quantity) {
+        return createPPMission("PLACE_SYM", stationType, loadType, stationName, loadId, quantity);
     }
 
     @Override
@@ -384,7 +388,7 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
                 }
             });
 
-            Parameter pos = mii.parameters.stream().filter((Parameter p) -> p.label == "SymbolicPosition").findAny().orElse(null);
+            Parameter pos = mii.parameters.stream().filter((Parameter p) -> p.label.equals("SymbolicPosition")).findAny().orElse(null);
             if(pos!=null) {
                 JsonObject targetPos = Json.createObjectBuilder().add("target_pos", (String) pos.value).build();
                 goal.submit(targetPos);
@@ -411,11 +415,12 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
                     }
                 });
 
-                Parameter sourceLocation = mii.parameters.stream().filter((Parameter p) -> p.label == "SourceLocation").findAny().orElse(null);
-                Parameter objectType = mii.parameters.stream().filter((Parameter p) -> p.label == "ObjectType").findAny().orElse(null);
-                if(sourceLocation!=null && objectType!=null ) {
+                Parameter sourceLocation = mii.parameters.stream().filter((Parameter p) -> p.label.equals("SourceLocation")).findAny().orElse(null);
+                Parameter objectType = mii.parameters.stream().filter((Parameter p) -> p.label.equals("ObjectType")).findAny().orElse(null);
+                Parameter objectQuantity = mii.parameters.stream().filter((Parameter p) -> p.label.equals("Quantity")).findAny().orElse(null);
+                if(sourceLocation!=null && objectType!=null && objectQuantity != null) {
                     JsonObject jsonGoal = Json.createObjectBuilder().add("source_location", (String) sourceLocation.value).
-                            add("object_type", (String) objectType.value).
+                            add("object_type", (String) objectType.value).add("quantity", (int) objectQuantity.value).
                             build();
                     goal.submit(jsonGoal);
                 }
@@ -442,11 +447,12 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
                     }
                 });
 
-                Parameter targetLocation = mii.parameters.stream().filter((Parameter p) -> p.label == "TargetLocation").findAny().orElse(null);
-                objectType = mii.parameters.stream().filter((Parameter p) -> p.label == "ObjectType").findAny().orElse(null);
-                if(targetLocation!=null && objectType!=null ) {
+                Parameter targetLocation = mii.parameters.stream().filter((Parameter p) -> p.label.equals("TargetLocation")).findAny().orElse(null);
+                objectType = mii.parameters.stream().filter((Parameter p) -> p.label.equals("ObjectType")).findAny().orElse(null);
+                objectQuantity = mii.parameters.stream().filter((Parameter p) -> p.label.equals("Quantity")).findAny().orElse(null);
+                if(targetLocation!=null && objectType!=null && objectQuantity != null) {
                     JsonObject jsonGoal = Json.createObjectBuilder().add("target_location", (String) targetLocation.value).
-                            add("object_type", (String) objectType.value).
+                            add("object_type", (String) objectType.value).add("quantity", (int) objectQuantity.value).
                             build();
                     goal.submit(jsonGoal);
                 }

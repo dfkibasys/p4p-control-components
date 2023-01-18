@@ -159,13 +159,13 @@ public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 	}
 
 	@Override
-	public MissionInstanceInfo pick(String stationType, String loadType, String stationName, String loadId) {
-		return service.pick(stationType, loadType, stationName, loadId);
+	public MissionInstanceInfo pick(String stationType, String loadType, String stationName, String loadId, int quantity) {
+		return service.pick(stationType, loadType, stationName, loadId, quantity);
 	}
 
 	@Override
-	public MissionInstanceInfo drop(String stationType, String loadType, String stationName, String loadId) {
-		return service.drop(stationType, loadType, stationName, loadId);
+	public MissionInstanceInfo drop(String stationType, String loadType, String stationName, String loadId, int quantity) {
+		return service.drop(stationType, loadType, stationName, loadId, quantity);
 	}
 
 }

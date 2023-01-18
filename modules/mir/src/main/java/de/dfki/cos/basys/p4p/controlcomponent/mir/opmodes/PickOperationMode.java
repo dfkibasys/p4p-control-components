@@ -35,7 +35,7 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "pick_quantity", direction = ParameterDirection.IN)
 	private int quantity = 1;
 
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "pick_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PickOperationMode(BaseControlComponent<MirService> component) {

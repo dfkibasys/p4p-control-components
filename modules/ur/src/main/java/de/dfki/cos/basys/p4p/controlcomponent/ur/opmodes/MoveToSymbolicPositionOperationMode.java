@@ -16,7 +16,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseUROperationMode {
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "";
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "move_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 		
 	public MoveToSymbolicPositionOperationMode(BaseControlComponent<UrService> component) {

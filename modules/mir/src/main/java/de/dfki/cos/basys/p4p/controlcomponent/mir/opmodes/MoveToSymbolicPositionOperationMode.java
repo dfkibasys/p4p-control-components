@@ -28,7 +28,7 @@ public class MoveToSymbolicPositionOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "position", direction = ParameterDirection.IN)
 	private String position = "Waypoint01";
 	
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "move_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public MoveToSymbolicPositionOperationMode(BaseControlComponent<MirService> component) {

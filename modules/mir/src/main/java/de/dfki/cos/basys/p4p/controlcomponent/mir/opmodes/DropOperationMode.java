@@ -35,7 +35,7 @@ public class DropOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "drop_quantity", direction = ParameterDirection.IN)
 	private int quantity = 1;
 
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "drop_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public DropOperationMode(BaseControlComponent<MirService> component) {

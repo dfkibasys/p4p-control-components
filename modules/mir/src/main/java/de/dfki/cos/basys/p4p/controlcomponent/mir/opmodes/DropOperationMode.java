@@ -17,7 +17,7 @@ import org.mockito.stubbing.Answer;
 
 @OperationMode(name = "Drop", shortName = "DROP", description = "drops an object",
 		allowedCommands = {	ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
-		allowedModes = { ExecutionMode.SIMULATE})
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class DropOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "drop_stationType", direction = ParameterDirection.IN)

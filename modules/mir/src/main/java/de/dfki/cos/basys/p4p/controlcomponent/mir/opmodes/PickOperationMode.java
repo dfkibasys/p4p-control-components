@@ -17,7 +17,7 @@ import org.mockito.stubbing.Answer;
 
 @OperationMode(name = "Pick", shortName = "PICK", description = "picks an object",
 		allowedCommands = {	ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
-		allowedModes = { ExecutionMode.SIMULATE })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class PickOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "pick_stationType", direction = ParameterDirection.IN)

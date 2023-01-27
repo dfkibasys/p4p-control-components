@@ -23,7 +23,7 @@ public class PlaySoundOperationMode extends BaseMiROperationMode {
 	@Parameter(name = "type", direction = ParameterDirection.IN)
 	private String type = "Horn";
 
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "play_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PlaySoundOperationMode(BaseControlComponent<MirService> component) {

@@ -18,7 +18,7 @@ public class PlaceSymbolicOperationMode extends BaseUROperationMode {
 	private String target_location = "";
 	@Parameter(name = "place_object_type", direction = ParameterDirection.IN)
 	private String object_type = "";
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "place_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PlaceSymbolicOperationMode(BaseControlComponent<UrService> component) {

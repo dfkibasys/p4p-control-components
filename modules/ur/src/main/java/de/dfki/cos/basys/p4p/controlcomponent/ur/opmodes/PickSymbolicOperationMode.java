@@ -18,7 +18,7 @@ public class PickSymbolicOperationMode extends BaseUROperationMode {
 	private String source_location = "";
 	@Parameter(name = "pick_object_type", direction = ParameterDirection.IN)
 	private String object_type = "";
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "pick_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PickSymbolicOperationMode(BaseControlComponent<UrService> component) {

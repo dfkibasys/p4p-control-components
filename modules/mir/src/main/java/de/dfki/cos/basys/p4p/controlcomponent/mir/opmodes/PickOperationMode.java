@@ -17,15 +17,25 @@ import org.mockito.stubbing.Answer;
 
 @OperationMode(name = "Pick", shortName = "PICK", description = "picks an object",
 		allowedCommands = {	ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
-		allowedModes = { ExecutionMode.SIMULATE })
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class PickOperationMode extends BaseMiROperationMode {
 
 	@Parameter(name = "pick_stationType", direction = ParameterDirection.IN)
-	private String stationType = "floor-1";
+	private String stationType = "floor-2";
 
 	@Parameter(name = "pick_loadType", direction = ParameterDirection.IN)
-	private String loadType = "EPAL";
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	private String loadType = "TypeCaseTop";
+
+	@Parameter(name = "pick_stationName", direction = ParameterDirection.IN)
+	private String stationName = "";
+
+	@Parameter(name = "pick_loadId", direction = ParameterDirection.IN)
+	private String loadId = "";
+
+	@Parameter(name = "pick_quantity", direction = ParameterDirection.IN)
+	private int quantity = 1;
+
+	@Parameter(name = "pick_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PickOperationMode(BaseControlComponent<MirService> component) {
@@ -35,7 +45,7 @@ public class PickOperationMode extends BaseMiROperationMode {
 	@Override
 	public void onStarting() {
 		super.onStarting();
-		currentMission = getService(MirService.class).pick(stationType, loadType);
+		currentMission = getService(MirService.class).pick(stationType, loadType, stationName, loadId, quantity);
 		sleep(1000);
 	}
 

@@ -21,7 +21,7 @@ public class PickAndPlaceSymbolicOperationMode extends BaseUROperationMode {
 	@Parameter(name = "pps_target_location", direction = ParameterDirection.IN)
 	private String target_location = "";
 
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "pps_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public PickAndPlaceSymbolicOperationMode(BaseControlComponent<UrService> component) {

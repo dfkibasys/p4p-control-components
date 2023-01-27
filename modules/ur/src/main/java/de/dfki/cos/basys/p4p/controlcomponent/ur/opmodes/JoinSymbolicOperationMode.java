@@ -17,7 +17,7 @@ public class JoinSymbolicOperationMode extends BaseUROperationMode {
 	private String object_type_a = "";
 	@Parameter(name = "object_type_b", direction = ParameterDirection.IN)
 	private String object_type_b = "";
-	@Parameter(name = "duration", direction = ParameterDirection.OUT)
+	@Parameter(name = "join_duration", direction = ParameterDirection.OUT)
 	private int duration_out = 0;
 
 	public JoinSymbolicOperationMode(BaseControlComponent<UrService> component) {

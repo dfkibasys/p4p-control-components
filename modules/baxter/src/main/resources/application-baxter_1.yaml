@@ -14,8 +14,9 @@ basys:
       service:
         implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.baxter.service.BaxterServiceImpl
         connectionString: ws://10.2.1.11:9090
-        serverName: /move_base
-        actionNameMove: /move_base_msgs/MoveBaseAction
+        properties:
+          serverName: /move_base
+          actionNameMove: /move_base_msgs/MoveBaseAction
     simulate:
       disableExecutionModeChange: true
       disableOccupationCheck: true

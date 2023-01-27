@@ -26,6 +26,7 @@ basys:
       service:
         implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.virtual.service.agv.AgvServiceImpl
         connectionString: ${KAFKA_BROKER_ENDPOINT}:9092
-        schemaRegistryUrl: ${SCHEMA_REGISTRY_ENDPOINT}
-        topicStatus: agv_1_status
-        topicPose: agv_1_pose
+        properties:
+          schemaRegistryUrl: ${SCHEMA_REGISTRY_ENDPOINT}
+          topicStatus: agv_1_status
+          topicPose: agv_1_pose

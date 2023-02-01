@@ -16,10 +16,11 @@ basys:
     id: materialoutput_1
     name: MaterialOutput-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.virtual.opmodes.materialoutput
-    executionMode: SIMULATE
-    auto:
-      disableExecutionModeChange: false
-      disableOccupationCheck: false
-    simulate:
-      disableExecutionModeChange: true
-      disableOccupationCheck: true
+    initialExecutionMode: SIMULATE
+    executionsModes:
+      auto:
+        executionModeChangeDisabled: false
+        occupationCheckDisabled: false
+      simulate:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true

@@ -7,13 +7,14 @@ basys:
     id: smartwatch_1
     name: SmartWatch-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.smartwatch.opmodes
-    executionMode: SIMULATE
-    auto:
-      disableExecutionModeChange: false
-      disableOccupationCheck: false
-      service:
-        implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.smartwatch.service.NotificationServiceImpl
-        connectionString: mq3t.rpc://smartwatch-lg-3691.mrk40.dfki.lan:9030
-    simulate:
-      disableExecutionModeChange: true
-      disableOccupationCheck: true
+    initialExecutionMode: SIMULATE
+    executionsModes:
+      auto:
+        executionModeChangeDisabled: false
+        occupationCheckDisabled: false
+        service:
+          implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.smartwatch.service.NotificationServiceImpl
+          connectionString: mq3t.rpc://smartwatch-lg-3691.mrk40.dfki.lan:9030
+      simulate:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true

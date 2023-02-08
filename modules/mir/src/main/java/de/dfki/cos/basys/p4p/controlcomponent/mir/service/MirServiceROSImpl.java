@@ -369,19 +369,16 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
         switch(mii.mission) {
             case "MOVSYM":
             goal = gotoClient.createGoal(new ActionCallback() {
-                boolean finished = false;
                 @Override
                 public void handleStatus(GoalStatus gs) {
                     LOGGER.info("GOTO-STATUS: " + gs.toString());
                     //mii.state = convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus()));
-                    if(!finished)
-                        updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
+                    updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
                 }
 
                 @Override
                 public void handleResult(JsonObject result) {
                     LOGGER.info("GOTO-RESULT: " + result.toString());
-                    finished = true;
                 }
 
                 @Override
@@ -398,19 +395,16 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
             break;
             case "PICK_SYM":
                 goal = pickClient.createGoal(new ActionCallback() {
-                    boolean finished = false;
                     @Override
                     public void handleStatus(GoalStatus gs) {
                         LOGGER.info("PICK-STATUS: " + gs.toString());
                         //mii.state = convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus()));
-                        if(!finished)
-                            updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
+                        updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
                     }
 
                     @Override
                     public void handleResult(JsonObject result) {
                         LOGGER.info("PICK-RESULT: " + result.toString());
-                        finished = true;
                     }
 
                     @Override
@@ -432,19 +426,16 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
 
             case "PLACE_SYM":
                 goal = dropClient.createGoal(new ActionCallback() {
-                    boolean finished = false;
                     @Override
                     public void handleStatus(GoalStatus gs) {
                         LOGGER.info("PLACE-STATUS: " + gs.toString());
                         //mii.state = convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus()));
-                        if(!finished)
-                            updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
+                        updateMissionState(mii, convertGoalStatusToMissionState(GoalStatusEnum.get(gs.getStatus())));
                     }
 
                     @Override
                     public void handleResult(JsonObject result) {
                         LOGGER.info("PLACE-RESULT: " + result.toString());
-                        finished = true;
                     }
 
                     @Override

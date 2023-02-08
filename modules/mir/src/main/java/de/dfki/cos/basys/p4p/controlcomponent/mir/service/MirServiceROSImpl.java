@@ -464,6 +464,11 @@ public class MirServiceROSImpl implements MirService, ServiceProvider<MirService
     }
 
     private void updateMissionState(MissionInstanceInfo mii, String newState) {
+
+        // WORKAROUND: ignore PENDING states, due to a bug in one of the used action servers
+        // this state is not trustable
+        if(newState=="PENDING") return;
+
         mii.state = newState;
         switch(newState) {
             case "EXECUTING":

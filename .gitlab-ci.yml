@@ -1,147 +1,59 @@
-image: maven:3-eclipse-temurin-11-alpine
+include:
+    - project: i40/administration
+      file: gitlab-ci-maven.yml
+      ref: main
 
 variables:
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
-  MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
-  DOCKER_HOST: "tcp://docker:2375" 
-  DOCKER_TLS_CERTDIR: ""
-
-cache:
-  paths:
-    - .m2/repository/
-    - target/
-
-stages:
-  - validate
-  - build
-  - test
-  - install
-  - deploy
-
-mvn-validate:
-  stage: validate
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn -V $MAVEN_CLI_OPTS validate
-
-mvn-compile:
-  stage: build
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn -V $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
-  artifacts:
-    paths:
-      - $MAVEN_TARGET_CLASSES
-    expire_in: 3 hour 
-
-mvn-test:
-  stage: test
-  tags:
-    - basys
-    - maven
-  dependencies:
-    - mvn-compile
-  script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-
-mvn-docker-install:
-  stage: install
-  image: dfkibasys/docker-temurin11jdk:20.10.17  
-  variables:
-     DOCKER_DRIVER: overlay2
-  services:
-    - name: docker:20.10.17-dind
-    # explicitly disable tls to avoid docker startup interruption
-      command: ["--tls=false"]
-  tags:
-    - basys
-    - maven
-  script:
-    - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD 
-  dependencies:
-    - mvn-compile
-
-.maven-docker-publish:
-  stage: deploy
-  tags:
-    - basys
-    - docker
-  image: dfkibasys/docker-temurin11jdk:20.10.17
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-     - name: docker:20.10.17-dind
-     # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  before_script:
-    - docker info
-  dependencies:
-     - mvn-compile
-     - mvn-docker-install
-  script:
-    - chmod 775 ./mvnw
-    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$PROJECT_NAME
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
-      changes:
-        - modules/$PROJECT_NAME/**/*
-
+  MVN_FORBID_SNAPSHOT_DEPENDENCIES_DISABLED : "true"
+  MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED: "true"
+  MAVEN_DEPLOY_ENABLED: "true"
     
-maven-docker-publish-baxter:
-  extends: .maven-docker-publish
+docker-publish-baxter:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: baxter
+    MODULE_NAME: baxter
 
-maven-docker-publish-drone:
-  extends: .maven-docker-publish
+docker-publish-drone:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: drone
+    MODULE_NAME: drone
 
-maven-docker-publish-laplaser:
-  extends: .maven-docker-publish
+docker-publish-laplaser:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: laplaser
+    MODULE_NAME: laplaser
 
-maven-docker-publish-mir:
-  extends: .maven-docker-publish
+docker-publish-mir:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: mir
+    MODULE_NAME: mir
 
-maven-docker-publish-smartwatch:
-  extends: .maven-docker-publish
+docker-publish-smartwatch:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: smartwatch
+    MODULE_NAME: smartwatch
 
-maven-docker-publish-ur:
-  extends: .maven-docker-publish
+docker-publish-ur:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: ur
+    MODULE_NAME: ur
 
-maven-docker-publish-vacuum:
-  extends: .maven-docker-publish
+docker-publish-vacuum:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: vacuum
+    MODULE_NAME: vacuum
 
-maven-docker-publish-virtual:
-  extends: .maven-docker-publish
+docker-publish-virtual:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: virtual
+    MODULE_NAME: virtual
 
-maven-docker-publish-wallet:
-  extends: .maven-docker-publish
+docker-publish-wallet:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: wallet
+    MODULE_NAME: wallet
 
-maven-docker-publish-worker:
-  extends: .maven-docker-publish
+docker-publish-worker:
+  extends: .docker-publish-module
   variables:
-    PROJECT_NAME: worker
+    MODULE_NAME: worker

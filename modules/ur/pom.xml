@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.pom</groupId>
 		<artifactId>starter-parent</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.5.0-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
@@ -27,13 +27,13 @@
 		<dependency>
 			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
 			<artifactId>spring</artifactId>
-			<version>${basys-controlcomponent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
 			<artifactId>jrosbridge</artifactId>
-			<version>${basys-common.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 				
 		<dependency>

@@ -8,7 +8,7 @@ basys:
     name: Heinz
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.worker.opmodes
     initialExecutionMode: SIMULATE
-    executionsModes:
+    executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false

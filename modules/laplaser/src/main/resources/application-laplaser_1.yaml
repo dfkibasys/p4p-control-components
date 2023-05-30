@@ -8,7 +8,7 @@ basys:
     name: LapLaser-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.laplaser.opmodes
     initialExecutionMode: SIMULATE
-    executionsModes:
+    executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false

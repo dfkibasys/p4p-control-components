@@ -1,6 +1,6 @@
 basys:
   controlcomponent:
-    executionsModes:
+    executionModes:
       simulate:
         executionModeChangeDisabled: true
         occupationCheckDisabled: true

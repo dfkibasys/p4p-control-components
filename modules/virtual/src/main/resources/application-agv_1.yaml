@@ -17,7 +17,7 @@ basys:
     name: agv-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.virtual.opmodes.agv
     initialExecutionMode: SIMULATE
-    executionsModes:
+    executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false

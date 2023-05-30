@@ -8,7 +8,7 @@ basys:
     name: Vacuum-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.vacuum.opmodes
     initialExecutionMode: SIMULATE
-    executionsModes:
+    executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false

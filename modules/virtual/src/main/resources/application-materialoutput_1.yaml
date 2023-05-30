@@ -17,7 +17,7 @@ basys:
     name: MaterialOutput-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.virtual.opmodes.materialoutput
     initialExecutionMode: SIMULATE
-    executionsModes:
+    executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false

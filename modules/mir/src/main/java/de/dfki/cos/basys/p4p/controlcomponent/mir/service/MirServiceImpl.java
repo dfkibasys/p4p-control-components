@@ -26,18 +26,22 @@ public class MirServiceImpl implements MirService, ServiceProvider<MirService> {
 	
 	@Override
 	public boolean connect(ComponentContext context, String connectionString) {
+		LOGGER.info("Connect to " + connectionString);
 		service = new MirRestService(connectionString, auth);	
 		Status status = service.getRobotStatus();
 		if (status != null) {
 			LOGGER.info("Battery-Percentage: " + status.battery_percentage);
 			LOGGER.info("Time-Remaining: " + status.battery_time_remaining);
 			connected = true;
+			LOGGER.info("Connection established");
 		}
+
 		return connected;
 	}
 
 	@Override
 	public void disconnect() {
+		LOGGER.info("Disconnect");
 		connected = false;
 		service = null;
 	}

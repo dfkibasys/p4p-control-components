@@ -1,0 +1,21 @@
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12685
+    httpsPort: 8443
+  controlcomponent:
+    id: workstation
+    name: Workstation
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.opmodes
+    initialExecutionMode: AUTO
+    executionModes:
+      auto:
+        executionModeChangeDisabled: false
+        occupationCheckDisabled: false
+        service:
+          implementationJavaClass: de.dfki.cos.basys.p4p.workstation.workstation.service.WorkstationServiceImpl
+          connectionString: tcp://10.2.10.4:1883
+          properties:
+      simulate:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true

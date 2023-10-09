@@ -27,6 +27,7 @@
 		<module>modules/virtual</module>
 		<module>modules/wallet</module>
 		<module>modules/worker</module>
+		<module>modules/workstation</module>
 	</modules>
   
 	<scm>

@@ -29,6 +29,12 @@
 			<artifactId>spring</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.controlcomponent</groupId>
+			<artifactId>camunda</artifactId>
+			<version>0.5.2-SNAPSHOT</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

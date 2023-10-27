@@ -1,0 +1,17 @@
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12685
+    httpsPort: 8443
+  controlcomponent:
+    id: assembly_works_station_1 #remove 's' when updated in AAS
+    name: Workstation
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.highlevel.opmodes
+    initialExecutionMode: AUTO
+    executionModes:
+      auto:
+        executionModeChangeDisabled: false
+        occupationCheckDisabled: false
+      simulate:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true

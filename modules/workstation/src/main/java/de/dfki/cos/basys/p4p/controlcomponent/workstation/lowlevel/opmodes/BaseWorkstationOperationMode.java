@@ -1,8 +1,8 @@
-package de.dfki.cos.basys.p4p.controlcomponent.workstation.opmodes;
+package de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
-import de.dfki.cos.basys.p4p.controlcomponent.workstation.service.WorkstationService;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

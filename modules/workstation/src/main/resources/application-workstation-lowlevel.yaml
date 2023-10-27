@@ -6,14 +6,14 @@ basys:
   controlcomponent:
     id: assembly_work_station_1
     name: Workstation
-    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.opmodes
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes
     initialExecutionMode: AUTO
     executionModes:
       auto:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false
         service:
-          implementationJavaClass: de.dfki.cos.basys.p4p.workstation.workstation.service.WorkstationServiceImpl
+          implementationJavaClass: de.dfki.cos.basys.p4p.workstation.lowlevel.service.WorkstationServiceImpl
           connectionString: tcp://10.2.10.4:1883
           properties:
       simulate:

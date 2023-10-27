@@ -1,7 +1,5 @@
 package de.dfki.cos.basys.p4p.controlcomponent.workstation.highlevel.opmodes;
 
-import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
-import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.camunda.opmodes.CamundaOperationMode;
 import de.dfki.cos.basys.controlcomponent.camunda.service.CamundaService;
@@ -10,9 +8,7 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 
 @OperationMode(name = "PickAndPlaceSymbolic", shortName = "PP_SYM", description = "Pick and place an object of specified type from its current location" +
-        "to a symbolic target location",
-        allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
-        allowedModes = { ExecutionMode.AUTO, ExecutionMode.SIMULATE })
+        "to a symbolic target location")
 public class PickAndPlaceSymbolicOperationMode extends CamundaOperationMode {
 
     public PickAndPlaceSymbolicOperationMode(BaseControlComponent<CamundaService> component){
@@ -26,12 +22,12 @@ public class PickAndPlaceSymbolicOperationMode extends CamundaOperationMode {
     // Execute WGS / PICK / PLACE BPMN process enhanced with ?mat_location, ?quantity (PICK) and ?material, ?quantity, ?target_location (PLACE)
 
     @Parameter(name = "pps_material", direction = ParameterDirection.IN)
-    private String material = "";
+    private String pps_material = "";
     @Parameter(name = "pps_quantity", direction = ParameterDirection.IN)
-    private int quantity = 1;
+    private int pps_quantity = 1;
     @Parameter(name = "pps_target_location", direction = ParameterDirection.IN)
-    private String target_location = "";
+    private String pps_target_location = "";
     @Parameter(name = "pps_workstep_id", direction = ParameterDirection.IN)
-    private String workstep_id = "";
+    private String pps_workstep_id = "";
 
 }

@@ -4,7 +4,7 @@ basys:
     tcpPort: 12685
     httpsPort: 8443
   controlcomponent:
-    id: assembly_work_station_1
+    id: assembly_works_station_1
     name: Workstation
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes
     initialExecutionMode: AUTO

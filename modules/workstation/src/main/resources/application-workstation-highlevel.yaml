@@ -11,8 +11,8 @@ basys:
         service:
           implementationJavaClass: de.dfki.cos.basys.controlcomponent.camunda.service.CamundaServiceImpl
           connectionString: http://camunda.basys-lnv-1.mrk40.dfki.lan:9080/engine-rest
-          properties:
-            prop1: value1
+          #properties:
+            #prop1: value1
       simulate:
         executionModeChangeDisabled: true
         occupationCheckDisabled: true

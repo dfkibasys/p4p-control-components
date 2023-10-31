@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0a60pbl" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.8.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
-  <bpmn:process id="assembly_work_station_1.PP_SYM" name="pickAndPlace" isExecutable="true">
+  <bpmn:process id="assembly_works_station_1.PP_SYM" name="pickAndPlace" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -17,10 +17,10 @@
             <camunda:script scriptFormat="freemarker">[]</camunda:script>
           </camunda:inputParameter>
           <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
-          <camunda:inputParameter name="componentId">
-            <camunda:script scriptFormat="freemarker">${componentId}</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="workstepId">${pps_workstep_id}</camunda:inputParameter>
+          <camunda:inputParameter name="componentId">
+            <camunda:script scriptFormat="freemarker">assembly_works_station_1</camunda:script>
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0zgzhjq</bpmn:incoming>
@@ -66,7 +66,7 @@
     <bpmn:sequenceFlow id="Flow_0ielbcs" sourceRef="Activity_1qivhdf" targetRef="Event_1li3pux" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="assembly_work_station_1.PP_SYM">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="assembly_works_station_1.PP_SYM">
       <bpmndi:BPMNEdge id="Flow_0ielbcs_di" bpmnElement="Flow_0ielbcs">
         <di:waypoint x="380" y="117" />
         <di:waypoint x="862" y="117" />

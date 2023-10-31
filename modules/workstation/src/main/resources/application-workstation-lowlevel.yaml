@@ -4,7 +4,7 @@ basys:
     tcpPort: 12685
     httpsPort: 8443
   controlcomponent:
-    id: assembly_works_station_1
+    id: assembly_works_station_1_ll
     name: Workstation
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes
     initialExecutionMode: AUTO
@@ -13,9 +13,64 @@ basys:
         executionModeChangeDisabled: false
         occupationCheckDisabled: false
         service:
-          implementationJavaClass: de.dfki.cos.basys.p4p.workstation.lowlevel.service.WorkstationServiceImpl
+          implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationServiceImpl
           connectionString: tcp://10.2.10.4:1883
           properties:
       simulate:
         executionModeChangeDisabled: true
         occupationCheckDisabled: true
+spring:
+  cloud:
+    function:
+      definition: assemblyEventUpdates;handEventUpdates;scaleController0Updates
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKER_ENDPOINT}
+      bindings:
+        assemblyEventUpdates-in-0:
+          destination: aws.assembly-event
+          content-type: application/*+avro
+          binder: kafka-avro
+        handEventUpdates-in-0:
+          destination: aws.hand-event
+          content-type: application/*+avro
+          binder: kafka-avro
+        scaleController0Updates-in-0:
+          destination: scale-0-pieceCount
+          content-type: application/json
+          binder: kafka-json
+        notification:
+          destination: wgs-notification
+          content-type: application/*+avro
+          binder: kafka-avro
+          producer:
+            useNativeEncoding: true
+        stepChange:
+          destination: wgs-step-change
+          content-type: application/*+avro
+          binder: kafka-avro
+          producer:
+            useNativeEncoding: true
+      binders:
+        kafka-json:
+          type: kafka
+        kafka-avro:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      producer-properties:
+                        key.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                        #key.deserializer: org.apache.kafka.common.serialization.StringSerializer
+                        value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                        schema.registry.url: ${SCHEMA_REGISTRY_ENDPOINT}
+                      consumer-properties:
+                        key.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                        #key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+                        value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                        schema.registry.url: ${SCHEMA_REGISTRY_ENDPOINT}
+                        specific.avro.reader: true

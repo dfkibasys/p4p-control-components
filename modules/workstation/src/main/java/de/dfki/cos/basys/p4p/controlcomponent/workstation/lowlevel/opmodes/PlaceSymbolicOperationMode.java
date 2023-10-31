@@ -30,6 +30,7 @@ public class PlaceSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Override
     public void onStarting() {
         super.onStarting();
+        executing = true;
         getService(WorkstationService.class).placeSymbolic(material, quantity, target_location);
     }
 

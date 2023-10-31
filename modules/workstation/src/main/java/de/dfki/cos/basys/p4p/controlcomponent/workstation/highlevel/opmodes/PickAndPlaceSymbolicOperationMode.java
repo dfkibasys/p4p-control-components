@@ -24,7 +24,7 @@ public class PickAndPlaceSymbolicOperationMode extends CamundaOperationMode {
     @Parameter(name = "pps_material", direction = ParameterDirection.IN)
     private String pps_material = "";
     @Parameter(name = "pps_quantity", direction = ParameterDirection.IN)
-    private int pps_quantity = 1;
+    private long pps_quantity = 1;
     @Parameter(name = "pps_target_location", direction = ParameterDirection.IN)
     private String pps_target_location = "";
     @Parameter(name = "pps_workstep_id", direction = ParameterDirection.IN)

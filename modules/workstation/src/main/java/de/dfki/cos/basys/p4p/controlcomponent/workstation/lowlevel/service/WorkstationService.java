@@ -5,4 +5,5 @@ public interface WorkstationService {
     void placeSymbolic(String material, int quantity, String target_location);
     void joinSymbolic(String material_a, String material_b, String tool);
     void reset();
+    MissionState getMissionState();
 }

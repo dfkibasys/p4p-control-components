@@ -2,6 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes;
 
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.MissionState;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ public abstract class BaseWorkstationOperationMode extends BaseOperationMode<Wor
 	protected long startTime = 0;
 	protected long endTime = 0;
 	protected int duration = 0;
+
+	protected boolean executing = false;
 	
 	public BaseWorkstationOperationMode(BaseControlComponent<WorkstationService> component) {
 		super(component);
@@ -33,8 +36,36 @@ public abstract class BaseWorkstationOperationMode extends BaseOperationMode<Wor
 
 	@Override
 	public void onExecute() {
-		sleep(500);
-		LOGGER.info("EXECUTE FINISHED");
+		MissionState state;
+		while(executing) {
+			WorkstationService service = getService(WorkstationService.class);
+			state = service.getMissionState();
+			LOG.debug("Current mission state is {}.", state);
+			switch(state.getState()) {
+				case PENDING:
+					break;
+				case EXECUTING:
+					break;
+				case DONE:
+					executing=false;
+					break;
+				case FAILED:
+					executing=false;
+					component.setErrorStatus(1, "failed");
+					component.stop(component.getOccupierId());
+					break;
+				case ABORTED:
+					executing=false;
+					component.setErrorStatus(2, "aborted");
+					component.stop(component.getOccupierId());
+					break;
+				default:
+					LOG.warn("Received unexpected mission state {}!", state);
+					break;
+
+			}
+			sleep(500);
+		}
 	}
 
 	@Override

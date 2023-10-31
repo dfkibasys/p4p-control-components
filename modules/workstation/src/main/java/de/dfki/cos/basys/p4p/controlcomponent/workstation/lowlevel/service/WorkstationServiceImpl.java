@@ -2,15 +2,34 @@ package de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service;
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.model.MaterialRemovedEvent;
+import de.dfki.cos.basys.processcontrol.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Bean;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus.MState;
+import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
+@Service
 public class WorkstationServiceImpl implements WorkstationService, ServiceProvider<WorkstationService> {
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
+
+    private String expected_mat_location = null;
+    private int expected_quantity = 1;
+    private int current_quantity = 0;
+
+    @Autowired
+    StreamBridge streamBridge;
+
     public WorkstationServiceImpl(Properties config) {
         this.config = config;
     }
@@ -55,7 +74,20 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
          * - ?mat_location reached && withdrawal of ?quantity ?material  -> complete (clear hints)
          * - ?mat_location reached && withdrawal of <?quantity && hand retrackted
          */
+        this.expected_mat_location = mat_location;
+        this.expected_quantity = quantity;
 
+        MissionState.getInstance().setState(MState.EXECUTING);
+
+        while (this.expected_quantity != this.current_quantity) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        MissionState.getInstance().setState(MState.DONE);
     }
 
     @Override
@@ -73,5 +105,52 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     @Override
     public void reset() {
 
+    }
+
+    @Override
+    public MissionState getMissionState() {
+        return MissionState.getInstance();
+    }
+
+    @Bean
+    public Consumer<AssemblyEvent> assemblyEventUpdates() {
+        return this::handleAssemblyEventUpdates;
+    }
+
+    @Bean
+    public Consumer<HandEvent> handEventUpdates() {
+        return this::handleHandEventUpdates;
+    }
+
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController0Updates() { return this::handleScaleController0Updates;}
+
+    private void handleAssemblyEventUpdates(AssemblyEvent assemblyEvent) {
+        LOGGER.info("Assembly Event arrived {}", assemblyEvent);
+    }
+
+    private void handleHandEventUpdates(HandEvent handEvent) {
+        LOGGER.info("Hand Event arrived {}", handEvent);
+        Notification not = new Notification();
+
+        switch(handEvent.getType()){
+            case LEADING_INTO_DIRECTION:
+                not.setType(NotificationType.LEADING_INTO_WRONG_DIRECTION);
+                break;
+            case LOCATION_REACHED:
+                not.setType(NotificationType.WRONG_LOCATION_REACHED);
+                break;
+            case GRASPED_AT_LOCATION:
+                not.setType(NotificationType.GRASPED_AT_WRONG_LOCATION);
+                break;
+        }
+
+        not.setShow(!Objects.equals(handEvent.getTarget(), expected_mat_location));
+        streamBridge.send("notification", not);
+    }
+
+    private void handleScaleController0Updates(MaterialRemovedEvent materialRemovedEvent) {
+        LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
+        this.current_quantity -= materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
     }
 }

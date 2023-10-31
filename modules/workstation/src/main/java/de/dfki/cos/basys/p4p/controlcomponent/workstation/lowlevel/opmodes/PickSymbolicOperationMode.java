@@ -28,6 +28,7 @@ public class PickSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Override
     public void onStarting() {
         super.onStarting();
+        executing = true;
         getService(WorkstationService.class).pickSymbolic(mat_location, quantity);
     }
 

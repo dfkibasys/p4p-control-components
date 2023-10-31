@@ -29,6 +29,7 @@ public class JoinSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Override
     public void onStarting() {
         super.onStarting();
+        executing = true;
         getService(WorkstationService.class).joinSymbolic(material_a, material_b, tool);
     }
 

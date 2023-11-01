@@ -158,43 +158,49 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         // Maybe add orientation property instead of combining it with workstepId
         if (assemblyEvent.getConfidence() >= CONFIDENCE_THRESHOLD && !Objects.equals(assemblyEvent.getWorkstepId(), "error")){
             current_workstep_id = assemblyEvent.getWorkstepId().substring(0,10); // workstep is encoded as workstep_1_0, where 0 stands for the orientation
-        }
 
-        LOGGER.info("Expected: {}, Current: {}", expected_workstep_id, current_workstep_id);
-        if(Objects.equals(expected_workstep_id, current_workstep_id)){
-            if (previous_orientation != null) {
-                // previous workstep had an orientation
-                try {
-                    // current workstep depends on previous orientation
-                    String current_orientation = assemblyEvent.getWorkstepId().substring(11,12);
+            LOGGER.info("Expected: {}, Current: {}", expected_workstep_id, current_workstep_id);
+            if(Objects.equals(expected_workstep_id, current_workstep_id)){
+                Notification not = new Notification();
+                not.setType(NotificationType.WRONG_ORIENTATION);
 
-                    if (current_orientation.equals(previous_orientation)){
-                        // same orientation -> variable doesn't need to be updated, just continue
-                        LOGGER.info("Orientations are equal");
+                if (previous_orientation != null) {
+                    // previous workstep had an orientation
+                    try {
+                        // current workstep depends on previous orientation
+                        String current_orientation = assemblyEvent.getWorkstepId().substring(11,12);
+
+                        if (current_orientation.equals(previous_orientation)){
+                            // same orientation -> variable doesn't need to be updated, just continue
+                            LOGGER.info("Orientations are equal");
+                            not.setShow(false);
+                            streamBridge.send("notification", not);
+                            latch.countDown();
+                        }
+                        else {
+                            LOGGER.info("Orientations differ");
+                            not.setShow(true);
+                            streamBridge.send("notification", not);
+                        }
+                    }
+                    catch (IndexOutOfBoundsException ignored) {
+                        // current workstep doesn't depend on previous orientation -> reset variable and continue
+                        LOGGER.info("Orientations won't matter in current workstep");
+                        previous_orientation = null;
                         latch.countDown();
                     }
-                    else {
-                        // TODO: show notification in dashboard
-                        LOGGER.info("Orientations differ");
-                    }
                 }
-                catch (IndexOutOfBoundsException ignored) {
-                    // current workstep doesn't depend on previous orientation -> reset variable and continue
-                    LOGGER.info("Orientations won't matter in current workstep");
-                    previous_orientation = null;
+                else {
+                    LOGGER.info("Orientations won't matter in previous workstep");
+                    // current workstep doesn't depend on previous orientation
+                    try {
+                        // if current workstep has orientation, save it for next one
+                        previous_orientation = assemblyEvent.getWorkstepId().substring(11,12);
+                    }
+                    catch (IndexOutOfBoundsException ignored) {}
+
                     latch.countDown();
                 }
-            }
-            else {
-                LOGGER.info("Orientations won't matter in previous workstep");
-                // current workstep doesn't depend on previous orientation
-                try {
-                    // if current workstep has orientation, save it for next one
-                    previous_orientation = assemblyEvent.getWorkstepId().substring(11,12);
-                }
-                catch (IndexOutOfBoundsException ignored) {}
-
-                latch.countDown();
             }
         }
     }

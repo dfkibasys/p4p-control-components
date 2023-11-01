@@ -6,6 +6,9 @@
         <camunda:formData>
           <camunda:formField id="componentId" label="Component ID" type="string" defaultValue="assembly_works_station_1" />
           <camunda:formField id="pps_workstep_id" label="Workstep ID" type="string" defaultValue="workstep_1" />
+          <camunda:formField id="pps_material" label="Material" type="string" defaultValue="Schrauben" />
+          <camunda:formField id="pps_mat_location" label="Material Location" type="string" defaultValue="box_01" />
+          <camunda:formField id="pps_quantity" label="Quantity" type="long" defaultValue="1" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0zgzhjq</bpmn:outgoing>
@@ -38,9 +41,9 @@
           </camunda:inputParameter>
           <camunda:inputParameter name="inputParameters">
             <camunda:script scriptFormat="freemarker">[
-{ "name": "pps_material", "type" : "STRING", "value": "Schrauben"},
-{ "name": "pps_mat_location", "type" : "STRING", "value": "box_01"},
-{ "name": "pps_quantity", "type" : "INTEGER", "value": "4"}
+{ "name": "pps_material", "type" : "STRING", "value": "${pps_material}"},
+{ "name": "pps_mat_location", "type" : "STRING", "value": "${pps_mat_location}"},
+{ "name": "pps_quantity", "type" : "LONG", "value": "${pps_quantity}"}
 ]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
@@ -76,6 +79,14 @@
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="assembly_works_station_1.PP_SYM">
+      <bpmndi:BPMNEdge id="Flow_1bxbbie_di" bpmnElement="Flow_1bxbbie">
+        <di:waypoint x="740" y="117" />
+        <di:waypoint x="862" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0031odp_di" bpmnElement="Flow_0031odp">
+        <di:waypoint x="560" y="117" />
+        <di:waypoint x="640" y="117" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ielbcs_di" bpmnElement="Flow_0ielbcs">
         <di:waypoint x="380" y="117" />
         <di:waypoint x="460" y="117" />
@@ -84,28 +95,20 @@
         <di:waypoint x="215" y="117" />
         <di:waypoint x="280" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0031odp_di" bpmnElement="Flow_0031odp">
-        <di:waypoint x="560" y="117" />
-        <di:waypoint x="640" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1bxbbie_di" bpmnElement="Flow_1bxbbie">
-        <di:waypoint x="740" y="117" />
-        <di:waypoint x="862" y="117" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0yiawnn_di" bpmnElement="Activity_1qivhdf">
         <dc:Bounds x="280" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1li3pux_di" bpmnElement="Event_1li3pux">
-        <dc:Bounds x="862" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1hkr3da_di" bpmnElement="Activity_06gqm2l">
         <dc:Bounds x="460" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0b4z16h_di" bpmnElement="Activity_0b4z16h">
         <dc:Bounds x="640" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1li3pux_di" bpmnElement="Event_1li3pux">
+        <dc:Bounds x="862" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

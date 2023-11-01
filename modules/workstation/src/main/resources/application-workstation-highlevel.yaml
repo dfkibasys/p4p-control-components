@@ -1,4 +1,11 @@
+server:
+  port: 8089
+  accessibleEndpoint: http://localhost:8089
 basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12686
+    httpsPort: 8444
   controlcomponent:
     id: assembly_works_station_1 #remove 's' when updated in AAS
     name: Workstation

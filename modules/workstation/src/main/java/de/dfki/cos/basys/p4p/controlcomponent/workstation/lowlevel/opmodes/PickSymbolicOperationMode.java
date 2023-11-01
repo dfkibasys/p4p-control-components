@@ -20,7 +20,7 @@ public class PickSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Parameter(name = "pps_mat_location", direction = ParameterDirection.IN)
     private String mat_location = "";
     @Parameter(name = "pps_quantity", direction = ParameterDirection.IN)
-    private int quantity = 1;
+    private long quantity = 1;
     @Parameter(name = "pick_quantity_taken", direction = ParameterDirection.OUT)
     private int quantity_taken = 0;
 
@@ -32,7 +32,7 @@ public class PickSymbolicOperationMode extends BaseWorkstationOperationMode {
     public void onStarting() {
         super.onStarting();
         executing = true;
-        getService(WorkstationService.class).pickSymbolic(material, mat_location, quantity);
+        getService(WorkstationService.class).pickSymbolic(material, mat_location, (int) quantity);
     }
 
     @Override

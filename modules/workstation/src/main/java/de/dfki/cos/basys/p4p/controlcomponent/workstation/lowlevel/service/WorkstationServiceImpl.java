@@ -20,12 +20,13 @@ import java.util.function.Consumer;
 @Service
 public class WorkstationServiceImpl implements WorkstationService, ServiceProvider<WorkstationService> {
 
-    static int expected_quantity = 1;
-    static int current_quantity = 0;
+    public static int expected_quantity = 1;
+    public static int current_quantity = 0;
+    public static String expected_mat_location = "";
+    public static String expected_material = "";
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
-    private String expected_mat_location = null;
 
     @Autowired
     StreamBridge streamBridge;
@@ -55,7 +56,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     }
 
     @Override
-    public void pickSymbolic(String mat_location, int quantity) {
+    public void pickSymbolic(String material, String mat_location, int quantity) {
         // e.g. mat_location: box_01 | quantity: 4
         // onStarting
         // Find validation services / sensors (Logitech camera, scale)
@@ -76,6 +77,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
          */
         expected_mat_location = mat_location;
         expected_quantity = quantity;
+        expected_material = material;
 
         MissionState.getInstance().setState(MState.EXECUTING);
 
@@ -124,7 +126,15 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     }
 
     @Bean
-    public Consumer<MaterialRemovedEvent> scaleController0Updates() { return this::handleScaleController0Updates;}
+    public Consumer<MaterialRemovedEvent> scaleController0Updates() { return this::handleScaleControllerUpdates;}
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController1Updates() { return this::handleScaleControllerUpdates;}
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController2Updates() { return this::handleScaleControllerUpdates;}
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController3Updates() { return this::handleScaleControllerUpdates;}
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController4Updates() { return this::handleScaleControllerUpdates;}
 
     private void handleAssemblyEventUpdates(AssemblyEvent assemblyEvent) {
         LOGGER.info("Assembly Event arrived {}", assemblyEvent);
@@ -150,8 +160,15 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         streamBridge.send("notification", not);
     }
 
-    private void handleScaleController0Updates(MaterialRemovedEvent materialRemovedEvent) {
+    private void handleScaleControllerUpdates(MaterialRemovedEvent materialRemovedEvent) {
+        // Skip validation for other scales
+        if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())) return;
+
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
         current_quantity -= materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
+        Notification not = new Notification();
+        not.setType(NotificationType.WRONG_QUANTITY_TAKEN);
+        not.setShow(current_quantity != expected_quantity);
+        streamBridge.send("notification", not);
     }
 }

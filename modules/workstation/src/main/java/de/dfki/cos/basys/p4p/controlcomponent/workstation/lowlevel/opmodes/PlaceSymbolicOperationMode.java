@@ -8,12 +8,15 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes.BaseWorkstationOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationService;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationServiceImpl;
 
 @OperationMode(name = "PlaceSymbolic", shortName = "PLACESYM", description = "Place objects of specified type and amount at a specified target location",
         allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
         allowedModes = { ExecutionMode.AUTO, ExecutionMode.SIMULATE })
 public class PlaceSymbolicOperationMode extends BaseWorkstationOperationMode {
 
+    @Parameter(name = "pps_workstep_id", direction = ParameterDirection.IN)
+    private String workstepId = "";
     @Parameter(name = "place_material", direction = ParameterDirection.IN)
     private String material = "";
     @Parameter(name = "place_quantity", direction = ParameterDirection.IN)
@@ -31,16 +34,20 @@ public class PlaceSymbolicOperationMode extends BaseWorkstationOperationMode {
     public void onStarting() {
         super.onStarting();
         executing = true;
-        getService(WorkstationService.class).placeSymbolic(material, quantity, target_location);
+        getService(WorkstationService.class).placeSymbolic(workstepId);
     }
 
     @Override
     public void onCompleting() {
         super.onCompleting();
+        WorkstationServiceImpl.expected_workstep_id = "";
+        WorkstationServiceImpl.current_workstep_id = "-1";
     }
 
     @Override
     public void onStopping() {
         super.onStopping();
+        WorkstationServiceImpl.expected_workstep_id = "";
+        WorkstationServiceImpl.current_workstep_id = "-1";
     }
 }

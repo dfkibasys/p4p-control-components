@@ -14,16 +14,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 @Service
 public class WorkstationServiceImpl implements WorkstationService, ServiceProvider<WorkstationService> {
 
+    static CountDownLatch latch;
     public static int expected_quantity = 1;
     public static int current_quantity = 0;
     public static String expected_mat_location = "";
     public static String expected_material = "";
+    public static String expected_workstep_id = "";
+    public static String current_workstep_id = "-1";
+    public static String previous_orientation = null;
+    private final float CONFIDENCE_THRESHOLD = 0.95F;
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
@@ -81,23 +86,35 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
 
         MissionState.getInstance().setState(MState.EXECUTING);
 
-        while (expected_quantity != current_quantity) {
-            try {
-                LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        latch = new CountDownLatch(1);
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         MissionState.getInstance().setState(MState.DONE);
     }
 
     @Override
-    public void placeSymbolic(String material, int quantity, String target_location) {
+    public void placeSymbolic(String workstepId) {
         // onStarting
         // Find validation services / sensors (Logitech camera, Flir camera)
         // Subscribe to respective events
+        expected_workstep_id = workstepId;
+
+        MissionState.getInstance().setState(MState.EXECUTING);
+
+        latch = new CountDownLatch(1);
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        MissionState.getInstance().setState(MState.DONE);
     }
 
     @Override
@@ -138,6 +155,48 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
 
     private void handleAssemblyEventUpdates(AssemblyEvent assemblyEvent) {
         LOGGER.info("Assembly Event arrived {}", assemblyEvent);
+        // Maybe add orientation property instead of combining it with workstepId
+        if (assemblyEvent.getConfidence() >= CONFIDENCE_THRESHOLD && !Objects.equals(assemblyEvent.getWorkstepId(), "error")){
+            current_workstep_id = assemblyEvent.getWorkstepId().substring(0,10); // workstep is encoded as workstep_1_0, where 0 stands for the orientation
+        }
+
+        LOGGER.info("Expected: {}, Current: {}", expected_workstep_id, current_workstep_id);
+        if(Objects.equals(expected_workstep_id, current_workstep_id)){
+            if (previous_orientation != null) {
+                // previous workstep had an orientation
+                try {
+                    // current workstep depends on previous orientation
+                    String current_orientation = assemblyEvent.getWorkstepId().substring(11,12);
+
+                    if (current_orientation.equals(previous_orientation)){
+                        // same orientation -> variable doesn't need to be updated, just continue
+                        LOGGER.info("Orientations are equal");
+                        latch.countDown();
+                    }
+                    else {
+                        // TODO: show notification in dashboard
+                        LOGGER.info("Orientations differ");
+                    }
+                }
+                catch (IndexOutOfBoundsException ignored) {
+                    // current workstep doesn't depend on previous orientation -> reset variable and continue
+                    LOGGER.info("Orientations won't matter in current workstep");
+                    previous_orientation = null;
+                    latch.countDown();
+                }
+            }
+            else {
+                LOGGER.info("Orientations won't matter in previous workstep");
+                // current workstep doesn't depend on previous orientation
+                try {
+                    // if current workstep has orientation, save it for next one
+                    previous_orientation = assemblyEvent.getWorkstepId().substring(11,12);
+                }
+                catch (IndexOutOfBoundsException ignored) {}
+
+                latch.countDown();
+            }
+        }
     }
 
     private void handleHandEventUpdates(HandEvent handEvent) {
@@ -170,5 +229,8 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         not.setType(NotificationType.WRONG_QUANTITY_TAKEN);
         not.setShow(current_quantity != expected_quantity);
         streamBridge.send("notification", not);
+
+        LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
+        if (expected_quantity == current_quantity) latch.countDown();
     }
 }

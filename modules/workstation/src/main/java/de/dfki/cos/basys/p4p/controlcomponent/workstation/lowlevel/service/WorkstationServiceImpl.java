@@ -19,13 +19,13 @@ import java.util.function.Consumer;
 
 @Service
 public class WorkstationServiceImpl implements WorkstationService, ServiceProvider<WorkstationService> {
+
+    static int expected_quantity = 1;
+    static int current_quantity = 0;
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
-
     private String expected_mat_location = null;
-    private int expected_quantity = 1;
-    private int current_quantity = 0;
 
     @Autowired
     StreamBridge streamBridge;
@@ -74,13 +74,14 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
          * - ?mat_location reached && withdrawal of ?quantity ?material  -> complete (clear hints)
          * - ?mat_location reached && withdrawal of <?quantity && hand retrackted
          */
-        this.expected_mat_location = mat_location;
-        this.expected_quantity = quantity;
+        expected_mat_location = mat_location;
+        expected_quantity = quantity;
 
         MissionState.getInstance().setState(MState.EXECUTING);
 
-        while (this.expected_quantity != this.current_quantity) {
+        while (expected_quantity != current_quantity) {
             try {
+                LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -133,7 +134,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         LOGGER.info("Hand Event arrived {}", handEvent);
         Notification not = new Notification();
 
-        switch(handEvent.getType()){
+        switch (handEvent.getType()) {
             case LEADING_INTO_DIRECTION:
                 not.setType(NotificationType.LEADING_INTO_WRONG_DIRECTION);
                 break;
@@ -151,6 +152,6 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
 
     private void handleScaleController0Updates(MaterialRemovedEvent materialRemovedEvent) {
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
-        this.current_quantity -= materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
+        current_quantity -= materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
     }
 }

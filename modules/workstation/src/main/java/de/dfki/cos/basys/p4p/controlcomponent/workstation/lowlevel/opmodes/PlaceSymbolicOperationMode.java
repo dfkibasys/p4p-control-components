@@ -9,6 +9,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes.BaseWorkstationOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationService;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationServiceImpl;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus;
 
 @OperationMode(name = "PlaceSymbolic", shortName = "PLACESYM", description = "Place objects of specified type and amount at a specified target location",
         allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
@@ -40,6 +41,7 @@ public class PlaceSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Override
     public void onCompleting() {
         super.onCompleting();
+        WorkstationServiceImpl.currentOpMode = WorkstationStatus.OPMode.NONE;
         WorkstationServiceImpl.expected_workstep_id = "";
         WorkstationServiceImpl.current_workstep_id = "-1";
     }
@@ -47,6 +49,7 @@ public class PlaceSymbolicOperationMode extends BaseWorkstationOperationMode {
     @Override
     public void onStopping() {
         super.onStopping();
+        WorkstationServiceImpl.currentOpMode = WorkstationStatus.OPMode.NONE;
         WorkstationServiceImpl.expected_workstep_id = "";
         WorkstationServiceImpl.current_workstep_id = "-1";
     }

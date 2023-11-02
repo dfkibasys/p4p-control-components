@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
-import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus.MState;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -28,7 +28,8 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     public static String expected_workstep_id = "";
     public static String current_workstep_id = "-1";
     public static String previous_orientation = null;
-    private final float CONFIDENCE_THRESHOLD = 0.95F;
+    public static OPMode currentOpMode = OPMode.NONE;
+    private final float CONFIDENCE_THRESHOLD = 0.80F;
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
@@ -80,6 +81,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
          * - ?mat_location reached && withdrawal of ?quantity ?material  -> complete (clear hints)
          * - ?mat_location reached && withdrawal of <?quantity && hand retrackted
          */
+        currentOpMode = OPMode.PICK;
         expected_mat_location = mat_location;
         expected_quantity = quantity;
         expected_material = material;
@@ -102,6 +104,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         // onStarting
         // Find validation services / sensors (Logitech camera, Flir camera)
         // Subscribe to respective events
+        currentOpMode = OPMode.PLACE;
         expected_workstep_id = workstepId;
 
         MissionState.getInstance().setState(MState.EXECUTING);
@@ -142,9 +145,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         return this::handleHandEventUpdates;
     }
 
-    @Bean
-    public Consumer<MaterialRemovedEvent> scaleController0Updates() { return this::handleScaleControllerUpdates;}
-    @Bean
+   @Bean
     public Consumer<MaterialRemovedEvent> scaleController1Updates() { return this::handleScaleControllerUpdates;}
     @Bean
     public Consumer<MaterialRemovedEvent> scaleController2Updates() { return this::handleScaleControllerUpdates;}
@@ -152,8 +153,13 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     public Consumer<MaterialRemovedEvent> scaleController3Updates() { return this::handleScaleControllerUpdates;}
     @Bean
     public Consumer<MaterialRemovedEvent> scaleController4Updates() { return this::handleScaleControllerUpdates;}
+    @Bean
+    public Consumer<MaterialRemovedEvent> scaleController5Updates() { return this::handleScaleControllerUpdates;}
 
     private void handleAssemblyEventUpdates(AssemblyEvent assemblyEvent) {
+        //Only evaluate in PLACE opMode
+        if (currentOpMode != OPMode.PLACE) return;
+
         LOGGER.info("Assembly Event arrived {}", assemblyEvent);
         // Maybe add orientation property instead of combining it with workstepId
         if (assemblyEvent.getConfidence() >= CONFIDENCE_THRESHOLD && !Objects.equals(assemblyEvent.getWorkstepId(), "error")){
@@ -206,6 +212,9 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     }
 
     private void handleHandEventUpdates(HandEvent handEvent) {
+        //Only evaluate in PICK opMode
+        if (currentOpMode != OPMode.PICK) return;
+
         LOGGER.info("Hand Event arrived {}", handEvent);
         Notification not = new Notification();
 
@@ -226,11 +235,14 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     }
 
     private void handleScaleControllerUpdates(MaterialRemovedEvent materialRemovedEvent) {
+        //Only evaluate in PICK opMode
+        if (currentOpMode != OPMode.PICK) return;
+
         // Skip validation for other scales
         if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())) return;
 
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
-        current_quantity -= materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
+        current_quantity += materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
         Notification not = new Notification();
         not.setType(NotificationType.WRONG_QUANTITY_TAKEN);
         not.setShow(current_quantity != expected_quantity);

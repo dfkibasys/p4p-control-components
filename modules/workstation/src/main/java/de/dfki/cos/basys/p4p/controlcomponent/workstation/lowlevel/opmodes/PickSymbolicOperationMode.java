@@ -9,6 +9,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.opmodes.BaseWorkstationOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationService;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationServiceImpl;
+import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus;
 
 @OperationMode(name = "PickSymbolic", shortName = "PICK_SYM", description = "Pick objects of specified type and amount from its current location",
         allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
@@ -39,6 +40,7 @@ public class PickSymbolicOperationMode extends BaseWorkstationOperationMode {
     public void onCompleting() {
         super.onCompleting();
         // reset variables
+        WorkstationServiceImpl.currentOpMode = WorkstationStatus.OPMode.NONE;
         WorkstationServiceImpl.expected_quantity = 1;
         WorkstationServiceImpl.current_quantity = 0;
         WorkstationServiceImpl.expected_mat_location = "";
@@ -49,6 +51,7 @@ public class PickSymbolicOperationMode extends BaseWorkstationOperationMode {
     public void onStopping() {
         super.onStopping();
         // reset variables
+        WorkstationServiceImpl.currentOpMode = WorkstationStatus.OPMode.NONE;
         WorkstationServiceImpl.expected_quantity = 1;
         WorkstationServiceImpl.current_quantity = 0;
         WorkstationServiceImpl.expected_mat_location = "";

@@ -6,4 +6,8 @@ public class WorkstationStatus {
 		ACCEPTED, REJECTED, EXECUTING, DONE, PENDING, FAILED, ABORTED
 	}
 
+	public enum OPMode {
+		NONE, PICK, PLACE
+	}
+
 }

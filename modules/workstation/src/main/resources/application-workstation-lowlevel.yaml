@@ -22,7 +22,7 @@ basys:
 spring:
   cloud:
     function:
-      definition: assemblyEventUpdates;handEventUpdates;scaleController0Updates;scaleController1Updates;scaleController2Updates;scaleController3Updates;scaleController4Updates
+      definition: assemblyEventUpdates;handEventUpdates;scaleController1Updates;scaleController2Updates;scaleController3Updates;scaleController4Updates;scaleController5Updates
     stream:
       kafka:
         binder:
@@ -36,10 +36,6 @@ spring:
           destination: aws.hand-event
           content-type: application/*+avro
           binder: kafka-avro
-        scaleController0Updates-in-0:
-          destination: scale-0-pieceCount
-          content-type: application/json
-          binder: kafka-json
         scaleController1Updates-in-0:
           destination: scale-1-pieceCount
           content-type: application/json
@@ -54,6 +50,10 @@ spring:
           binder: kafka-json
         scaleController4Updates-in-0:
           destination: scale-4-pieceCount
+          content-type: application/json
+          binder: kafka-json
+        scaleController5Updates-in-0:
+          destination: scale-5-pieceCount
           content-type: application/json
           binder: kafka-json
         notification:

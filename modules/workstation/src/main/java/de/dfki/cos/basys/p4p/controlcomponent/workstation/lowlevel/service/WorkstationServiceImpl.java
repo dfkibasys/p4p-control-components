@@ -167,9 +167,6 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
 
             LOGGER.info("Expected: {}, Current: {}", expected_workstep_id, current_workstep_id);
             if(Objects.equals(expected_workstep_id, current_workstep_id)){
-                Notification not = new Notification();
-                not.setType(NotificationType.WRONG_ORIENTATION);
-
                 if (previous_orientation != null) {
                     // previous workstep had an orientation
                     try {
@@ -179,14 +176,12 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                         if (current_orientation.equals(previous_orientation)){
                             // same orientation -> variable doesn't need to be updated, just continue
                             LOGGER.info("Orientations are equal");
-                            not.setShow(false);
-                            streamBridge.send("notification", not);
+                            sendNotification(NotificationType.WRONG_ORIENTATION, false);
                             latch.countDown();
                         }
                         else {
                             LOGGER.info("Orientations differ");
-                            not.setShow(true);
-                            streamBridge.send("notification", not);
+                            sendNotification(NotificationType.WRONG_ORIENTATION, true);
                         }
                     }
                     catch (IndexOutOfBoundsException ignored) {
@@ -216,45 +211,61 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         if (currentOpMode != OPMode.PICK) return;
 
         LOGGER.info("Hand Event arrived {}", handEvent);
-        Notification not = new Notification();
+        NotificationType type;
 
         switch (handEvent.getType()) {
             case LEADING_INTO_DIRECTION:
-                not.setType(NotificationType.LEADING_INTO_WRONG_DIRECTION);
+                type = NotificationType.LEADING_INTO_WRONG_DIRECTION;
                 break;
             case LOCATION_REACHED:
-                not.setType(NotificationType.WRONG_LOCATION_REACHED);
+                type = NotificationType.WRONG_LOCATION_REACHED;
                 break;
             case GRASPED_AT_LOCATION:
-                not.setType(NotificationType.GRASPED_AT_WRONG_LOCATION);
+                type = NotificationType.GRASPED_AT_WRONG_LOCATION;
                 break;
+            default:
+                type = null;
         }
-
-        not.setShow(!Objects.equals(handEvent.getTarget(), expected_mat_location));
-        streamBridge.send("notification", not);
+        sendNotification(type, !Objects.equals(handEvent.getTarget(), expected_mat_location));
     }
 
     private void handleScaleControllerUpdates(MaterialRemovedEvent materialRemovedEvent) {
         //Only evaluate in PICK opMode
         if (currentOpMode != OPMode.PICK) return;
 
-        // Skip validation for other scales
-        if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())) return;
+        // Show notification when interacting with another scale
+        if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())){
+            sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
+            return;
+        }
+        sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
 
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
         current_quantity += materialRemovedEvent.getRemoved();
-        Notification not = new Notification();
-        not.setType(NotificationType.WRONG_QUANTITY_TAKEN);
-        not.setShow(current_quantity != expected_quantity);
-        streamBridge.send("notification", not);
+        sendNotification(NotificationType.WRONG_QUANTITY_TAKEN, current_quantity != expected_quantity);
 
         LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
         if (expected_quantity == current_quantity) {
+            // Block further hand events
+            currentOpMode = OPMode.NONE;
+
+            // Reset notifications in dashboard
+            sendNotification(NotificationType.LEADING_INTO_WRONG_DIRECTION, false);
+            sendNotification(NotificationType.WRONG_LOCATION_REACHED, false);
+            sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
+
             // Send notification to check material in dashboard
             StepChange sc = new StepChange();
             sc.setWorkstepId("checkMaterial");
             streamBridge.send("stepChange", sc);
             latch.countDown();
         }
+    }
+
+    private void sendNotification(NotificationType type, boolean show) {
+        Notification not = new Notification();
+        not.setType(type);
+        not.setShow(show);
+        streamBridge.send("notification", not);
     }
 }

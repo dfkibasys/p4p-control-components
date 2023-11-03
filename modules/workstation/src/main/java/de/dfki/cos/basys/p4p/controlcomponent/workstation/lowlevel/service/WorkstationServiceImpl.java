@@ -242,13 +242,19 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())) return;
 
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
-        current_quantity += materialRemovedEvent.getRemoved(); //amount for taken material is negative, so deduct from current quantity
+        current_quantity += materialRemovedEvent.getRemoved();
         Notification not = new Notification();
         not.setType(NotificationType.WRONG_QUANTITY_TAKEN);
         not.setShow(current_quantity != expected_quantity);
         streamBridge.send("notification", not);
 
         LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
-        if (expected_quantity == current_quantity) latch.countDown();
+        if (expected_quantity == current_quantity) {
+            // Send notification to check material in dashboard
+            StepChange sc = new StepChange();
+            sc.setWorkstepId("checkMaterial");
+            streamBridge.send("stepChange", sc);
+            latch.countDown();
+        }
     }
 }

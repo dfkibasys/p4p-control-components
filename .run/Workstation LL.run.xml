@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Workstation LL" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="EXTERNAL_HOSTNAME" value="localhost" />
+      <env name="KAFKA_BROKER_ENDPOINT" value="basys-lnv-1.mrk40.dfki.lan:9092" />
+      <env name="SCHEMA_REGISTRY_ENDPOINT" value="http://basys-lnv-1.mrk40.dfki.lan:8081" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.workstation.ControlComponentApplication" />
+    <module name="workstation" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=workstation-lowlevel,mrklab" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.dfki.cos.basys.p4p.controlcomponent.workstation.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

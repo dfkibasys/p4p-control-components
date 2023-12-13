@@ -57,3 +57,8 @@ docker-publish-worker:
   extends: .docker-publish-module
   variables:
     MODULE_NAME: worker
+
+docker-publish-workstation:
+  extends: .docker-publish-module
+  variables:
+    MODULE_NAME: workstation

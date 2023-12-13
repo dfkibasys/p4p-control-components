@@ -1,0 +1,25 @@
+server:
+  port: 8089
+  accessibleEndpoint: http://localhost:8089
+basys:
+  opcuaServer:
+    certsFolder: ./certs
+    tcpPort: 12686
+    httpsPort: 8444
+  controlcomponent:
+    id: assembly_works_station_1 #remove 's' when updated in AAS
+    name: Workstation
+    operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.workstation.highlevel.opmodes
+    initialExecutionMode: AUTO
+    executionModes:
+      auto:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true
+        service:
+          implementationJavaClass: de.dfki.cos.basys.controlcomponent.camunda.service.CamundaServiceImpl
+          connectionString: http://camunda.basys-lnv-1.mrk40.dfki.lan:9080/engine-rest
+          #properties:
+            #prop1: value1
+      simulate:
+        executionModeChangeDisabled: true
+        occupationCheckDisabled: true

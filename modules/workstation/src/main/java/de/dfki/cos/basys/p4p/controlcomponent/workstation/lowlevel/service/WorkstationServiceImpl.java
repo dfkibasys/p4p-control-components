@@ -163,6 +163,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         LOGGER.info("Assembly Event arrived {}", assemblyEvent);
         // Maybe add orientation property instead of combining it with workstepId
         if (assemblyEvent.getConfidence() >= CONFIDENCE_THRESHOLD && !Objects.equals(assemblyEvent.getWorkstepId(), "error")){
+            sendNotification(NotificationType.WRONG_WORKSTEP, false);
             current_workstep_id = assemblyEvent.getWorkstepId().substring(0,10); // workstep is encoded as workstep_1_0, where 0 stands for the orientation
 
             LOGGER.info("Expected: {}, Current: {}", expected_workstep_id, current_workstep_id);
@@ -203,6 +204,10 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                     latch.countDown();
                 }
             }
+        }
+        else if (Objects.equals(assemblyEvent.getWorkstepId(), "error")){
+            LOGGER.info("Workstep wrong");
+            sendNotification(NotificationType.WRONG_WORKSTEP, true);
         }
     }
 

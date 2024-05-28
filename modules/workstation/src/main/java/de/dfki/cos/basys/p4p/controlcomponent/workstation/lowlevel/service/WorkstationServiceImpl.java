@@ -205,7 +205,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                 }
             }
         }
-        else if (Objects.equals(assemblyEvent.getWorkstepId(), "workstep_error")){
+        else if (Objects.equals(assemblyEvent.getWorkstepId(), "workstep_error") || assemblyEvent.getConfidence() < CONFIDENCE_THRESHOLD){
             LOGGER.info("Workstep wrong");
             sendNotification(NotificationType.WRONG_WORKSTEP, true);
         }

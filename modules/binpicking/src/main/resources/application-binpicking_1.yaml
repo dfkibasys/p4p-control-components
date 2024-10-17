@@ -1,7 +1,7 @@
 basys:
   opcuaServer:
     certsFolder: ./certs
-    tcpPort: 12685
+    tcpPort: 12700
     httpsPort: 8443
   controlcomponent:
     id: binpicking_1

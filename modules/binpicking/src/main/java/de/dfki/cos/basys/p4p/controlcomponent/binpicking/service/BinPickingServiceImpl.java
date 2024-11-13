@@ -7,6 +7,8 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -50,14 +52,17 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
                     try {
                         mqttClient.subscribe(workStateTopic, QOS, (topic, message) -> {
                             String sMessage = new String(message.getPayload());
-                            if (sMessage.contains("detecting")) {
+                            if (sMessage.contains("object detection")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.DETECTING);
-                            } else if (sMessage.contains("path planning")) {
+                            } else if (sMessage.contains("robot path planning")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.PATH_PLANNING);
-                            } else if (sMessage.contains("pose estimation")) {
+                            } else if (sMessage.contains("3D pose estimation")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.POSE_ESTIMATION);
                             } else if (sMessage.contains("pick and place")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.PICK_AND_PLACE);
+                            }
+                            else{
+                                LOG.warn("Received unknown work state message {}! Ignoring.", sMessage);
                             }
 
                         }).waitForCompletion();
@@ -105,21 +110,26 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
         String requestTopic = "binpicking/command/request";
 
         // TODO
-        StringBuilder sb = new StringBuilder("[");
-
-        for (int i = 0; i < number; i++) {
-            sb.append("\"").append(partType).append("\"");
-            if (i < number - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("]");
-
-        String payload = sb.toString();
-        //String payload = "[\"Upper_BackSide\", \"Lower_FrontSide\", \"Lower_BackSide\", \"Upper_FrontSide\"]";
+//        StringBuilder sb = new StringBuilder("[");
+//
+//        for (int i = 0; i < number; i++) {
+//            sb.append(partType); //sb.append("\"").append(partType).append("\"");
+//            if (i < number - 1) {
+//                sb.append(", ");
+//            }
+//        }
+//        sb.append("]");
+//
+//        String payload = sb.toString();
+//        //String payload = "[Upper_BackSide, Lower_FrontSide, Lower_BackSide, Upper_FrontSide]";
+        JsonObject payloadJson = Json.createObjectBuilder()
+                .add("type", partType)
+                .add("count", number)
+                .add("location", targetLocation)
+                .build();
 
         subscribeToResponse(responseTopic);
-        publish(requestTopic, payload);
+        publish(requestTopic, payloadJson.toString());
     }
 
     @Override
@@ -144,7 +154,7 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
         try {
             mqttClient.subscribe(responseTopic, QOS, (topic, message) -> {
                 String sMessage = new String(message.getPayload());
-                if (sMessage.contains("Accepted")) {
+                if (sMessage.contains("accepted")) {
                     MissionState.getInstance().setState(BinPickingStatus.MState.ACCEPTED);
                 }
                 else // Rejected

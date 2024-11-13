@@ -51,7 +51,7 @@ public abstract class BaseBinPickingOperationMode extends BaseOperationMode<BinP
 			component.setWorkState(service.getWorkState().toString());
 			LOG.debug("Current mission state is {}.", state);
 			switch(state.getState()) {
-				case PENDING:
+				case NONE:
 					break;
 				case EXECUTING:
 					break;

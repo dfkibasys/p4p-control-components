@@ -4,10 +4,10 @@ basys:
     tcpPort: 12700
     httpsPort: 8443
   controlcomponent:
-    id: binpicking_1
+    id: bin_picking_1
     name: BinPickingStation-1
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.binpicking.opmodes
-    initialExecutionMode: SIMULATE
+    initialExecutionMode: AUTO
     executionModes:
       auto:
         executionModeChangeDisabled: false

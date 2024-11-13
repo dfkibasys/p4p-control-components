@@ -7,7 +7,7 @@
     </envs>
     <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.binpicking.ControlComponentApplication" />
     <module name="binpicking" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=binpicking_1,mrklab" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=bin_picking_1,mrklab" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="de.dfki.cos.basys.p4p.controlcomponent.binpicking.*" />

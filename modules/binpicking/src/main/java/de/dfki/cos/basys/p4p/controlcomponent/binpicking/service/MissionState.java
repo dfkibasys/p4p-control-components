@@ -12,7 +12,7 @@ public class MissionState {
     }
 
     private MissionState() {
-        this.currentState = BinPickingStatus.MState.PENDING;
+        this.currentState = BinPickingStatus.MState.NONE;
     }
 
     public static MissionState getInstance() {

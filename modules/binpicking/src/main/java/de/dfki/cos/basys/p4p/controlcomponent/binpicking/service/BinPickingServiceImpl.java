@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -130,6 +132,26 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
 
         subscribeToResponse(responseTopic);
         publish(requestTopic, payloadJson.toString());
+    }
+
+    @Override
+    public void provideParts(List<ProductPartRequest> order) {
+        String responseTopic = "binpicking/command/response";
+        String requestTopic = "binpicking/command/request";
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        for (ProductPartRequest req : order) {
+            JsonObject payloadJson = Json.createObjectBuilder()
+                    .add("type", req.getType())
+                    .add("count", req.getCount())
+                    .add("location", req.getLocation())
+                    .build();
+            arrayBuilder.add(payloadJson);
+        }
+
+        subscribeToResponse(responseTopic);
+        publish(requestTopic, arrayBuilder.build().toString());
     }
 
     @Override

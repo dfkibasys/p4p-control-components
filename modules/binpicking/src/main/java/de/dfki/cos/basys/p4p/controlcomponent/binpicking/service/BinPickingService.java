@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface BinPickingService {
 	void provideParts(String partType, int number, String targetLocation);
+	void provideParts(List<ProductPartRequest> order);
 	MissionState getMissionState();
 	WorkState getWorkState();
 	void reset();

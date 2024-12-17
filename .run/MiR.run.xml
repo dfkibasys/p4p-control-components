@@ -3,10 +3,11 @@
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="EXTERNAL_HOSTNAME" value="localhost" />
+      <env name="EXTERNAL_HOSTNAME" value="10.107.0.135" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.mir.ControlComponentApplication" />
     <module name="mir" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=mir100_1,mrklab,simrk" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="de.dfki.cos.basys.p4p.controlcomponent.mir.*" />

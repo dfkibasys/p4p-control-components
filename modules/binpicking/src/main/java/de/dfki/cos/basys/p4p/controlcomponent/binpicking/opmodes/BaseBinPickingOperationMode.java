@@ -49,7 +49,7 @@ public abstract class BaseBinPickingOperationMode extends BaseOperationMode<BinP
 			BinPickingService service = getService(BinPickingService.class);
 			state = service.getMissionState();
 			component.setWorkState(service.getWorkState().toString());
-			LOG.debug("Current mission state is {}.", state);
+			LOG.info("Current mission state is {}.", state);
 			switch(state.getState()) {
 				case NONE:
 					break;

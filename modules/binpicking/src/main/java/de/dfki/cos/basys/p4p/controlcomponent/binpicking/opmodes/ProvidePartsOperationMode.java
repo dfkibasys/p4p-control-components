@@ -42,7 +42,8 @@ public class ProvidePartsOperationMode extends BaseBinPickingOperationMode {
 
 		// start live image listeners
 		MissionState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(BinPickingStatus.MState.ACCEPTED)) {
+			if (newState.equals(BinPickingStatus.MState.ACCEPTED) || newState.equals(BinPickingStatus.MState.EXECUTING)) {
+				executing = true;
 				component.setErrorStatus(0, "OK");
 				counter.countDown();
 			}

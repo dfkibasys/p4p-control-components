@@ -54,6 +54,7 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
                     try {
                         mqttClient.subscribe(workStateTopic, QOS, (topic, message) -> {
                             String sMessage = new String(message.getPayload());
+                            LOG.info("Received working state message: {}", sMessage);
                             if (sMessage.contains("object detection")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.DETECTING);
                             } else if (sMessage.contains("robot path planning")) {

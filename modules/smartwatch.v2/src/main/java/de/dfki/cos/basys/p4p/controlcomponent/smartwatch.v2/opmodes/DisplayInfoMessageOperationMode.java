@@ -33,9 +33,9 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 
 		counter = new CountDownLatch(1);
 
-		// start task state listeners
 		TaskState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(SmartwatchStatus.TState.ACCEPTED)) {
+			if (newState.equals(SmartwatchStatus.TState.ACCEPTED) || newState.equals(SmartwatchStatus.TState.EXECUTING)) {
+				executing = true;
 				component.setErrorStatus(0, "OK");
 				counter.countDown();
 			}
@@ -45,6 +45,11 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 			}
 		});
 
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");
+
+		// Start Sorting and providing of specified part types in specified number at specified symbolic target location
+		getService(SmartwatchService.class).displayInfoMessage(message);
 		sleep(1000);
 
 		try {

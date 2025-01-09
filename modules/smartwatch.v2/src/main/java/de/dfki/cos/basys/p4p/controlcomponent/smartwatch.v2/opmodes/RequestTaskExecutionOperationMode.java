@@ -1,6 +1,7 @@
 package de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.opmodes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
@@ -11,6 +12,7 @@ import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -34,9 +36,9 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 
 		counter = new CountDownLatch(1);
 
-		// start task state listeners
 		TaskState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(SmartwatchStatus.TState.ACCEPTED)) {
+			if (newState.equals(SmartwatchStatus.TState.ACCEPTED) || newState.equals(SmartwatchStatus.TState.EXECUTING)) {
+				executing = true;
 				component.setErrorStatus(0, "OK");
 				counter.countDown();
 			}
@@ -46,6 +48,15 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 			}
 		});
 
+		// precautionary set timeout error (gets overridden in case of success)
+		component.setErrorStatus(4, "timeout");
+		TaskRequest tr = null;
+		try {
+			tr = new ObjectMapper().readValue(task, new TypeReference<TaskRequest>() {});
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+		getService(SmartwatchService.class).requestTaskExecution(tr);
 		sleep(1000);
 
 		try {
@@ -54,7 +65,6 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

@@ -1,0 +1,175 @@
+package de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service;
+
+
+import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.dfki.cos.basys.common.component.ComponentContext;
+import de.dfki.cos.basys.common.component.ServiceProvider;
+import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchStatus.*;
+
+
+public class SmartwatchServiceImpl implements de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService, ServiceProvider<de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService>{
+	private Properties config = null;
+	private static final Logger LOG = LoggerFactory.getLogger(SmartwatchServiceImpl.class);
+	private static final String PREFIX = "MqttAsyncClient-paho-v3";
+	private static final Integer QOS = 0;
+	IMqttAsyncClient mqttClient = null;
+	String clientId = null;
+
+	public SmartwatchServiceImpl(Properties config) {
+		clientId = PREFIX + UUID.randomUUID().toString();
+		this.config = config;
+	}
+	
+	@Override
+	public boolean connect(ComponentContext context, String connectionString) {
+		MemoryPersistence persistence = new MemoryPersistence();
+		final MqttConnectOptions options = new MqttConnectOptions();
+
+		options.setUserName(config.getProperty("mqttUsername"));
+		options.setPassword(config.getProperty("mqttPassword").toCharArray());
+		options.setCleanSession(true);
+		try {
+			mqttClient = new MqttAsyncClient(connectionString, clientId, persistence);
+		} catch (MqttException e) {
+			LOG.error("Generation of MqttAsyncClient failed wih {}!", e);
+			return false;
+		}
+		
+		try {
+			mqttClient.connect(options, null, new IMqttActionListener() {
+				@Override
+				public void onSuccess(IMqttToken asyncActionToken) {
+					LOG.debug(clientId + " successfully connected to {}.", connectionString);	
+					
+					// Subscribe task states
+					String taskStateTopic = "smartwatch/galaxy_watch_4_classic_1/taskStatus";
+					try {
+						mqttClient.subscribe(taskStateTopic, QOS, (topic, message) -> {
+							String sMessage = new String(message.getPayload());
+							if (sMessage.contains("aborted")) {
+								TaskState.getInstance().setState(TState.ABORTED);
+							} else if (sMessage.contains("failed")) {
+								TaskState.getInstance().setState(TState.FAILED);
+							} else if (sMessage.contains("done")) {
+								TaskState.getInstance().setState(TState.DONE);
+							} else if (sMessage.contains("paused")) {
+								TaskState.getInstance().setState(TState.PAUSED);
+							} else if (sMessage.contains("accepted")) {
+								TaskState.getInstance().setState(TState.ACCEPTED);
+							} else if (sMessage.contains("rejected")) {
+								TaskState.getInstance().setState(TState.REJECTED);
+							} else if (sMessage.contains("executing")) {
+								TaskState.getInstance().setState(TState.EXECUTING);
+							}
+						}).waitForCompletion();
+					} catch (MqttException e) {
+						LOG.warn(clientId + " could not subscribe to topic {}!", taskStateTopic);
+					}
+
+				}
+				
+				@Override
+				public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+					LOG.warn(clientId + " could not establish connection to {}!", connectionString);
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Establishing connection to {} failed with {}!", connectionString, e);
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public void disconnect() {
+		try {
+			mqttClient.disconnect().waitForCompletion();
+		} catch (MqttException e) {
+			LOG.warn(clientId + " failed to disconnect with {}!", e);
+		}		
+	}
+
+
+	@Override
+	public TaskState getTaskState() {
+		return TaskState.getInstance();
+	}
+
+	@Override
+	public void requestTaskExecution(TaskRequest request) {
+
+	}
+
+	@Override
+	public void displayInfoMessage(String message) {
+
+	}
+
+	@Override
+	public void reset() {
+		unsubscribe("smartwatch/galaxy_watch_4_classic_1/command/taskRequest/res");
+		unsubscribe("smartwatch/galaxy_watch_4_classic_1/command/displayInfoMessage/res");
+		
+		TaskState.getInstance().setState(TState.PENDING);
+	}
+
+	@Override
+	public boolean isConnected() {
+		return mqttClient != null && mqttClient.isConnected();
+	}
+
+	@Override
+	public de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService getService() {
+		return this;
+	}
+
+	private void subscribeToResponse(String responseTopic){
+		try {
+			mqttClient.subscribe(responseTopic, QOS, (topic, message) -> {
+				String sMessage = new String(message.getPayload());
+				if (sMessage.contains("accepted")) {
+					TaskState.getInstance().setState(TState.ACCEPTED);
+				}
+				else // Rejected
+				{
+					TaskState.getInstance().setState(TState.REJECTED);
+				}
+			}).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.error("Failed to subscribe to topic {} with {}.", responseTopic, e);
+		}
+	}
+
+	private void publish(String topic, String content) {
+		final MqttMessage message = new MqttMessage(content.getBytes());
+	    message.setQos(QOS);
+	    try {
+	    	mqttClient.publish(topic, message).waitForCompletion();
+	    	LOG.debug("publishing message {} on topic {}", message, topic);
+	    } catch (MqttException e) {
+	    	LOG.error("Failed to publish message {} on topic {} with {}", message, topic, e);
+	    	e.printStackTrace();
+	    }
+	}
+
+	private void unsubscribe(String topic) {
+		try {
+			mqttClient.unsubscribe(topic).waitForCompletion();
+		} catch (MqttException e) {
+			LOG.warn("Failed to unsubscribe from topic {} with {}!", topic, e);
+		}
+	}
+}

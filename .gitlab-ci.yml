@@ -62,3 +62,8 @@ docker-publish-workstation:
   extends: .docker-publish-module
   variables:
     MODULE_NAME: workstation
+
+docker-publish-smartwatch-v2:
+  extends: .docker-publish-module
+  variables:
+    MODULE_NAME: smartwatch.v2

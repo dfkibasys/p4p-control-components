@@ -81,6 +81,11 @@ public class ProvidePartsOperationMode extends BaseBinPickingOperationMode {
 
 	@Override
 	public void onStopping() {	
+
 		super.onStopping();
+
+		sleep(1000);
+
+		getService(BinPickingService.class).reset();
 	}
 }

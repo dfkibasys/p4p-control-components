@@ -14,7 +14,7 @@ basys:
         occupationCheckDisabled: false
         service:
           implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.binpicking.service.BinPickingServiceImpl
-          connectionString: tcp://10.6.0.50:1883
+          connectionString: tcp://10.6.0.112:1883
       simulate:
         executionModeChangeDisabled: true
         occupationCheckDisabled: true

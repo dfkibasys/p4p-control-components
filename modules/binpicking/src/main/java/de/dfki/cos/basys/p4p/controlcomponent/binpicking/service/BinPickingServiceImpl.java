@@ -13,6 +13,7 @@ import javax.json.JsonObject;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import de.dfki.cos.basys.p4p.controlcomponent.binpicking.service.BinPickingStatus;
 
 public class BinPickingServiceImpl implements BinPickingService, ServiceProvider<BinPickingService> {
 
@@ -56,13 +57,15 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
                             String sMessage = new String(message.getPayload());
                             LOG.info("Received working state message: {}", sMessage);
                             if (sMessage.contains("object detection")) {
-                                WorkState.getInstance().setState(BinPickingStatus.WState.DETECTING);
+                                WorkState.getInstance().setState(BinPickingStatus.WState.OBJECT_DETECTION);
                             } else if (sMessage.contains("robot path planning")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.PATH_PLANNING);
                             } else if (sMessage.contains("3D pose estimation")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.POSE_ESTIMATION);
-                            } else if (sMessage.contains("pick and place")) {
-                                WorkState.getInstance().setState(BinPickingStatus.WState.PICK_AND_PLACE);
+                            } else if (sMessage.contains("sorting")) {
+                                WorkState.getInstance().setState(BinPickingStatus.WState.SORTING_PARTS);
+                            } else if (sMessage.contains("providing")) {
+                                WorkState.getInstance().setState(BinPickingStatus.WState.PROVIDING_PARTS);
                             }
                             else{
                                 LOG.warn("Received unknown work state message {}! Ignoring.", sMessage);
@@ -112,19 +115,21 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
         String responseTopic = "binpicking/command/response";
         String requestTopic = "binpicking/command/request";
 
-        // TODO
-//        StringBuilder sb = new StringBuilder("[");
-//
-//        for (int i = 0; i < number; i++) {
-//            sb.append(partType); //sb.append("\"").append(partType).append("\"");
-//            if (i < number - 1) {
-//                sb.append(", ");
-//            }
-//        }
-//        sb.append("]");
-//
-//        String payload = sb.toString();
-//        //String payload = "[Upper_BackSide, Lower_FrontSide, Lower_BackSide, Upper_FrontSide]";
+        WorkState.getInstance().addStateListener((oldState, newState) -> {
+            if (newState.equals(BinPickingStatus.WState.DONE)) {
+                MissionState.getInstance().setState(BinPickingStatus.MState.DONE);
+            } else if (
+                    newState.equals(BinPickingStatus.WState.OBJECT_DETECTION) ||
+                            newState.equals(BinPickingStatus.WState.POSE_ESTIMATION) ||
+                            newState.equals(BinPickingStatus.WState.SORTING_PARTS) ||
+                            newState.equals(BinPickingStatus.WState.PATH_PLANNING) ||
+                            newState.equals(BinPickingStatus.WState.PROVIDING_PARTS)
+            ) {
+                MissionState.getInstance().setState(BinPickingStatus.MState.EXECUTING);
+            }
+        });
+
+
         JsonObject payloadJson = Json.createObjectBuilder()
                 .add("type", partType)
                 .add("count", number)

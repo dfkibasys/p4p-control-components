@@ -44,12 +44,14 @@ public abstract class BaseBinPickingOperationMode extends BaseOperationMode<BinP
 
 	@Override
 	public void onExecute() {
-		MissionState state;
+		MissionState state; WorkState wState;
 		while(executing) {
 			BinPickingService service = getService(BinPickingService.class);
 			state = service.getMissionState();
-			component.setWorkState(service.getWorkState().toString());
-			LOG.info("Current mission state is {}.", state);
+			wState = service.getWorkState();
+			component.setWorkState(wState.toString());
+			LOG.info("Current mission state is {}.", state.getState().toString());
+			LOG.info("Current work state is {}.", wState.getState().toString());
 			switch(state.getState()) {
 				case NONE:
 					break;
@@ -69,7 +71,7 @@ public abstract class BaseBinPickingOperationMode extends BaseOperationMode<BinP
 					component.stop(component.getOccupierId());
 					break;
 			default:
-				LOG.warn("Received unexpected mission state {}!", state);
+				LOG.warn("Received unexpected mission state {}!", state.getState().toString());
 				break;
 
 			}

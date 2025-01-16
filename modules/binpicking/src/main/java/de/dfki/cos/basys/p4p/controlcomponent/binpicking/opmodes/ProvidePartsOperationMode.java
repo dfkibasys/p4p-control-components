@@ -40,7 +40,6 @@ public class ProvidePartsOperationMode extends BaseBinPickingOperationMode {
 
 		counter = new CountDownLatch(1);
 
-		// start live image listeners
 		MissionState.getInstance().addStateListener((oldState, newState) -> {
 			if (newState.equals(BinPickingStatus.MState.ACCEPTED) || newState.equals(BinPickingStatus.MState.EXECUTING)) {
 				executing = true;

@@ -141,7 +141,7 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
     }
 
     @Override
-    public void provideParts(List<ProductPartRequest> order) {
+    public void providePartsOrder(List<ProductPartRequest> order) {
         String responseTopic = "binpicking/command/response";
         String requestTopic = "binpicking/command/request";
 

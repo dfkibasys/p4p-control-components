@@ -47,8 +47,6 @@ public class ProvidePartsOrderOperationMode extends BaseBinPickingOperationMode 
 			e1.printStackTrace();
 		}
 
-
-		// start live image listeners
 		MissionState.getInstance().addStateListener((oldState, newState) -> {
 			if (newState.equals(BinPickingStatus.MState.ACCEPTED) || newState.equals(BinPickingStatus.MState.EXECUTING)) {
 				executing = true;
@@ -65,7 +63,7 @@ public class ProvidePartsOrderOperationMode extends BaseBinPickingOperationMode 
 		component.setErrorStatus(4, "timeout");
 
 		// Start Sorting and providing of specified part types in specified number at specified symbolic target location
-		getService(BinPickingService.class).provideParts(ppr);
+		getService(BinPickingService.class).providePartsOrder(ppr);
 		sleep(1000);
 
 		try {

@@ -112,8 +112,8 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
 
     @Override
     public void provideParts(String partType, int number, String targetLocation) {
-        String responseTopic = "binpicking/command/response";
-        String requestTopic = "binpicking/command/request";
+        String responseTopic = "binpicking/command/provideParts/response";
+        String requestTopic = "binpicking/command/provideParts/request";
 
         WorkState.getInstance().addStateListener((oldState, newState) -> {
             if (newState.equals(BinPickingStatus.WState.DONE)) {
@@ -142,8 +142,8 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
 
     @Override
     public void providePartsOrder(List<ProductPartRequest> order) {
-        String responseTopic = "binpicking/command/response";
-        String requestTopic = "binpicking/command/request";
+        String responseTopic = "binpicking/command/providePartsOrder/response";
+        String requestTopic = "binpicking/command/providePartsOrder/request";
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -172,7 +172,8 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
 
     @Override
     public void reset() {
-        unsubscribe("binpicking/command/response");
+        unsubscribe("binpicking/command/provideParts/response");
+        unsubscribe("binpicking/command/providePartsOrder/response");
 
         MissionState.getInstance().setState(BinPickingStatus.MState.NONE);
         WorkState.getInstance().removeStateListeners();

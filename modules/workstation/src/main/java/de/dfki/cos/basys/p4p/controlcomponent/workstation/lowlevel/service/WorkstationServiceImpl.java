@@ -4,6 +4,7 @@ import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.model.MaterialRemovedEvent;
 import de.dfki.cos.basys.processcontrol.model.*;
+import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.service.WorkstationStatus.*;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -33,6 +35,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
     private Properties config = null;
     protected final Logger LOGGER = LoggerFactory.getLogger(WorkstationServiceImpl.class.getName());
     private boolean connected = false;
+    private HashMap<String, Integer> wrongMaterialsTaken = new HashMap<>();
 
     @Autowired
     StreamBridge streamBridge;
@@ -204,6 +207,10 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                     latch.countDown();
                 }
             }
+            else {
+                LOGGER.info("Workstep wrong");
+                sendNotification(NotificationType.WRONG_WORKSTEP, true);
+            }
         }
         else if (Objects.equals(assemblyEvent.getWorkstepId(), "workstep_error") || assemblyEvent.getConfidence() < CONFIDENCE_THRESHOLD){
             LOGGER.info("Workstep wrong");
@@ -239,10 +246,30 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         if (currentOpMode != OPMode.PICK) return;
 
         // Show notification when interacting with another scale
-        if (!Objects.equals(expected_material, materialRemovedEvent.getMaterial())){
+        String materialName = materialRemovedEvent.getMaterial();
+        if (!Objects.equals(expected_material, materialName)){
+            if (wrongMaterialsTaken.containsKey(materialName)){
+                // Wrong material already taken out
+                int wrongMaterialsCount = wrongMaterialsTaken.get(materialName) + materialRemovedEvent.getRemoved();
+                if (wrongMaterialsCount == 0) {
+                    // All materials were returned
+                    wrongMaterialsTaken.remove(materialName);
+                }
+                else {
+                    // Not all materials have been returned yet
+                    wrongMaterialsTaken.put(materialName, wrongMaterialsCount);
+                }
+            }
+            else {
+                // Wrong material taken out is first of that kind
+                wrongMaterialsTaken.put(materialName, materialRemovedEvent.getRemoved());
+            }
             sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
             return;
         }
+        // Only evaluate when all wrong material have been returned
+        if (!wrongMaterialsTaken.isEmpty()) return;
+
         sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
 
         LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);

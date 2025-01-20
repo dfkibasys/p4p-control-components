@@ -4,7 +4,6 @@ import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.p4p.controlcomponent.workstation.lowlevel.model.MaterialRemovedEvent;
 import de.dfki.cos.basys.processcontrol.model.*;
-import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

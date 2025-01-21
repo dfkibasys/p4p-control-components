@@ -13,7 +13,7 @@ import de.dfki.cos.basys.controlcomponent.impl.BaseOperationMode;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService;
 
 public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<SmartwatchService> {
-	private static final Logger LOG = LoggerFactory.getLogger(BaseSmartwatchOperationMode.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(BaseSmartwatchOperationMode.class);
 	private static final int MOCKUP_SERVICE_DURATION = 5000;
 	
 	protected long startTime = 0;
@@ -42,51 +42,19 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 	}
 
 	@Override
-	public void onExecute() {
-		TaskState state;
-		executing = true;
-		while(executing) {
-			SmartwatchService service = getService(SmartwatchService.class);
-			state = service.getTaskState();
-			LOG.debug("Current task state is {}.", state);
-			switch(state.getState()) {
-				case PENDING:
-					break;
-				case EXECUTING:
-					break;
-				case DONE:
-					executing=false;
-					break;
-				case FAILED:
-					executing=false;
-					component.setErrorStatus(1, "failed");
-					component.stop(component.getOccupierId());
-					break;
-				case CANCELLED:
-					executing=false;
-					component.setErrorStatus(2, "cancelled");
-					component.stop(component.getOccupierId());
-					break;
-			default:
-				LOG.warn("Received unexpected task state {}!", state);
-				break;
-
-			}
-			sleep(500);
-		}
-		
-	}
-
-	@Override
 	public void onCompleting() {
 		endTime = System.currentTimeMillis();
 		duration = (int) (endTime - startTime);
+		getService(SmartwatchService.class).reset();
+		sleep(1000);
 	}
 
 	@Override
 	public void onStopping() {
 		endTime = System.currentTimeMillis();
 		duration = (int) (endTime - startTime);
+		getService(SmartwatchService.class).reset();
+		sleep(1000);
 	}
 	
 	@Override
@@ -105,15 +73,15 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 		}).when(serviceMock).displayInfoMessage(Mockito.any());
 
 		Mockito.when(serviceMock.getTaskState()).thenAnswer(new Answer<TaskState>() {
-			boolean accepted = false;
+			boolean pending = false;
 			@Override
 			public TaskState answer(InvocationOnMock invocation) {
-				if(!accepted)
+				if(!pending)
 				{
-					TaskState.getInstance().setState(TState.ACCEPTED);
-					accepted = true;
+					TaskState.getInstance().setState(TState.PENDING);
+					pending = true;
 				}
-				else { // accepted
+				else { // pending
 					long elapsed = System.currentTimeMillis() - startTime;
 					if (elapsed < MOCKUP_SERVICE_DURATION) {
 						TaskState.getInstance().setState(TState.EXECUTING);

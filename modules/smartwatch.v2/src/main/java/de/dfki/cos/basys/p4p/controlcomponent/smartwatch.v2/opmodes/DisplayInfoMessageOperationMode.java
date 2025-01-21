@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode {
 
-	private CountDownLatch counter;
 	@Parameter(name = "message", direction = ParameterDirection.IN)
 	private String message = "";
 
@@ -35,8 +34,6 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 	public void onStarting() {
 		super.onStarting();
 
-		counter = new CountDownLatch(1);
-
 		// convert JSON string to Notification using Jackson
 		Notification dim = null;
 		try {
@@ -46,43 +43,14 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 			e1.printStackTrace();
 		}
 
-
-		TaskState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(SmartwatchStatus.TState.DONE)) {
-				executing = true;
-				component.setErrorStatus(0, "OK");
-				counter.countDown();
-			}
-		});
-
-		// precautionary set timeout error (gets overridden in case of success)
-		component.setErrorStatus(4, "timeout");
-
-
 		getService(SmartwatchService.class).displayInfoMessage(dim);
-		sleep(1000);
 
-		try {
-			counter.await(20, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		sleep(1000);
 	}
 
 	@Override
-	public void onCompleting() {
-		super.onCompleting();
-
+	public void onExecute() {
+		// Do nothing
 		sleep(1000);
-		getService(SmartwatchService.class).reset();
-	}
-
-	@Override
-	public void onStopping() {	
-		super.onStopping();
-
-		getService(SmartwatchService.class).reset();
 	}
 }

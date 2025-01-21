@@ -3,6 +3,10 @@ package de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service;
 
 import java.util.UUID;
 import java.util.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -22,6 +26,7 @@ import javax.json.JsonObject;
 
 
 public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService, ServiceProvider<de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService>{
+
 	private Properties config = null;
 	private static final Logger LOG = LoggerFactory.getLogger(SmartwatchMQTTServiceImpl.class);
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
@@ -29,6 +34,8 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
 	String topicTaskRequest, topicTaskStatus, topicNotification = null;
+
+	String currentTaskId="";
 
 
 	public SmartwatchMQTTServiceImpl(Properties config) {
@@ -64,21 +71,45 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 					try {
 						mqttClient.subscribe(topicTaskStatus, QOS, (topic, message) -> {
 							String sMessage = new String(message.getPayload());
-							if (sMessage.contains("aborted")) {
-								TaskState.getInstance().setState(TState.CANCELLED);
-							} else if (sMessage.contains("failed")) {
-								TaskState.getInstance().setState(TState.FAILED);
-							} else if (sMessage.contains("done")) {
-								TaskState.getInstance().setState(TState.DONE);
-							} else if (sMessage.contains("paused")) {
-								TaskState.getInstance().setState(TState.PAUSED);
-							} else if (sMessage.contains("accepted")) {
-								TaskState.getInstance().setState(TState.ACCEPTED);
-							} else if (sMessage.contains("rejected")) {
-								TaskState.getInstance().setState(TState.REJECTED);
-							} else if (sMessage.contains("executing")) {
-								TaskState.getInstance().setState(TState.EXECUTING);
+							TaskStatus ts = null;
+							try {
+								ts = new ObjectMapper().readValue(sMessage, new TypeReference<TaskStatus>() {});
+							} catch (JsonProcessingException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							}
+							if(!ts.taskId.equals(currentTaskId))
+								return;
+
+							switch(ts.taskStatus) {
+								case "PENDING":
+									TaskState.getInstance().setState(TState.PENDING);
+									break;
+								case "ACCEPTED":
+									TaskState.getInstance().setState(TState.ACCEPTED);
+									break;
+								case "REJECTED":
+									TaskState.getInstance().setState(TState.REJECTED);
+									break;
+								case "EXECUTING":
+									TaskState.getInstance().setState(TState.EXECUTING);
+									break;
+								case "PAUSED":
+									TaskState.getInstance().setState(TState.PAUSED);
+									break;
+								case "CANCELLED":
+									TaskState.getInstance().setState(TState.CANCELLED);
+									break;
+								case "FAILED":
+									TaskState.getInstance().setState(TState.FAILED);
+									break;
+								case "DONE":
+									TaskState.getInstance().setState(TState.DONE);
+									break;
+								default:
+									LOG.warn("Received unexpected task state {}! Ignoring.", ts.taskStatus);
+							}
+
 						}).waitForCompletion();
 					} catch (MqttException e) {
 						LOG.warn(clientId + " could not subscribe to topic {}!", topicTaskStatus);
@@ -117,12 +148,13 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 	@Override
 	public void requestTaskExecution(TaskRequest request) {
 
+		currentTaskId = request.taskId;
+
 		JsonObject payloadJson = Json.createObjectBuilder()
 			.add("taskDescription", request.taskDescription)
 			.add("taskTitle", request.taskTitle)
 			.add("taskId", request.taskId)
 			.build();
-
 
 		publish(topicTaskRequest, payloadJson.toString());
 	}
@@ -140,8 +172,9 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 
 	@Override
 	public void reset() {
-		// TODO: Unsubscribe from topics?
-		TaskState.getInstance().setState(TState.PENDING);
+		// TODO: What should happen on smartwatch device?
+		currentTaskId = "";
+		TaskState.getInstance().setState(TState.NONE);
 	}
 
 	@Override

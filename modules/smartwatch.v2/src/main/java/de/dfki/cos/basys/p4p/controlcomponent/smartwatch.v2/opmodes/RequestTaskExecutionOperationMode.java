@@ -36,15 +36,22 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 
 		counter = new CountDownLatch(1);
 
+		// Register task state listener and wait for task to be queued (PENDING)
 		TaskState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(SmartwatchStatus.TState.ACCEPTED) || newState.equals(SmartwatchStatus.TState.EXECUTING)) {
+			if(newState.equals(oldState)) {
+				LOG.info("Starting: no state change. Ignoring.");
+				return;
+			}
+
+			// Task has been received and has been queued
+			if(newState.equals(SmartwatchStatus.TState.PENDING)) {
+				LOG.info("Starting PENDING");
 				executing = true;
 				component.setErrorStatus(0, "OK");
 				counter.countDown();
 			}
-			else if (newState.equals(SmartwatchStatus.TState.REJECTED)) {
-				component.setErrorStatus(3, "rejected");
-				counter.countDown();
+			else {
+				LOG.warn("Received unexpected task state {}! Ignoring.", newState.toString());
 			}
 		});
 
@@ -68,17 +75,46 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 	}
 
 	@Override
-	public void onCompleting() {
-		super.onCompleting();
+	public void onExecute() {
+		TaskState state;
 
-		sleep(1000);
-		getService(SmartwatchService.class).reset();
-	}
+		while(executing) {
+			SmartwatchService service = getService(SmartwatchService.class);
+			state = service.getTaskState();
+			LOG.info("Current task state is {}.", state.getState().toString());
+			switch(state.getState()) {
+				// Task has been queued and waits for accept/reject
+				case PENDING:
+					component.setWorkState("Waiting for Worker to accept task ...");
+					break;
+				case EXECUTING:
+					component.setWorkState("Task execution ongoing ...");
+					break;
+				case PAUSED:
+					component.setWorkState("Task execution paused ...");
+					break;
+				case DONE:
+					component.setWorkState("Task execution finished!");
+					executing=false;
+					break;
+				case FAILED:
+					executing=false;
+					component.setWorkState("Task execution failed!");
+					component.setErrorStatus(1, "failed");
+					component.stop(component.getOccupierId());
+					break;
+				case CANCELLED:
+					executing=false;
+					component.setWorkState("Task execution cancelled by worker!");
+					component.setErrorStatus(2, "cancelled");
+					component.stop(component.getOccupierId());
+					break;
+				default:
+					LOG.warn("Received unexpected task state {}!", state.getState().toString());
+					break;
 
-	@Override
-	public void onStopping() {	
-		super.onStopping();
-
-		getService(SmartwatchService.class).reset();
+			}
+			sleep(500);
+		}
 	}
 }

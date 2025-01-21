@@ -15,7 +15,7 @@ public class TaskState {
     }
 
     private TaskState() {
-        this.currentState = TState.PENDING;
+        this.currentState = TState.NONE;
     }
 
     public static TaskState getInstance() {

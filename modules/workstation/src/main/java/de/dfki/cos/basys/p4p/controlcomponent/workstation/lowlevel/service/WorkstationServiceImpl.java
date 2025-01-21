@@ -244,6 +244,8 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         //Only evaluate in PICK opMode
         if (currentOpMode != OPMode.PICK) return;
 
+        LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
+
         // Show notification when interacting with another scale
         String materialName = materialRemovedEvent.getMaterial();
         if (!Objects.equals(expected_material, materialName)){
@@ -251,28 +253,29 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                 // Wrong material already taken out
                 int wrongMaterialsCount = wrongMaterialsTaken.get(materialName) + materialRemovedEvent.getRemoved();
                 if (wrongMaterialsCount == 0) {
-                    // All materials were returned
+                    // All materials of one kind were returned
                     wrongMaterialsTaken.remove(materialName);
                 }
                 else {
                     // Not all materials have been returned yet
                     wrongMaterialsTaken.put(materialName, wrongMaterialsCount);
+                    sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
                 }
             }
             else {
                 // Wrong material taken out is first of that kind
                 wrongMaterialsTaken.put(materialName, materialRemovedEvent.getRemoved());
+                sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
             }
-            sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
-            return;
         }
-        // Only evaluate when all wrong material have been returned
-        if (!wrongMaterialsTaken.isEmpty()) return;
+        else {
+            current_quantity += materialRemovedEvent.getRemoved();
+        }
+        // Only evaluate when all wrong material have been returned and right material was taken
+        if (!wrongMaterialsTaken.isEmpty() || current_quantity == 0) return;
 
         sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
 
-        LOGGER.info("Material Removed Event arrived {}", materialRemovedEvent);
-        current_quantity += materialRemovedEvent.getRemoved();
         sendNotification(NotificationType.WRONG_QUANTITY_TAKEN, current_quantity != expected_quantity);
 
         LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);

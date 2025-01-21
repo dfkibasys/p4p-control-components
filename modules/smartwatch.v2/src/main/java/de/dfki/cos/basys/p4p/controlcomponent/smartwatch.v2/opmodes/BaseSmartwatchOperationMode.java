@@ -62,9 +62,9 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 					component.setErrorStatus(1, "failed");
 					component.stop(component.getOccupierId());
 					break;
-				case ABORTED:
+				case CANCELLED:
 					executing=false;
-					component.setErrorStatus(2, "aborted");
+					component.setErrorStatus(2, "cancelled");
 					component.stop(component.getOccupierId());
 					break;
 			default:
@@ -91,6 +91,7 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 	
 	@Override
 	protected void configureServiceMock(SmartwatchService serviceMock) {
+		Mockito.when(serviceMock.getTaskState()).thenReturn(TaskState.getInstance());
 		Mockito.doNothing().when(serviceMock).reset();
 
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
@@ -102,6 +103,29 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 			TaskState.getInstance().setState(TState.EXECUTING);
 			return null;
 		}).when(serviceMock).displayInfoMessage(Mockito.any());
+
+		Mockito.when(serviceMock.getTaskState()).thenAnswer(new Answer<TaskState>() {
+			boolean accepted = false;
+			@Override
+			public TaskState answer(InvocationOnMock invocation) {
+				if(!accepted)
+				{
+					TaskState.getInstance().setState(TState.ACCEPTED);
+					accepted = true;
+				}
+				else { // accepted
+					long elapsed = System.currentTimeMillis() - startTime;
+					if (elapsed < MOCKUP_SERVICE_DURATION) {
+						TaskState.getInstance().setState(TState.EXECUTING);
+					} else {
+						TaskState.getInstance().setState(TState.DONE);
+					}
+				}
+				return TaskState.getInstance();
+			}
+
+		});
+
 	
 	}
 }

@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.p4p.controlcomponent.drone;
+package de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

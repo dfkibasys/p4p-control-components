@@ -1,11 +1,15 @@
 package de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.opmodes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dfki.cos.basys.controlcomponent.ExecutionCommand;
 import de.dfki.cos.basys.controlcomponent.ExecutionMode;
 import de.dfki.cos.basys.controlcomponent.ParameterDirection;
 import de.dfki.cos.basys.controlcomponent.annotation.OperationMode;
 import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
+import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.Notification;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchStatus;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.TaskState;
@@ -33,14 +37,20 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 
 		counter = new CountDownLatch(1);
 
+		// convert JSON string to Notification using Jackson
+		Notification dim = null;
+		try {
+			dim = new ObjectMapper().readValue(message, new TypeReference<Notification>() {});
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+
 		TaskState.getInstance().addStateListener((oldState, newState) -> {
-			if (newState.equals(SmartwatchStatus.TState.ACCEPTED) || newState.equals(SmartwatchStatus.TState.EXECUTING)) {
+			if (newState.equals(SmartwatchStatus.TState.DONE)) {
 				executing = true;
 				component.setErrorStatus(0, "OK");
-				counter.countDown();
-			}
-			else if (newState.equals(SmartwatchStatus.TState.REJECTED)) {
-				component.setErrorStatus(3, "rejected");
 				counter.countDown();
 			}
 		});
@@ -48,8 +58,8 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 		// precautionary set timeout error (gets overridden in case of success)
 		component.setErrorStatus(4, "timeout");
 
-		// Start Sorting and providing of specified part types in specified number at specified symbolic target location
-		getService(SmartwatchService.class).displayInfoMessage(message);
+
+		getService(SmartwatchService.class).displayInfoMessage(dim);
 		sleep(1000);
 
 		try {

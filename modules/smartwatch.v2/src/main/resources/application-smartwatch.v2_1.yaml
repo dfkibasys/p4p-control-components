@@ -1,7 +1,7 @@
 basys:
   opcuaServer:
     certsFolder: ./certs
-    tcpPort: 12699
+    tcpPort: 12701
     httpsPort: 8443
   controlcomponent:
     id: galaxy_watch_4_classic_1
@@ -14,10 +14,13 @@ basys:
         occupationCheckDisabled: false
         service:
           implementationJavaClass: de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchMQTTServiceImpl
-          connectionString: tcp://10.2.10.1:1883
+          connectionString: tcp://10.2.10.4:1883
           properties:
             mqttUsername: "smartwatch_v2_control_component"
             mqttPassword: "smartwatch_v2_control_component"
+            topicTaskRequest: "smartwatch/galaxy_watch_4_classic_1/requestTask"
+            topicNotification: "smartwatch/galaxy_watch_4_classic_1/infoMessage"
+            topicTaskStatus: "smartwatch/galaxy_watch_4_classic_1/taskStatus"
       simulate:
         executionModeChangeDisabled: true
         occupationCheckDisabled: true

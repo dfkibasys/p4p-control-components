@@ -6,7 +6,7 @@ public interface SmartwatchService {
 
 	TaskState getTaskState();
 	void requestTaskExecution(TaskRequest request);
-	void displayInfoMessage(String message);
+	void displayInfoMessage(Notification message);
 
 
 	void reset();

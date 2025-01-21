@@ -259,41 +259,35 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
                 else {
                     // Not all materials have been returned yet
                     wrongMaterialsTaken.put(materialName, wrongMaterialsCount);
-                    sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
                 }
             }
             else {
                 // Wrong material taken out is first of that kind
                 wrongMaterialsTaken.put(materialName, materialRemovedEvent.getRemoved());
-                sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, true);
             }
+            sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, !wrongMaterialsTaken.isEmpty());
         }
         else {
             current_quantity += materialRemovedEvent.getRemoved();
+            sendNotification(NotificationType.WRONG_QUANTITY_TAKEN, current_quantity != expected_quantity);
+            LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
         }
         // Only evaluate when all wrong material have been returned and right material was taken
-        if (!wrongMaterialsTaken.isEmpty() || current_quantity == 0) return;
+        if (!wrongMaterialsTaken.isEmpty() || current_quantity != expected_quantity) return;
 
+        // Block further hand events
+        currentOpMode = OPMode.NONE;
+
+        // Reset notifications in dashboard
+        sendNotification(NotificationType.LEADING_INTO_WRONG_DIRECTION, false);
+        sendNotification(NotificationType.WRONG_LOCATION_REACHED, false);
         sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
 
-        sendNotification(NotificationType.WRONG_QUANTITY_TAKEN, current_quantity != expected_quantity);
-
-        LOGGER.info("Expected: {}, Current: {}", expected_quantity, current_quantity);
-        if (expected_quantity == current_quantity) {
-            // Block further hand events
-            currentOpMode = OPMode.NONE;
-
-            // Reset notifications in dashboard
-            sendNotification(NotificationType.LEADING_INTO_WRONG_DIRECTION, false);
-            sendNotification(NotificationType.WRONG_LOCATION_REACHED, false);
-            sendNotification(NotificationType.GRASPED_AT_WRONG_LOCATION, false);
-
-            // Send notification to check material in dashboard
-            StepChange sc = new StepChange();
-            sc.setWorkstepId("checkMaterial");
-            streamBridge.send("stepChange", sc);
-            latch.countDown();
-        }
+        // Send notification to check material in dashboard
+        StepChange sc = new StepChange();
+        sc.setWorkstepId("checkMaterial");
+        streamBridge.send("stepChange", sc);
+        latch.countDown();
     }
 
     private void sendNotification(NotificationType type, boolean show) {

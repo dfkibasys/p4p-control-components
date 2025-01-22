@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Smartwatch.V2" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="11" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="EXTERNAL_HOSTNAME" value="10.100.0.6" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.ControlComponentApplication" />
+    <module name="smartwatch.v2" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=smartwatch.v2_1,mrklab" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

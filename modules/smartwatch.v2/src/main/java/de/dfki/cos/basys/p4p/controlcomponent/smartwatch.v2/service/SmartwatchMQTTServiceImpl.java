@@ -30,7 +30,7 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 	private Properties config = null;
 	private static final Logger LOG = LoggerFactory.getLogger(SmartwatchMQTTServiceImpl.class);
 	private static final String PREFIX = "MqttAsyncClient-paho-v3";
-	private static final Integer QOS = 0;
+	private static final Integer QOS = 2;
 	IMqttAsyncClient mqttClient = null;
 	String clientId = null;
 	String topicTaskRequest, topicTaskStatus, topicNotification = null;

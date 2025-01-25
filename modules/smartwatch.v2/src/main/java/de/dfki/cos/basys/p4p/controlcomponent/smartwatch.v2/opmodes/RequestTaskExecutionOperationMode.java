@@ -39,8 +39,7 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 		// Register task state listener and wait for task to be queued (PENDING)
 		TaskState.getInstance().addStateListener((oldState, newState) -> {
 			if(newState.equals(oldState)) {
-				LOG.info("Starting: no state change. Ignoring.");
-				return;
+				LOG.info("Starting: no state change. {}, {}, Ignoring.", oldState, newState);
 			}
 
 			// Task has been received and has been queued
@@ -51,7 +50,7 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 				counter.countDown();
 			}
 			else {
-				LOG.warn("Received unexpected task state {}! Ignoring.", newState.toString());
+				LOG.warn("Starting. Received unexpected task state {}! Ignoring.", newState.toString());
 			}
 		});
 
@@ -63,11 +62,15 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-		getService(SmartwatchService.class).requestTaskExecution(tr);
+
 		sleep(1000);
+		getService(SmartwatchService.class).requestTaskExecution(tr);
+
 
 		try {
 			counter.await(20, TimeUnit.SECONDS);
+			if(component.getErrorCode() == 4)
+				component.stop(component.getOccupierId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,12 +108,12 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 					break;
 				case CANCELLED:
 					executing=false;
-					component.setWorkState("Task execution cancelled by worker!");
+					component.setWorkState("Task execution cancelled!");
 					component.setErrorStatus(2, "cancelled");
 					component.stop(component.getOccupierId());
 					break;
 				default:
-					LOG.warn("Received unexpected task state {}!", state.getState().toString());
+					LOG.warn("Execute: Received unexpected task state {}!", state.getState().toString());
 					break;
 
 			}

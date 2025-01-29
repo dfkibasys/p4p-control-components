@@ -97,8 +97,8 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 								case "PAUSED":
 									TaskState.getInstance().setState(TState.PAUSED);
 									break;
-								case "CANCELLED":
-									TaskState.getInstance().setState(TState.CANCELLED);
+								case "CANCELED":
+									TaskState.getInstance().setState(TState.CANCELED);
 									break;
 								case "FAILED":
 									TaskState.getInstance().setState(TState.FAILED);

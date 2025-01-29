@@ -22,8 +22,11 @@ import java.util.concurrent.TimeUnit;
 public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMode {
 
 	private CountDownLatch counter;
-	@Parameter(name = "task", direction = ParameterDirection.IN)
+	@Parameter(name = "rte_task", direction = ParameterDirection.IN)
 	private String task = "";
+
+	@Parameter(name = "rte_duration", direction = ParameterDirection.OUT)
+	private int rte_duration = 0;
 	
 
 	public RequestTaskExecutionOperationMode(BaseControlComponent<SmartwatchService> component) {
@@ -75,6 +78,8 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		TaskState.getInstance().removeStateListeners();
 	}
 
 	@Override
@@ -90,8 +95,16 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 				case PENDING:
 					component.setWorkState("Waiting for Worker to accept task ...");
 					break;
+				case ACCEPTED:
+					component.setWorkState("Task has been accepted ...");
+					break;
+				case REJECTED:
+					executing=false;
+					component.setWorkState("Task has been rejected ...");
+					component.setErrorStatus(3, "rejected");
+					component.stop(component.getOccupierId());
 				case EXECUTING:
-					component.setWorkState("Task execution ongoing ...");
+					component.setWorkState("Task has execution ongoing ...");
 					break;
 				case PAUSED:
 					component.setWorkState("Task execution paused ...");
@@ -106,7 +119,7 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 					component.setErrorStatus(1, "failed");
 					component.stop(component.getOccupierId());
 					break;
-				case CANCELLED:
+				case CANCELED:
 					executing=false;
 					component.setWorkState("Task execution cancelled!");
 					component.setErrorStatus(2, "cancelled");
@@ -119,5 +132,13 @@ public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMo
 			}
 			sleep(500);
 		}
+	}
+
+	@Override
+	public void onCompleting() {
+		super.onCompleting();
+		rte_duration = duration;
+		getService(SmartwatchService.class).reset();
+		sleep(1000);
 	}
 }

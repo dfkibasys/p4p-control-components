@@ -11,18 +11,13 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.Notification;
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService;
-import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchStatus;
-import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.TaskState;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @OperationMode(name = "DisplayInfoMessage", shortName = "DIM", description = "display an info message for a human worker",
 		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
 		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
 public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode {
 
-	@Parameter(name = "message", direction = ParameterDirection.IN)
+	@Parameter(name = "dim_message", direction = ParameterDirection.IN)
 	private String message = "";
 
 
@@ -51,6 +46,13 @@ public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode
 	@Override
 	public void onExecute() {
 		// Do nothing
+		sleep(1000);
+	}
+
+	@Override
+	public void onCompleting() {
+		super.onCompleting();
+		getService(SmartwatchService.class).reset();
 		sleep(1000);
 	}
 }

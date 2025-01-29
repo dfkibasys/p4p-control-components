@@ -45,8 +45,6 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 	public void onCompleting() {
 		endTime = System.currentTimeMillis();
 		duration = (int) (endTime - startTime);
-		getService(SmartwatchService.class).reset();
-		sleep(1000);
 	}
 
 	@Override

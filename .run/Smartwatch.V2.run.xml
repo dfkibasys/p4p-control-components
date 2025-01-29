@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="EXTERNAL_HOSTNAME" value="10.100.0.6" />
+      <env name="EXTERNAL_HOSTNAME" value="10.107.0.135" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.ControlComponentApplication" />
     <module name="smartwatch.v2" />

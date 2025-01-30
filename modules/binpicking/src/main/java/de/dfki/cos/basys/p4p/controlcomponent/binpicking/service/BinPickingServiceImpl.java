@@ -66,6 +66,8 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
                                 WorkState.getInstance().setState(BinPickingStatus.WState.SORTING_PARTS);
                             } else if (sMessage.contains("providing")) {
                                 WorkState.getInstance().setState(BinPickingStatus.WState.PROVIDING_PARTS);
+                            } else if (sMessage.contains("done")) {
+                                WorkState.getInstance().setState(BinPickingStatus.WState.DONE);
                             }
                             else{
                                 LOG.warn("Received unknown work state message {}! Ignoring.", sMessage);
@@ -118,17 +120,12 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
         WorkState.getInstance().addStateListener((oldState, newState) -> {
             if (newState.equals(BinPickingStatus.WState.DONE)) {
                 MissionState.getInstance().setState(BinPickingStatus.MState.DONE);
-            } else if (
-                    newState.equals(BinPickingStatus.WState.OBJECT_DETECTION) ||
-                            newState.equals(BinPickingStatus.WState.POSE_ESTIMATION) ||
-                            newState.equals(BinPickingStatus.WState.SORTING_PARTS) ||
-                            newState.equals(BinPickingStatus.WState.PATH_PLANNING) ||
-                            newState.equals(BinPickingStatus.WState.PROVIDING_PARTS)
-            ) {
+            } else if (newState.equals(BinPickingStatus.WState.IDLE)) {
+                MissionState.getInstance().setState(BinPickingStatus.MState.NONE);
+            } else {
                 MissionState.getInstance().setState(BinPickingStatus.MState.EXECUTING);
             }
         });
-
 
         JsonObject payloadJson = Json.createObjectBuilder()
                 .add("type", partType)
@@ -144,6 +141,16 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
     public void providePartsOrder(List<ProductPartRequest> order) {
         String responseTopic = "binpicking/command/providePartsOrder/response";
         String requestTopic = "binpicking/command/providePartsOrder/request";
+
+        WorkState.getInstance().addStateListener((oldState, newState) -> {
+            if (newState.equals(BinPickingStatus.WState.DONE)) {
+                MissionState.getInstance().setState(BinPickingStatus.MState.DONE);
+            } else if (newState.equals(BinPickingStatus.WState.IDLE)) {
+                MissionState.getInstance().setState(BinPickingStatus.MState.NONE);
+            } else {
+                MissionState.getInstance().setState(BinPickingStatus.MState.EXECUTING);
+            }
+        });
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -186,9 +193,11 @@ public class BinPickingServiceImpl implements BinPickingService, ServiceProvider
                 if (sMessage.contains("accepted")) {
                     MissionState.getInstance().setState(BinPickingStatus.MState.ACCEPTED);
                 }
-                else // Rejected
-                {
+                else if(sMessage.contains("rejected")) {
                     MissionState.getInstance().setState(BinPickingStatus.MState.REJECTED);
+                }
+                else {
+                    LOG.warn("Received unexpected response message {}! Ignoring.", sMessage);
                 }
             }).waitForCompletion();
         } catch (MqttException e) {

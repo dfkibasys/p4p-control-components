@@ -48,8 +48,8 @@ public class SmartwatchMQTTServiceImpl implements de.dfki.cos.basys.p4p.controlc
 		MemoryPersistence persistence = new MemoryPersistence();
 		final MqttConnectOptions options = new MqttConnectOptions();
 
-		//options.setUserName(config.getProperty("mqttUsername"));
-		//options.setPassword(config.getProperty("mqttPassword").toCharArray());
+		options.setUserName(config.getProperty("mqttUsername"));
+		options.setPassword(config.getProperty("mqttPassword").toCharArray());
 		options.setCleanSession(true);
 		topicNotification = config.getProperty("topicNotification");
 		topicTaskRequest = config.getProperty("topicTaskRequest");

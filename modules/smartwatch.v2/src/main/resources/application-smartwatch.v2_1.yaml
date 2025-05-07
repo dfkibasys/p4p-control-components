@@ -19,7 +19,7 @@ basys:
             mqttUsername: "smartwatch_v2_control_component"
             mqttPassword: "smartwatch_v2_control_component"
             topicTaskRequest: "smartwatch/galaxy_watch_4_classic_1/requestTask"
-            topicNotification: "smartwatch/galaxy_watch_4_classic_1/infoMessage"
+            topicNotification: "smartwatch/galaxy_watch_4_classic_1/notification"
             topicTaskStatus: "smartwatch/galaxy_watch_4_classic_1/taskStatus"
       simulate:
         executionModeChangeDisabled: true

@@ -63,7 +63,13 @@ docker-publish-workstation:
   variables:
     MODULE_NAME: workstation
 
+docker-publish-smartwatch-v2:
+  extends: .docker-publish-module
+  variables:
+    MODULE_NAME: smartwatch.v2
+
 docker-publish-binpicking:
   extends: .docker-publish-module
   variables:
     MODULE_NAME: binpicking
+

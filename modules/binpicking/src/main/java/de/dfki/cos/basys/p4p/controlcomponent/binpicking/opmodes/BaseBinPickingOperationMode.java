@@ -100,7 +100,7 @@ public abstract class BaseBinPickingOperationMode extends BaseOperationMode<BinP
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
 			MissionState.getInstance().setState(BinPickingStatus.MState.EXECUTING);
 			return null;
-		}).when(serviceMock).provideParts(Mockito.any(), Mockito.any(), Mockito.any());
+		}).when(serviceMock).provideParts(Mockito.anyString(), Mockito.anyInt(), Mockito.anyString());
 
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
 			MissionState.getInstance().setState(BinPickingStatus.MState.EXECUTING);

@@ -61,12 +61,12 @@ public abstract class BaseSmartwatchOperationMode extends BaseOperationMode<Smar
 		Mockito.doNothing().when(serviceMock).reset();
 
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
-			TaskState.getInstance().setState(TState.EXECUTING);
+			TaskState.getInstance().setState(TState.PENDING);
 			return null;
 		}).when(serviceMock).requestTaskExecution(Mockito.any());
 
 		Mockito.doAnswer((Answer<Void>) invocationOnMock -> {
-			TaskState.getInstance().setState(TState.EXECUTING);
+			TaskState.getInstance().setState(TState.PENDING);
 			return null;
 		}).when(serviceMock).displayInfoMessage(Mockito.any());
 

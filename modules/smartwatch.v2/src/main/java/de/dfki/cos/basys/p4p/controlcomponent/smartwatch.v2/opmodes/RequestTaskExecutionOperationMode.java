@@ -17,8 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @OperationMode(name = "RequestTaskExecution", shortName = "RTE", description = "request execution of a task by a human worker",
-		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
+		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class RequestTaskExecutionOperationMode extends BaseSmartwatchOperationMode {
 
 	private CountDownLatch counter;

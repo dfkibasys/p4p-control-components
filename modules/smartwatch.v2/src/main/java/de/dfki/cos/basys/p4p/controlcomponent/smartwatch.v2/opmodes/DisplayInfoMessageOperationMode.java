@@ -13,8 +13,8 @@ import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.Notification
 import de.dfki.cos.basys.p4p.controlcomponent.smartwatch.v2.service.SmartwatchService;
 
 @OperationMode(name = "DisplayInfoMessage", shortName = "DIM", description = "display an info message for a human worker",
-		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP }, 
-		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE })
+		allowedCommands = {	ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP },
+		allowedModes = { ExecutionMode.PRODUCTION, ExecutionMode.SIMULATE, ExecutionMode.AUTO })
 public class DisplayInfoMessageOperationMode extends BaseSmartwatchOperationMode {
 
 	@Parameter(name = "dim_message", direction = ParameterDirection.IN)

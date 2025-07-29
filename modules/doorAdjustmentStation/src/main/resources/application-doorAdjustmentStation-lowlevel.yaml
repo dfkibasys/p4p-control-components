@@ -1,7 +1,7 @@
 basys:
   opcuaServer:
     certsFolder: ./certs
-    tcpPort: 12685
+    tcpPort: 12687
     httpsPort: 8443
   controlcomponent:
     id: door_adjustment_station_ll
@@ -22,7 +22,7 @@ basys:
 spring:
   cloud:
     function:
-      definition: assemblyEventUpdates;handEventUpdates;scaleController1Updates;scaleController2Updates;scaleController3Updates;scaleController4Updates;scaleController5Updates
+      definition: assemblyEventUpdates
     stream:
       kafka:
         binder:
@@ -32,30 +32,6 @@ spring:
           destination: aws.assembly-event
           content-type: application/*+avro
           binder: kafka-avro
-        handEventUpdates-in-0:
-          destination: aws.hand-event
-          content-type: application/*+avro
-          binder: kafka-avro
-        scaleController1Updates-in-0:
-          destination: scale-1-pieceCount
-          content-type: application/json
-          binder: kafka-json
-        scaleController2Updates-in-0:
-          destination: scale-2-pieceCount
-          content-type: application/json
-          binder: kafka-json
-        scaleController3Updates-in-0:
-          destination: scale-3-pieceCount
-          content-type: application/json
-          binder: kafka-json
-        scaleController4Updates-in-0:
-          destination: scale-4-pieceCount
-          content-type: application/json
-          binder: kafka-json
-        scaleController5Updates-in-0:
-          destination: scale-5-pieceCount
-          content-type: application/json
-          binder: kafka-json
         notification:
           destination: wgs-notification
           content-type: application/*+avro

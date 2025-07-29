@@ -10,21 +10,15 @@ import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.ser
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationServiceImpl;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus;
 
-@OperationMode(name = "PickSymbolic", shortName = "PICK_SYM", description = "Pick objects of specified type and amount from its current location",
+@OperationMode(name = "Obey", shortName = "OBEY", description = "Obey the instruction",
         allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
         allowedModes = { ExecutionMode.AUTO, ExecutionMode.SIMULATE })
-public class PickSymbolicOperationMode extends BaseDoorAdjustmentStationOperationMode {
+public class ObeyOperationMode extends BaseDoorAdjustmentStationOperationMode {
 
-    @Parameter(name = "pps_material", direction = ParameterDirection.IN)
-    private String material = "";
-    @Parameter(name = "pps_mat_location", direction = ParameterDirection.IN)
-    private String mat_location = "";
-    @Parameter(name = "pps_quantity", direction = ParameterDirection.IN)
-    private long quantity = 1;
-    @Parameter(name = "pick_quantity_taken", direction = ParameterDirection.OUT)
-    private int quantity_taken = 0;
+    @Parameter(name = "sao_workstep_id", direction = ParameterDirection.IN)
+    private String workstepId = "";
 
-    public PickSymbolicOperationMode(BaseControlComponent<DoorAdjustmentStationService> component) {
+    public ObeyOperationMode(BaseControlComponent<DoorAdjustmentStationService> component) {
         super(component);
     }
 
@@ -32,7 +26,7 @@ public class PickSymbolicOperationMode extends BaseDoorAdjustmentStationOperatio
     public void onStarting() {
         super.onStarting();
         executing = true;
-        getService(DoorAdjustmentStationService.class).pickSymbolic(material, mat_location, (int) quantity);
+        getService(DoorAdjustmentStationService.class).obey(workstepId);
     }
 
     @Override
@@ -40,10 +34,6 @@ public class PickSymbolicOperationMode extends BaseDoorAdjustmentStationOperatio
         super.onCompleting();
         // reset variables
         DoorAdjustmentStationServiceImpl.currentOpMode = DoorAdjustmentStationStatus.OPMode.NONE;
-        DoorAdjustmentStationServiceImpl.expected_quantity = 1;
-        DoorAdjustmentStationServiceImpl.current_quantity = 0;
-        DoorAdjustmentStationServiceImpl.expected_mat_location = "";
-        DoorAdjustmentStationServiceImpl.expected_material = "";
     }
 
     @Override
@@ -51,9 +41,5 @@ public class PickSymbolicOperationMode extends BaseDoorAdjustmentStationOperatio
         super.onStopping();
         // reset variables
         DoorAdjustmentStationServiceImpl.currentOpMode = DoorAdjustmentStationStatus.OPMode.NONE;
-        DoorAdjustmentStationServiceImpl.expected_quantity = 1;
-        DoorAdjustmentStationServiceImpl.current_quantity = 0;
-        DoorAdjustmentStationServiceImpl.expected_mat_location = "";
-        DoorAdjustmentStationServiceImpl.expected_material = "";
     }
 }

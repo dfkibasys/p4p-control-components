@@ -73,3 +73,8 @@ docker-publish-binpicking:
   variables:
     MODULE_NAME: binpicking
 
+  docker-publish-doorAdjustmentStation:
+    extends: .docker-publish-module
+    variables:
+      MODULE_NAME: doorAdjustmentStation
+

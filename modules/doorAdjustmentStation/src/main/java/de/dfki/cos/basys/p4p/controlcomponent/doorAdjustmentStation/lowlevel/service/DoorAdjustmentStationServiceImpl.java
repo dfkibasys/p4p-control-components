@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.se
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
-import de.dfki.cos.basys.processcontrol.model.*;
+import de.dfki.cos.mrk40.avro.JointStateStamped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,15 +79,15 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     }
 
     @Bean
-    public Consumer<AssemblyEvent> assemblyEventUpdates() {
-        return this::handleAssemblyEventUpdates;
+    public Consumer<JointStateStamped> doorEventUpdates() {
+        return this::handleDoorUpdates;
     }
 
-    private void handleAssemblyEventUpdates(AssemblyEvent assemblyEvent) {
+    private void handleDoorUpdates(JointStateStamped jointStateStamped) {
         //Only evaluate in OBEY opMode
         if (currentOpMode != OPMode.OBEY) return;
 
-        LOGGER.info("Assembly Event arrived {}", assemblyEvent);
+        LOGGER.info("Front Door Left Event arrived {}", jointStateStamped.getState().getPosition().get(0));
 
     }
 

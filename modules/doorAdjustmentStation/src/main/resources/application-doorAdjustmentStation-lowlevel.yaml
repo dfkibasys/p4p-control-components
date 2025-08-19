@@ -22,24 +22,18 @@ basys:
 spring:
   cloud:
     function:
-      definition: assemblyEventUpdates
+      definition: doorEventUpdates
     stream:
       kafka:
         binder:
           brokers: ${KAFKA_BROKER_ENDPOINT}
       bindings:
-        assemblyEventUpdates-in-0:
-          destination: aws.assembly-event
+        doorEventUpdates-in-0:
+          destination: vw.tiguan.doors.jointstatestamped
           content-type: application/*+avro
           binder: kafka-avro
         notification:
           destination: wgs-notification
-          content-type: application/*+avro
-          binder: kafka-avro
-          producer:
-            useNativeEncoding: true
-        stepChange:
-          destination: wgs-step-change
           content-type: application/*+avro
           binder: kafka-avro
           producer:

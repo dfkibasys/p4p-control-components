@@ -90,9 +90,9 @@
 		</dependency>
 
         <dependency>
-            <groupId>de.dfki.cos.basys</groupId>
-            <artifactId>shared-model</artifactId>
-            <version>${project.version}</version>
+            <groupId>de.dfki.cos.mrk40</groupId>
+            <artifactId>avro</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 		<!-- /Kafka -->
 		

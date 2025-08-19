@@ -2,6 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.se
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
+import de.dfki.cos.basys.processcontrol.model.*;
 import de.dfki.cos.mrk40.avro.JointStateStamped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

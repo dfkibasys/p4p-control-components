@@ -7,7 +7,7 @@ public class DoorAdjustmentStationStatus {
 	}
 
 	public enum OPMode {
-		NONE, OBEY
+		NONE, OBEY, SHOW
 	}
 
     public enum TASK {

@@ -2,7 +2,7 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dt
 
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.TASK;
 
-public class InstructionResponse {
+public class ObeyInstructionResponse {
     public TASK taskId;
     public Boolean success;
     public String message;

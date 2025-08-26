@@ -32,12 +32,6 @@ spring:
           destination: vw.tiguan.doors.jointstatestamped
           content-type: application/*+avro
           binder: kafka-avro
-        notification:
-          destination: wgs-notification
-          content-type: application/*+avro
-          binder: kafka-avro
-          producer:
-            useNativeEncoding: true
       binders:
         kafka-json:
           type: kafka

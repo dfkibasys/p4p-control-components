@@ -2,7 +2,8 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.se
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
-import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.InstructionResponse;
+import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.ObeyInstructionResponse;
+import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.ShowInstructionRequest;
 import de.dfki.cos.basys.processcontrol.model.*;
 import de.dfki.cos.mrk40.avro.JointStateStamped;
 import org.eclipse.paho.client.mqttv3.*;
@@ -20,6 +21,7 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
+import java.util.Map;
 
 @Service
 public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationService, ServiceProvider<DoorAdjustmentStationService> {
@@ -126,14 +128,20 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     public void show(String taskId) {
         currentOpMode = OPMode.SHOW;
         currentTask = convertStringToEnum(taskId);
+        LOGGER.debug("current task ", currentTask);
 
-        if (currentTask != null) {
+        if (currentTask != null) { // check if existing in enum
             MissionState.getInstance().setState(MState.EXECUTING);
-
-            //TODO: Send instruction via MQTT
-
-            // Wait for response?
-            MissionState.getInstance().setState(MState.DONE);
+            try {
+                String instructionTopic = "/aiquama/showInstruction/request";
+                ShowInstructionRequest sir = InstructionSettings.getInstance().getInstruction(taskId); // access with String
+                String jsonPayload = objectMapper.writeValueAsString(sir);
+                publish(instructionTopic, jsonPayload);
+                // We could let the display component respond and wait for it here
+                MissionState.getInstance().setState(MState.DONE);
+            } catch (Exception e) {
+                LOGGER.error("Failed to process JSON: " + e.getMessage());
+            }
         }
     }
 
@@ -175,7 +183,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         String payload = new String(message.getPayload());
 
         try {
-            InstructionResponse data = objectMapper.readValue(payload, InstructionResponse.class);
+            ObeyInstructionResponse data = objectMapper.readValue(payload, ObeyInstructionResponse.class);
             LOGGER.info("Parsed object: " + data);
 
             if (currentTask.equals(data.taskId) && data.success) {
@@ -187,20 +195,26 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         }
     }
 
-    private void sendNotification(NotificationType type, boolean show) {
-        Notification not = new Notification();
-        not.setType(type);
-        not.setShow(show);
-        streamBridge.send("notification", not);
-    }
-
-    public static TASK convertStringToEnum(String taskString) {
+    private TASK convertStringToEnum(String taskString) {
         try {
             return TASK.valueOf(taskString);
         } catch (IllegalArgumentException e) {
             // Handle the case when the input String doesn't match any enum constant
-            System.out.println("Invalid task string: " + taskString);
+            LOGGER.error("Invalid task string: " + taskString);
             return null;
+        }
+    }
+
+    private void publish(String topic, String content) {
+        final MqttMessage message = new MqttMessage(content.getBytes());
+        message.setQos(QOS);
+        message.setRetained(false);
+        try {
+            mqttClient.publish(topic, message).waitForCompletion();
+            LOGGER.debug("publishing message {} on topic {}", message, topic);
+        } catch (MqttException e) {
+            LOGGER.error("Failed to publish message {} on topic {} with {}", message, topic, e);
+            e.printStackTrace();
         }
     }
 }

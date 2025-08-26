@@ -1,0 +1,22 @@
+{
+  "OPEN_DOOR": {
+    "instructionMsg": "Please open the door",
+    "taskId": "OPEN_DOOR",
+    "icon": "fa-open-door"
+  },
+  "REMOVE_DOOR": {
+    "instructionMsg": "Please remove the door",
+    "taskId": "REMOVE_DOOR",
+    "icon": "fa-remove-door"
+  },
+  "ADJUST_DOOR": {
+    "instructionMsg": "Please adjust the door",
+    "taskId": "ADJUST_DOOR",
+    "icon": "fa-adjust-door"
+  },
+  "CLOSE_DOOR": {
+    "instructionMsg": "Please close the door",
+    "taskId": "CLOSE_DOOR",
+    "icon": "fa-close-door"
+  }
+}

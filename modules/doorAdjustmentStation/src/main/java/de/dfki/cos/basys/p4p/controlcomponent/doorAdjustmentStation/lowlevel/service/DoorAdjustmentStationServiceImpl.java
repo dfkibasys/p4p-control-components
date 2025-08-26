@@ -178,9 +178,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
             InstructionResponse data = objectMapper.readValue(payload, InstructionResponse.class);
             LOGGER.info("Parsed object: " + data);
 
-            if (currentTask.equals(TASK.ADJUST_DOOR) &&
-                    data.taskId.equals(TASK.ADJUST_DOOR) &&
-                    data.success) {
+            if (currentTask.equals(data.taskId) && data.success) {
                 latch.countDown();
             }
 

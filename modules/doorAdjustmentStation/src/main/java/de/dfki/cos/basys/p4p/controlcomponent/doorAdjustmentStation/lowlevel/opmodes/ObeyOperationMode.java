@@ -8,15 +8,15 @@ import de.dfki.cos.basys.controlcomponent.annotation.Parameter;
 import de.dfki.cos.basys.controlcomponent.impl.BaseControlComponent;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationService;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationServiceImpl;
-import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus;
+import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.*;
 
 @OperationMode(name = "Obey", shortName = "OBEY", description = "Obey the instruction",
         allowedCommands = {ExecutionCommand.HOLD, ExecutionCommand.UNHOLD, ExecutionCommand.RESET, ExecutionCommand.START, ExecutionCommand.STOP},
         allowedModes = { ExecutionMode.AUTO, ExecutionMode.SIMULATE })
 public class ObeyOperationMode extends BaseDoorAdjustmentStationOperationMode {
 
-    @Parameter(name = "sao_workstep_id", direction = ParameterDirection.IN)
-    private String workstepId = "";
+    @Parameter(name = "sao_task_id", direction = ParameterDirection.IN)
+    private String taskId = "";
 
     public ObeyOperationMode(BaseControlComponent<DoorAdjustmentStationService> component) {
         super(component);
@@ -26,20 +26,22 @@ public class ObeyOperationMode extends BaseDoorAdjustmentStationOperationMode {
     public void onStarting() {
         super.onStarting();
         executing = true;
-        getService(DoorAdjustmentStationService.class).obey(workstepId);
+        getService(DoorAdjustmentStationService.class).obey(taskId);
     }
 
     @Override
     public void onCompleting() {
         super.onCompleting();
         // reset variables
-        DoorAdjustmentStationServiceImpl.currentOpMode = DoorAdjustmentStationStatus.OPMode.NONE;
+        DoorAdjustmentStationServiceImpl.currentOpMode = OPMode.NONE;
+        DoorAdjustmentStationServiceImpl.currentTask = TASK.NONE;
     }
 
     @Override
     public void onStopping() {
         super.onStopping();
         // reset variables
-        DoorAdjustmentStationServiceImpl.currentOpMode = DoorAdjustmentStationStatus.OPMode.NONE;
+        DoorAdjustmentStationServiceImpl.currentOpMode = OPMode.NONE;
+        DoorAdjustmentStationServiceImpl.currentTask = TASK.NONE;
     }
 }

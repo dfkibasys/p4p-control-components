@@ -21,7 +21,10 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
 
     static CountDownLatch latch;
     public static OPMode currentOpMode = OPMode.NONE;
+    public static TASK currentTask = TASK.NONE;
     private Properties config = null;
+    private final float DOOR_ANGLE_OPENED = 90.0F;
+    private final float DOOR_ANGLE_CLOSED = 10.0F;
     protected final Logger LOGGER = LoggerFactory.getLogger(DoorAdjustmentStationServiceImpl.class.getName());
     private boolean connected = false;
 
@@ -53,20 +56,23 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     }
 
     @Override
-    public void obey(String workstepId) {
+    public void obey(String taskId) {
         currentOpMode = OPMode.OBEY;
+        currentTask = convertStringToEnum(taskId);
 
-        MissionState.getInstance().setState(MState.EXECUTING);
+        if (currentTask != null) {
+            MissionState.getInstance().setState(MState.EXECUTING);
 
-        latch = new CountDownLatch(1);
+            latch = new CountDownLatch(1);
 
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            MissionState.getInstance().setState(MState.DONE);
         }
-
-        MissionState.getInstance().setState(MState.DONE);
     }
 
     @Override
@@ -88,7 +94,16 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         //Only evaluate in OBEY opMode
         if (currentOpMode != OPMode.OBEY) return;
 
-        LOGGER.info("Front Door Left Event arrived {}", jointStateStamped.getState().getPosition().get(0));
+        Float doorAngle = jointStateStamped.getState().getPosition().get(0);
+
+        LOGGER.info("Front Door Left Event arrived {}", doorAngle);
+
+        if (currentTask.equals(TASK.OPEN_DOOR) && doorAngle > DOOR_ANGLE_OPENED) {
+            latch.countDown();
+        }
+        else if (currentTask.equals(TASK.CLOSE_DOOR) && doorAngle < DOOR_ANGLE_CLOSED) {
+            latch.countDown();
+        }
 
     }
 
@@ -97,5 +112,15 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         not.setType(type);
         not.setShow(show);
         streamBridge.send("notification", not);
+    }
+
+    public static TASK convertStringToEnum(String taskString) {
+        try {
+            return TASK.valueOf(taskString);
+        } catch (IllegalArgumentException e) {
+            // Handle the case when the input String doesn't match any enum constant
+            System.out.println("Invalid task string: " + taskString);
+            return null;
+        }
     }
 }

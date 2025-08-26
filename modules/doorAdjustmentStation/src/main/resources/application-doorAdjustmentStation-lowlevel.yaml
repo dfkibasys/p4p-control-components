@@ -4,7 +4,7 @@ basys:
     tcpPort: 12687
     httpsPort: 8443
   controlcomponent:
-    id: door_adjustment_station_ll
+    id: door_adjustment_station_1_ll
     name: DoorAdjustmentStation
     operationModeJavaPackage: de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.opmodes
     initialExecutionMode: AUTO

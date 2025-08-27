@@ -11,7 +11,7 @@ public class DoorAdjustmentStationStatus {
 	}
 
     public enum TASK {
-        NONE, OPEN_DOOR, REMOVE_DOOR, ADJUST_DOOR, CLOSE_DOOR
+        NONE, OPEN_DOOR, REMOVE_DOOR, ADJUST_DOOR, CHECK_DOOR, CLOSE_DOOR, INSTALL_DOOR
     }
 
 }

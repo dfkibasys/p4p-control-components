@@ -1,8 +1,10 @@
 package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto;
 
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.TASK;
+import lombok.Getter;
 
-public class ObeyInstructionResponse {
+@Getter
+public class InstructionResponse {
     public TASK taskId;
     public Boolean success;
     public String message;

@@ -1,22 +1,42 @@
 {
   "OPEN_DOOR": {
-    "instructionMsg": "Please open the door",
+    "instructionMsg": "Bitte Tür öffnen.",
+    "instructionImage": "",
     "taskId": "OPEN_DOOR",
-    "icon": "fa-open-door"
+    "icon": "fa-door-open",
+    "highlightRef": "TVR"
   },
   "REMOVE_DOOR": {
-    "instructionMsg": "Please remove the door",
+    "instructionMsg": "Bitte Tür entfernen.",
+    "instructionImage": "",
     "taskId": "REMOVE_DOOR",
-    "icon": "fa-remove-door"
+    "icon": "fa-xmark",
+    "highlightRef": "TVR"
   },
   "ADJUST_DOOR": {
-    "instructionMsg": "Please adjust the door",
+    "instructionMsg": "Bitte Scharnier einstellen.",
+    "instructionImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII",
     "taskId": "ADJUST_DOOR",
-    "icon": "fa-adjust-door"
+    "icon": "fa-wrench",
+    "highlightRef": "VR_SRO_KR_ET"
+  },
+  "CHECK_DOOR": {
+    "instructionMsg": "Bitte zum Zweck der Überprüfung von der Tür zurücktreten.",
+    "instructionImage": "",
+    "taskId": "ADJUST_DOOR",
+    "icon": "fa-magnifying-glass",
+    "highlightRef": "VR_SRO_KR_ET"
   },
   "CLOSE_DOOR": {
-    "instructionMsg": "Please close the door",
+    "instructionMsg": "Bitte Tür schließen.",
+    "instructionImage": "",
     "taskId": "CLOSE_DOOR",
-    "icon": "fa-close-door"
+    "icon": "fa-door-closed"
+  },
+  "INSTALL_DOOR": {
+    "instructionMsg": "Bitte Tür installieren.",
+    "instructionImage": "",
+    "taskId": "INSTALL_DOOR",
+    "icon": "fa-plus"
   }
 }

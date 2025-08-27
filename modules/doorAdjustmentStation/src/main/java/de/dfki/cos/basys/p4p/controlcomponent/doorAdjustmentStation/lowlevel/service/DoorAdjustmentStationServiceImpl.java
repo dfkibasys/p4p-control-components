@@ -2,16 +2,13 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.se
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
-import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.ObeyInstructionResponse;
+import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.InstructionResponse;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.ShowInstructionRequest;
-import de.dfki.cos.basys.processcontrol.model.*;
 import de.dfki.cos.mrk40.avro.JointStateStamped;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.*;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
-import java.util.Map;
 
 @Service
 public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationService, ServiceProvider<DoorAdjustmentStationService> {
@@ -38,13 +34,10 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     private static final Integer QOS = 0;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     IMqttAsyncClient mqttClient = null;
-    String clientId = null;
-
-    @Autowired
-    StreamBridge streamBridge;
+    String clientId;
 
     public DoorAdjustmentStationServiceImpl(Properties config) {
-        clientId = PREFIX + UUID.randomUUID().toString();
+        clientId = PREFIX + UUID.randomUUID();
         this.config = config;
     }
 
@@ -57,7 +50,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         try {
             mqttClient = new MqttAsyncClient(connectionString, clientId, persistence);
         } catch (MqttException e) {
-            LOGGER.error("Generation of MqttAsyncClient failed wih {}!", e);
+            LOGGER.error("Generation of MqttAsyncClient failed with {}!", e.getMessage());
             return false;
         }
 
@@ -65,24 +58,24 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
             mqttClient.connect(options, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    LOGGER.debug(clientId + " successfully connected to {}.", connectionString);
+                    LOGGER.debug("{} successfully connected to {}.", clientId, connectionString);
 
-                    String instructionTopic = "/aiquama/obeyInstruction/response";
+                    String responseTopics = "/aiquama/+/response";
                     try {
-                        mqttClient.subscribe(instructionTopic, QOS, (topic, message) -> {
-                            handleMQTTDoorUpdates(message);
+                        mqttClient.subscribe(responseTopics, QOS, (topic, message) -> {
+                            handleMQTTResponses(message);
                         });
                     } catch (MqttException e) {
-                        LOGGER.warn(clientId + " could not subscribe to topic {}!", instructionTopic);
+                        LOGGER.warn("{} could not subscribe to every topic!", clientId);
                     }
                 }
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    LOGGER.warn(clientId + " could not establish connection to {}!", connectionString);
+                    LOGGER.warn("{} could not establish connection to {}!", clientId, connectionString);
                 }
             }).waitForCompletion();
         } catch (MqttException e) {
-            LOGGER.error("Establishing connection to {} failed with {}!", connectionString, e);
+            LOGGER.error("Establishing connection to {} failed with {}!", connectionString, e.getMessage());
             return false;
         }
 
@@ -128,19 +121,27 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     public void show(String taskId) {
         currentOpMode = OPMode.SHOW;
         currentTask = convertStringToEnum(taskId);
-        LOGGER.debug("current task ", currentTask);
 
         if (currentTask != null) { // check if existing in enum
             MissionState.getInstance().setState(MState.EXECUTING);
             try {
                 String instructionTopic = "/aiquama/showInstruction/request";
+
                 ShowInstructionRequest sir = InstructionSettings.getInstance().getInstruction(taskId); // access with String
                 String jsonPayload = objectMapper.writeValueAsString(sir);
                 publish(instructionTopic, jsonPayload);
-                // We could let the display component respond and wait for it here
+
+                latch = new CountDownLatch(1);
+
+                try {
+                    latch.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 MissionState.getInstance().setState(MState.DONE);
             } catch (Exception e) {
-                LOGGER.error("Failed to process JSON: " + e.getMessage());
+                LOGGER.error("Failed to process JSON: {}", e.getMessage());
             }
         }
     }
@@ -176,22 +177,20 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
 
     }
 
-    private void handleMQTTDoorUpdates(MqttMessage message) {
-        //Only evaluate in OBEY opMode
-        if (currentOpMode != OPMode.OBEY) return;
-
+    private void handleMQTTResponses(MqttMessage message) {
         String payload = new String(message.getPayload());
 
         try {
-            ObeyInstructionResponse data = objectMapper.readValue(payload, ObeyInstructionResponse.class);
-            LOGGER.info("Parsed object: " + data);
+            InstructionResponse response = objectMapper.readValue(payload, InstructionResponse.class);
+            LOGGER.info("Parsed object: {}", response);
 
-            if (currentTask.equals(data.taskId) && data.success) {
+            // TODO: Guarantee that an OBEY response is not quitting a SHOW opMode or vice versa
+            if (!currentOpMode.equals(OPMode.NONE) && currentTask.equals(response.getTaskId()) && response.getSuccess()) {
                 latch.countDown();
             }
 
         } catch (Exception e) {
-            LOGGER.error("Failed to parse JSON: " + e.getMessage());
+            LOGGER.error("Failed to parse JSON: {}", e.getMessage());
         }
     }
 
@@ -200,7 +199,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
             return TASK.valueOf(taskString);
         } catch (IllegalArgumentException e) {
             // Handle the case when the input String doesn't match any enum constant
-            LOGGER.error("Invalid task string: " + taskString);
+            LOGGER.error("Invalid task string: {}", taskString);
             return null;
         }
     }
@@ -213,8 +212,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
             mqttClient.publish(topic, message).waitForCompletion();
             LOGGER.debug("publishing message {} on topic {}", message, topic);
         } catch (MqttException e) {
-            LOGGER.error("Failed to publish message {} on topic {} with {}", message, topic, e);
-            e.printStackTrace();
+            LOGGER.error("Failed to publish message {} on topic {} with {}", message, topic, e.getMessage());
         }
     }
 }

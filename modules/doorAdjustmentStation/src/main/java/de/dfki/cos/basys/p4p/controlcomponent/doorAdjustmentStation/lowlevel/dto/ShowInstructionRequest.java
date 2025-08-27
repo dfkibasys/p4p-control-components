@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ShowInstructionRequest {
     public String instructionMsg;
+    public String instructionImage;
     public TASK taskId;
     public String icon;
+    public String highlightRef;
 }

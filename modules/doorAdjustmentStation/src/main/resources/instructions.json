@@ -23,7 +23,7 @@
   "CHECK_DOOR": {
     "instructionMsg": "Bitte zum Zweck der Überprüfung von der Tür zurücktreten.",
     "instructionImage": "",
-    "taskId": "ADJUST_DOOR",
+    "taskId": "CHECK_DOOR",
     "icon": "fa-magnifying-glass",
     "highlightRef": "TVR_SRO_KR_ET"
   },

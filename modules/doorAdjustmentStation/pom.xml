@@ -14,7 +14,7 @@
 	<properties>
 		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation</bundle.namespace>
-		<docker.image.name>controlcomponent-${project.artifactId}</docker.image.name>		
+		<docker.image.name>controlcomponent-door-adjustment-station</docker.image.name>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>

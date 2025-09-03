@@ -15,7 +15,7 @@ public class ShowAndObeyOperationMode extends CamundaOperationMode {
     }
 
     // Execute SHOW / EXECUTE BPMN process
-    @Parameter(name = "sao_workstep_id", direction = ParameterDirection.IN)
-    private String sao_workstep_id = "";
+    @Parameter(name = "sao_task_id", direction = ParameterDirection.IN)
+    private String sao_task_id = "";
 
 }

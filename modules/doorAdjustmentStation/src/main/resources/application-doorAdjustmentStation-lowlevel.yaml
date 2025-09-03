@@ -1,7 +1,7 @@
 basys:
   opcuaServer:
     certsFolder: ./certs
-    tcpPort: 12687
+    tcpPort: 12694
     httpsPort: 8443
   controlcomponent:
     id: door_adjustment_station_1_ll

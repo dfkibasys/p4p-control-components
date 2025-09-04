@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="EXTERNAL_HOSTNAME" value="10.2.0.169" />
+      <env name="EXTERNAL_HOSTNAME" value="localhost" />
       <env name="KAFKA_BROKER_ENDPOINT" value="basys-lnv-1.mrk40.dfki.lan:9092" />
       <env name="SCHEMA_REGISTRY_ENDPOINT" value="http://basys-lnv-1.mrk40.dfki.lan:8081" />
     </envs>

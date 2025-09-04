@@ -147,7 +147,7 @@ public class WorkstationServiceImpl implements WorkstationService, ServiceProvid
         return this::handleHandEventUpdates;
     }
 
-   @Bean
+    @Bean
     public Consumer<MaterialRemovedEvent> scaleController1Updates() { return this::handleScaleControllerUpdates;}
     @Bean
     public Consumer<MaterialRemovedEvent> scaleController2Updates() { return this::handleScaleControllerUpdates;}

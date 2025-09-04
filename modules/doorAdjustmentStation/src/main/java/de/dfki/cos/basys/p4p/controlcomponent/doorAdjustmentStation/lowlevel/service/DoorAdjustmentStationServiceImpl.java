@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.*;
 import org.springframework.stereotype.Service;
@@ -157,6 +158,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "basys.controlcomponent", name = "kafka-enabled", havingValue = "true")
     public Consumer<JointStateStamped> doorEventUpdates() {
         return this::handleDoorUpdates;
     }

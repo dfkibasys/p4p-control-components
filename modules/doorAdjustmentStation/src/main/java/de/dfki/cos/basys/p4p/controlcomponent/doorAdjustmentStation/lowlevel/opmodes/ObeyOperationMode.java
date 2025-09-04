@@ -15,7 +15,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.ser
         allowedModes = { ExecutionMode.AUTO, ExecutionMode.SIMULATE })
 public class ObeyOperationMode extends BaseDoorAdjustmentStationOperationMode {
 
-    @Parameter(name = "sao_task_id", direction = ParameterDirection.IN)
+    @Parameter(name = "obey_task_id", direction = ParameterDirection.IN)
     private String taskId = "";
 
     public ObeyOperationMode(BaseControlComponent<DoorAdjustmentStationService> component) {

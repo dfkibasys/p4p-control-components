@@ -16,13 +16,13 @@
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
           <camunda:inputParameter name="token">OBEY</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{ "name": "sao_task_id", "type" : "STRING", "value": "${sao_task_id}"}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">door_adjustment_station_1_ll</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "obey_task_id", "type" : "STRING", "value": "${sao_task_id}"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -39,14 +39,14 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="requestType">OperationModeRequest</camunda:inputParameter>
           <camunda:inputParameter name="outputParameters">[]</camunda:inputParameter>
-          <camunda:inputParameter name="inputParameters">
-            <camunda:script scriptFormat="freemarker">[
-{ "name": "sao_task_id", "type" : "STRING", "value": "${sao_task_id}"}
-]</camunda:script>
-          </camunda:inputParameter>
           <camunda:inputParameter name="token">SHOW</camunda:inputParameter>
           <camunda:inputParameter name="componentId">
             <camunda:script scriptFormat="freemarker">door_adjustment_station_1_ll</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="inputParameters">
+            <camunda:script scriptFormat="freemarker">[
+{ "name": "show_task_id", "type" : "STRING", "value": "${sao_task_id}"}
+]</camunda:script>
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>

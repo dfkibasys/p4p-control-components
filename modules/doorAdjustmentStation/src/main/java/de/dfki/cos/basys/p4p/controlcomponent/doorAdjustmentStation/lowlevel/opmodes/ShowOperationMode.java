@@ -45,4 +45,10 @@ public class ShowOperationMode extends BaseDoorAdjustmentStationOperationMode {
         DoorAdjustmentStationServiceImpl.currentOpMode = OPMode.NONE;
         DoorAdjustmentStationServiceImpl.currentTask = TASK.NONE;
     }
+
+    @Override
+    public void onResetting() {
+        getService(DoorAdjustmentStationService.class).reset();
+        executing = false;
+    }
 }

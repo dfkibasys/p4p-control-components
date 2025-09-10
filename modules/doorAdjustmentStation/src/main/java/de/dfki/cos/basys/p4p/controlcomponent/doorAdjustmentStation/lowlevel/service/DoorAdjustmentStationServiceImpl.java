@@ -149,7 +149,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
 
     @Override
     public void reset() {
-
+        publish("/aiquama/showInstruction/reset", "");
     }
 
     @Override

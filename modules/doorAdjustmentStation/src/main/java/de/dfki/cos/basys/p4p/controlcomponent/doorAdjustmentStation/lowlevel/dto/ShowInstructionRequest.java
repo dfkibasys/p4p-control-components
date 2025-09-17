@@ -2,14 +2,16 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dt
 
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.TASK;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShowInstructionRequest {
-    public String instructionMsg;
-    public String instructionImage;
-    public TASK taskId;
-    public String icon;
-    public String highlightRef;
+    private String instructionMsg;
+    private String instructionImage;
+    private TASK taskId;
+    private String icon;
+    private String highlightRef;
 }

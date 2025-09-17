@@ -2,19 +2,12 @@ package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dt
 
 import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service.DoorAdjustmentStationStatus.TASK;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class InstructionResponse {
-    public TASK taskId;
-    public Boolean success;
-    public String message;
-
-    @Override
-    public String toString() {
-        return "Instruction{" +
-                "taskId='" + taskId + '\'' +
-                ", success=" + success +
-                ", message=" + message +
-                '}';
-    }
+    private TASK taskId;
+    private Boolean success;
+    private String message;
 }

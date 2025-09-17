@@ -1,9 +1,10 @@
 package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ServiceProvider;
-import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.InstructionResponse;
-import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.ShowInstructionRequest;
+import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.dto.*;
 import de.dfki.cos.mrk40.avro.JointStateStamped;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -15,6 +16,7 @@ import de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.ser
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -27,8 +29,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     public static OPMode currentOpMode = OPMode.NONE;
     public static TASK currentTask = TASK.NONE;
     private Properties config = null;
-    private final float DOOR_ANGLE_OPENED = 90.0F;
-    private final float DOOR_ANGLE_CLOSED = 10.0F;
+    private final float CONFIDENCE_THRESHOLD = 0.9F;
     protected final Logger LOGGER = LoggerFactory.getLogger(DoorAdjustmentStationServiceImpl.class.getName());
     private boolean connected = false;
     private static final String PREFIX = "MqttAsyncClient-paho-v3";
@@ -48,6 +49,7 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
         final MqttConnectOptions options = new MqttConnectOptions();
 
         options.setCleanSession(true);
+        options.setUserName("DAS-ControlComponent");
         try {
             mqttClient = new MqttAsyncClient(connectionString, clientId, persistence);
         } catch (MqttException e) {
@@ -61,10 +63,18 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
                 public void onSuccess(IMqttToken asyncActionToken) {
                     LOGGER.debug("{} successfully connected to {}.", clientId, connectionString);
 
-                    String responseTopics = "/aiquama/+/response";
+                    String instructionResponseTopic = "/aiquama/showInstruction/response";
+                    String clipResponseTopic = "/SiMRK4.0/command/showVideoClip/res";
+                    String cameraResponseTopic = "/aiquama/camera/status";
                     try {
-                        mqttClient.subscribe(responseTopics, QOS, (topic, message) -> {
-                            handleMQTTResponses(message);
+                        mqttClient.subscribe(instructionResponseTopic, QOS, (topic, message) -> {
+                            handleMQTTInstructionResponses(message);
+                        });
+                        mqttClient.subscribe(clipResponseTopic, QOS, (topic, message) -> {
+                            handleClipResponse(message);
+                        });
+                        mqttClient.subscribe(cameraResponseTopic, QOS, (topic, message) -> {
+                            handleCameraResponse(message);
                         });
                     } catch (MqttException e) {
                         LOGGER.warn("{} could not subscribe to every topic!", clientId);
@@ -105,6 +115,18 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
 
         if (currentTask != null) {
             MissionState.getInstance().setState(MState.EXECUTING);
+
+            // CHECK_DOOR is the only task that needs to be requested
+            if (currentTask.equals(TASK.CHECK_DOOR)) {
+                ShowVideoClipRequest req = ShowVideoClipRequest.builder().clip_id("Check_door.mp4").position_id("tv").issuer_id("aiquama_process").build();
+                String jsonPayload = null;
+                try {
+                    jsonPayload = objectMapper.writeValueAsString(req);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                publish("/SiMRK4.0/command/showVideoClip/req", jsonPayload);
+            }
 
             latch = new CountDownLatch(1);
 
@@ -163,34 +185,52 @@ public class DoorAdjustmentStationServiceImpl implements DoorAdjustmentStationSe
     }
 
     private void handleDoorUpdates(JointStateStamped jointStateStamped) {
-        //Only evaluate in OBEY opMode
-        if (currentOpMode != OPMode.OBEY) return;
-
-        Float doorAngle = jointStateStamped.getState().getPosition().get(0);
-
-        LOGGER.info("Front Door Left Event arrived {}", doorAngle);
-
-        if (currentTask.equals(TASK.OPEN_DOOR) && doorAngle > DOOR_ANGLE_OPENED) {
-            latch.countDown();
-        } else if (currentTask.equals(TASK.CLOSE_DOOR) && doorAngle < DOOR_ANGLE_CLOSED) {
-            latch.countDown();
-        }
-
     }
 
-    private void handleMQTTResponses(MqttMessage message) {
+    private void handleMQTTInstructionResponses(MqttMessage message) {
         String payload = new String(message.getPayload());
 
         try {
             InstructionResponse response = objectMapper.readValue(payload, InstructionResponse.class);
             LOGGER.info("Parsed object: {}", response);
 
-            // TODO: Guarantee that an OBEY response is not quitting a SHOW opMode or vice versa
-            if (!currentOpMode.equals(OPMode.NONE) && currentTask.equals(response.getTaskId()) && response.getSuccess()) {
+            if (currentOpMode.equals(OPMode.SHOW) && currentTask.equals(response.getTaskId()) && response.getSuccess()) {
                 latch.countDown();
             }
 
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Failed to parse JSON: {}", e.getMessage());
+        }
+    }
+
+    private void handleCameraResponse(MqttMessage message) {
+        String payload = new String(message.getPayload());
+
+        try {
+            List<StateConfidence> states = objectMapper.readValue(payload, new TypeReference<>() {});
+            LOGGER.info("Parsed object: {}", states);
+            boolean hasCurrentTaskWithHighConfidence = states.stream()
+                    .anyMatch(sc -> currentTask.name().equals(sc.getState()) && sc.getConfidence() >= CONFIDENCE_THRESHOLD);
+
+            if (currentOpMode.equals(OPMode.OBEY) && hasCurrentTaskWithHighConfidence) {
+                latch.countDown();
+            }
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Failed to parse JSON: {}", e.getMessage());
+        }
+    }
+
+    private void handleClipResponse(MqttMessage message) {
+        String payload = new String(message.getPayload());
+
+        try {
+            ShowVideoClipResponse response = objectMapper.readValue(payload, ShowVideoClipResponse.class);
+            LOGGER.info("Parsed object: {}", response);
+
+            if (currentOpMode.equals(OPMode.OBEY) && currentTask.equals(TASK.CHECK_DOOR) && response.getStatus().equals("DONE")){
+                latch.countDown();
+            }
+        } catch (JsonProcessingException e) {
             LOGGER.error("Failed to parse JSON: {}", e.getMessage());
         }
     }

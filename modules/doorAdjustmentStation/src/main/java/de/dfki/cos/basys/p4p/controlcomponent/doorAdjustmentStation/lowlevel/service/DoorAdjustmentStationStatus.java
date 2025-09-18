@@ -1,0 +1,17 @@
+package de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation.lowlevel.service;
+
+public class DoorAdjustmentStationStatus {
+
+	public enum MState {
+		ACCEPTED, REJECTED, EXECUTING, DONE, PENDING, FAILED, ABORTED
+	}
+
+	public enum OPMode {
+		NONE, OBEY, SHOW
+	}
+
+    public enum TASK {
+        NONE, OPEN_DOOR, REMOVE_DOOR, ADJUST_DOOR, CHECK_DOOR, CLOSE_DOOR, INSTALL_DOOR
+    }
+
+}

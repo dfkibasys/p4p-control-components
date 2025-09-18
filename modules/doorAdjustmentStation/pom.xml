@@ -12,13 +12,13 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.workstation</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.workstation</bundle.namespace>
-		<docker.image.name>controlcomponent-${project.artifactId}</docker.image.name>		
+		<bundle.symbolicName>de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.p4p.controlcomponent.doorAdjustmentStation</bundle.namespace>
+		<docker.image.name>controlcomponent-door-adjustment-station</docker.image.name>
 	</properties>
 
 	<groupId>de.dfki.cos.basys.p4p.controlcomponent</groupId>
-	<artifactId>workstation</artifactId>
+	<artifactId>doorAdjustmentStation</artifactId>
 	<version>0.5.2-SNAPSHOT</version>
 	<name>${bundle.symbolicName}</name>
 	<packaging>jar</packaging>

@@ -30,6 +30,7 @@
 		<module>modules/workstation</module>
 		<module>modules/smartwatch.v2</module>
 		<module>modules/binpicking</module>
+		<module>modules/doorAdjustmentStation</module>
 	</modules>
   
 	<scm>
